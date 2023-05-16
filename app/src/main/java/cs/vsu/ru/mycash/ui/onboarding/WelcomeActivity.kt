@@ -1,4 +1,4 @@
-package cs.vsu.ru.mycash.ui.start
+package cs.vsu.ru.mycash.ui.onboarding
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
