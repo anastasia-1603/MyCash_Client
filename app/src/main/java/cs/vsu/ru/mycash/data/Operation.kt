@@ -7,5 +7,5 @@ data class Operation (
     val category: String, //потом поменять на классы
     val account: String,
     val value: Double,
-    val date: LocalDateTime
+    val date: String
 )

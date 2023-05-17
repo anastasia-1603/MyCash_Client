@@ -30,7 +30,7 @@ class OperationAdapter : RecyclerView.Adapter<OperationAdapter.OperationViewHold
     }
 
     override fun onBindViewHolder(holder: OperationAdapter.OperationViewHolder, position: Int) {
-        val operation = data[position] // Получение человека из списка данных по позиции
+        val operation = data[position]
         val context = holder.itemView.context
         val colors = mapOf("Транспорт" to R.color.purple_500,
             "Еда" to R.color.teal_700, "Одежда" to R.color.red)

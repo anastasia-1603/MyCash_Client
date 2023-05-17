@@ -14,18 +14,18 @@
         tools:context=".ui.onboarding.StartActivity">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/textViewAccountName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="100dp"
             android:text="@string/enter_account_name"
             android:textColor="@color/black"
             android:textSize="24sp"
-            app:layout_constraintStart_toStartOf="@+id/textView1"
+            app:layout_constraintStart_toStartOf="@+id/textViewBalance"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/textViewBalance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="65dp"
@@ -35,10 +35,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
+            app:layout_constraintTop_toBottomOf="@+id/editTextAccountName" />
 
         <EditText
-            android:id="@+id/editTextTextPersonName"
+            android:id="@+id/editTextAccountName"
             android:layout_width="280dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
@@ -50,11 +50,11 @@
             android:textColor="@color/black"
             android:textColorHint="@color/gray"
             android:textSize="24sp"
-            app:layout_constraintStart_toStartOf="@+id/textView"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+            app:layout_constraintStart_toStartOf="@+id/textViewAccountName"
+            app:layout_constraintTop_toBottomOf="@+id/textViewAccountName" />
 
         <EditText
-            android:id="@+id/editTextTextPersonName2"
+            android:id="@+id/editTextBalance"
             android:layout_width="280dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
@@ -65,18 +65,18 @@
             android:textColor="@color/black"
             android:textColorHint="@color/gray"
             android:textSize="24sp"
-            app:layout_constraintStart_toStartOf="@+id/textView1"
-            app:layout_constraintTop_toBottomOf="@+id/textView1" />
+            app:layout_constraintStart_toStartOf="@+id/textViewBalance"
+            app:layout_constraintTop_toBottomOf="@+id/textViewBalance" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/btnContinue"
             android:layout_width="169dp"
             android:layout_height="62dp"
             android:text="@string/next"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName2"
+            app:layout_constraintTop_toBottomOf="@+id/editTextBalance"
             app:layout_constraintVertical_bias="0.294" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

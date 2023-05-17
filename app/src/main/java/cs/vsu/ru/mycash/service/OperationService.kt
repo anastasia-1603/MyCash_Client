@@ -7,12 +7,13 @@ import com.github.javafaker.Faker
 import cs.vsu.ru.mycash.data.Operation
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import kotlin.random.Random
 
 @SuppressLint("NewApi")
 class OperationService {
 
-    private var operations = mutableListOf<Operation>()
+    var operations = mutableListOf<Operation>()
 
     init {
         val categories = listOf("Транспорт", "Еда", "Одежда")
@@ -23,8 +24,8 @@ class OperationService {
                 id = it.toLong(),
                 account = names[Random.nextInt(names.size)],
                 category = categories[Random.nextInt(categories.size)],
-                date = LocalDateTime.now(),
-                value = Random.nextDouble()
+                date = LocalDateTime.now().format( DateTimeFormatter.ofPattern("HH:mm")),
+                value = Random.nextInt(10000).toDouble()
             )
         }.toMutableList()
     }
