@@ -5,14 +5,18 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import cs.vsu.ru.mycash.R
+import cs.vsu.ru.mycash.databinding.ActivityWelcomeBinding
 
 class WelcomeActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityWelcomeBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_welcome)
+        binding = ActivityWelcomeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val button: Button = findViewById(R.id.button)
-        button.setOnClickListener {
+
+        binding.button.setOnClickListener {
             val intent = Intent(this@WelcomeActivity, StartActivity::class.java)
             startActivity(intent)
         }
