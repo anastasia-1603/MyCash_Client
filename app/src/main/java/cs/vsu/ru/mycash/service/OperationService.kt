@@ -1,26 +1,30 @@
 package cs.vsu.ru.mycash.service
 
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.github.javafaker.Faker
 import cs.vsu.ru.mycash.data.Operation
 import java.time.LocalDate
 import java.time.LocalDateTime
+import kotlin.random.Random
 
-@RequiresApi(Build.VERSION_CODES.O)
+@SuppressLint("NewApi")
 class OperationService {
 
     private var operations = mutableListOf<Operation>()
 
     init {
-        val faker = Faker.instance()
+        val categories = listOf("Транспорт", "Еда", "Одежда")
+        val names = listOf("Новый счет", "Сбережения", "Отпуск")
+
         operations = (1..10).map {
             Operation(
                 id = it.toLong(),
-                account = faker.finance().creditCard(),
-                category = faker.business().creditCardType(),
+                account = names[Random.nextInt(names.size)],
+                category = categories[Random.nextInt(categories.size)],
                 date = LocalDateTime.now(),
-                value = faker.commerce().price()
+                value = Random.nextDouble()
             )
         }.toMutableList()
     }
