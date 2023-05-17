@@ -8,5 +8,6 @@
     <string name="next">Продолжить</string>
     <string name="balance_placeholder">10 000</string>
     <string name="title_activity_main2">MainActivity2</string>
+    <string name="circle">circle</string>
 
 </resources>
