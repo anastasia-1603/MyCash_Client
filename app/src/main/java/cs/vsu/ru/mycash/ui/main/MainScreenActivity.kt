@@ -3,6 +3,10 @@ package cs.vsu.ru.mycash.ui.main
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import cs.vsu.ru.mycash.R
 import cs.vsu.ru.mycash.adapter.OperationAdapter
@@ -17,47 +21,35 @@ import cs.vsu.ru.mycash.ui.main.profile.ProfileFragment
 class MainScreenActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainScreenBinding
-    private lateinit var adapter: OperationAdapter
-    private lateinit var operationService: OperationService
-
-
+    private lateinit var navController: NavController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.accountName.text = intent.getStringExtra("accountName")
-        binding.balance.text = intent.getStringExtra("balance")
 
-        val manager = LinearLayoutManager(this)
-        adapter = OperationAdapter()
-        operationService = OperationService()
-        adapter.data = operationService.operations
-        binding.recyclerView.layoutManager = manager
-        binding.recyclerView.adapter = adapter
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment)
+        binding.navView.setupWithNavController(navController)
 
-
-        binding.navView.selectedItemId = R.id.nav_host_fragment_activity_navigation
-        binding.navView.setOnItemSelectedListener {
-            when(it.itemId) {
-                R.id.navigation_diagrams -> {
-                    openFragment(DiagramsFragment())
-                }
-                R.id.navigation_accounts -> {
-                    openFragment(AccountsFragment())
-
-                }
-                R.id.navigation_categories -> {
-                    openFragment(CategoriesFragment())
-                }
-                R.id.navigation_profile -> {
-                    openFragment(ProfileFragment())
-                }
-                R.id.navigation_home->{
-                    openFragment(HomeFragment())
-                }
-            }
-            true
-        }
+//        binding.navView.setOnItemSelectedListener {
+//            when(it.itemId) {
+//                R.id.navigation_diagrams -> {
+//                    openFragment(DiagramsFragment())
+//                }
+//                R.id.navigation_accounts -> {
+//                    openFragment(AccountsFragment())
+//                }
+//                R.id.navigation_categories -> {
+//                    openFragment(CategoriesFragment())
+//                }
+//                R.id.navigation_profile -> {
+//                    openFragment(ProfileFragment())
+//                }
+//                R.id.navigation_home->{
+//                    openFragment(HomeFragment())
+//                }
+//            }
+//            true
+//        }
 //
 //        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_navigation) as NavHostFragment
 //        val navController = navHostFragment.navController
@@ -79,8 +71,9 @@ class MainScreenActivity : AppCompatActivity() {
 
     private fun openFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.nav_view, fragment)
+        transaction.replace(R.id.nav_host_fragment, fragment)
         transaction.addToBackStack(null)
         transaction.commit()
     }
+
 }
