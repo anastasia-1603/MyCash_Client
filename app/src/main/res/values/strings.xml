@@ -9,5 +9,13 @@
     <string name="balance_placeholder">10 000</string>
     <string name="title_activity_main2">MainActivity2</string>
     <string name="circle">circle</string>
+    <string name="title_activity_navigation">NavigationActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="diagrams">diagrams</string>
+    <string name="categories">categories</string>
+    <string name="accounts">accounts</string>
+    <string name="profile">profile</string>
 
 </resources>
