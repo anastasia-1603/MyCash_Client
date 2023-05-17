@@ -21,6 +21,8 @@ class MainScreenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.accountName.text = intent.getStringExtra("accountName")
+        binding.balance.text = intent.getStringExtra("balance")
 
         val manager = LinearLayoutManager(this)
         adapter = OperationAdapter()
