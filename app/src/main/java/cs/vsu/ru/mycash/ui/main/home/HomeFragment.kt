@@ -28,19 +28,14 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-//        val accountName: TextView = binding.accountName
-//        homeViewModel.accountName.observe(viewLifecycleOwner) {
-//            accountName.text = it
-//        }
-//
-//        val balance: TextView = binding.balance
-//        homeViewModel.balance.observe(viewLifecycleOwner) {
-//            balance.text = it
-//        }
+        val accountName: TextView = binding.accountName
+        homeViewModel.accountName.observe(viewLifecycleOwner) {
+            accountName.text = it
+        }
 
-        val textHome: TextView = binding.textHome
-        homeViewModel.text.observe(viewLifecycleOwner) {
-            textHome.text = it
+        val balance: TextView = binding.balance
+        homeViewModel.balance.observe(viewLifecycleOwner) {
+            balance.text = it
         }
         return root
     }

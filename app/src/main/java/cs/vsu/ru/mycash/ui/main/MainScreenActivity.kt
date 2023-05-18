@@ -30,50 +30,6 @@ class MainScreenActivity : AppCompatActivity() {
         navController = Navigation.findNavController(this, R.id.nav_host_fragment)
         binding.navView.setupWithNavController(navController)
 
-//        binding.navView.setOnItemSelectedListener {
-//            when(it.itemId) {
-//                R.id.navigation_diagrams -> {
-//                    openFragment(DiagramsFragment())
-//                }
-//                R.id.navigation_accounts -> {
-//                    openFragment(AccountsFragment())
-//                }
-//                R.id.navigation_categories -> {
-//                    openFragment(CategoriesFragment())
-//                }
-//                R.id.navigation_profile -> {
-//                    openFragment(ProfileFragment())
-//                }
-//                R.id.navigation_home->{
-//                    openFragment(HomeFragment())
-//                }
-//            }
-//            true
-//        }
-//
-//        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_navigation) as NavHostFragment
-//        val navController = navHostFragment.navController
-//
-//
-//        val navView: BottomNavigationView = binding.navView
-//
-//        // Passing each menu ID as a set of Ids because each
-//        // menu should be considered as top level destinations.
-//        val appBarConfiguration = AppBarConfiguration(
-//            setOf(
-//                R.id.homeFragment, R.id.accountsFragment, R.id.categoriesFragment,
-//                R.id.diagramsFragment, R.id.profileFragment
-//            )
-//        )
-//        navView.setupWithNavController(navController)
-
-    }
-
-    private fun openFragment(fragment: Fragment) {
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.nav_host_fragment, fragment)
-        transaction.addToBackStack(null)
-        transaction.commit()
     }
 
 }
