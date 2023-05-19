@@ -1,4 +1,4 @@
-package cs.vsu.ru.mycash.ui.ui.login
+package cs.vsu.ru.mycash.ui.login
 
 /**
  * User details post authentication that is exposed to the UI

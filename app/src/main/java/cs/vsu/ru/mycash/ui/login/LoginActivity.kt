@@ -1,4 +1,4 @@
-package cs.vsu.ru.mycash.ui.ui.login
+package cs.vsu.ru.mycash.ui.login
 
 import android.app.Activity
 import androidx.lifecycle.Observer

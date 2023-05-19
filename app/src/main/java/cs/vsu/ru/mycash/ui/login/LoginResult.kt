@@ -1,4 +1,4 @@
-package cs.vsu.ru.mycash.ui.ui.login
+package cs.vsu.ru.mycash.ui.login
 
 /**
  * Authentication result : success (user details) or error message.

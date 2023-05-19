@@ -1,4 +1,4 @@
-package cs.vsu.ru.mycash.ui.ui.login
+package cs.vsu.ru.mycash.ui.login
 
 /**
  * Data validation state of the login form.
