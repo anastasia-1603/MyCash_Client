@@ -31,4 +31,26 @@ object ApiClient {
 
         return retrofit!!
     }
+
+    fun initClient(): Retrofit {
+        val client = OkHttpClient.Builder()
+            .addInterceptor { chain ->
+                val request = chain.request().newBuilder()
+//                    .addHeader("ngrok-skip-browser-warning", true.toString())
+//                    .addHeader("User-Agent", "MyCash")
+                    .build()
+                chain.proceed(request)
+            }
+            .build()
+
+        if (retrofit == null) {
+            retrofit = Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build()
+        }
+
+        return retrofit!!
+    }
 }
