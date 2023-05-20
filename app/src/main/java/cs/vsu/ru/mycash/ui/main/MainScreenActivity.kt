@@ -31,5 +31,6 @@ class MainScreenActivity : AppCompatActivity() {
         binding.recyclerView.layoutManager = manager
         binding.recyclerView.adapter = adapter
 
+
     }
 }

@@ -2,6 +2,7 @@ package cs.vsu.ru.mycash.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.NonNull
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import cs.vsu.ru.mycash.R
@@ -19,6 +20,7 @@ class OperationAdapter : RecyclerView.Adapter<OperationAdapter.OperationViewHold
     class OperationViewHolder(val binding: ItemOperationBinding) : RecyclerView.ViewHolder(binding.root)
 
 
+    @NonNull
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
