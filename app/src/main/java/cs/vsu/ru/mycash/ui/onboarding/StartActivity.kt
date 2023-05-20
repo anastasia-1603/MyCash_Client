@@ -49,11 +49,12 @@ class StartActivity : AppCompatActivity() {
                         {
                             Toast.makeText(applicationContext, it.errorMessage, Toast.LENGTH_SHORT).show()
                         }
-                        ApiResponse.Loading -> Toast.makeText(applicationContext, "Loading", Toast.LENGTH_SHORT).show()
+                        is ApiResponse.Loading -> Toast.makeText(applicationContext, "Loading", Toast.LENGTH_SHORT).show()
                         is ApiResponse.Success -> {
                             tokenViewModel.saveToken(it.data.token)
                             Toast.makeText(applicationContext, "Success", Toast.LENGTH_SHORT).show()
                         }
+
                     }
                 }
 
