@@ -1,6 +1,7 @@
 package cs.vsu.ru.mycash.ui.onboarding
 
 import android.content.Intent
+import android.icu.util.Output
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -71,5 +72,4 @@ class StartActivity : AppCompatActivity() {
         }
 
     }
-
 }
