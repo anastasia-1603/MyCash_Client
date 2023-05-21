@@ -10,6 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/background"
         tools:context=".ui.main.home.HomeFragment">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -30,11 +31,12 @@
 
         <TextView
             android:id="@+id/accountName"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="411dp"
+            android:layout_height="59dp"
             android:layout_marginBottom="228dp"
             android:allowUndo="false"
             android:background="@color/yellow_main"
+            android:gravity="center"
             android:shadowColor="#AEAEAE"
             android:shadowDy="0"
             android:shadowRadius="0"
@@ -45,35 +47,24 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             android:id="@+id/balance"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="TextView"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="15dp"
+            android:text="0.0"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="34sp"
+            app:layout_constraintBottom_toTopOf="@+id/button5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/accountName" />
-
-        <Button
-            android:id="@+id/button4"
-            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="День"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.049"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/balance"
-            app:layout_constraintVertical_bias="0.044" />
 
         <Button
             android:id="@+id/button5"
@@ -84,60 +75,125 @@
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@+id/button4"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.073"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/button4"
-            app:layout_constraintTop_toTopOf="@+id/button4" />
+            app:layout_constraintTop_toTopOf="@+id/button4"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <Button
+            android:id="@+id/button4"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="День"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/right"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/balance" />
 
         <TextView
             android:id="@+id/day"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginEnd="15dp"
             android:text="Сегодня"
             android:textColor="@color/black"
             android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="@+id/right"
             app:layout_constraintEnd_toStartOf="@+id/right"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/left"
-            app:layout_constraintTop_toTopOf="@+id/left" />
+            app:layout_constraintTop_toTopOf="@+id/right"
+            app:layout_constraintVertical_bias="0.0" />
 
         <ImageButton
             android:id="@+id/left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginEnd="15dp"
             android:background="@color/background"
             android:contentDescription="left"
             android:src="@drawable/baseline_arrow_back_ios_new_24"
+            app:layout_constraintBottom_toBottomOf="@+id/day"
             app:layout_constraintEnd_toStartOf="@+id/day"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button4" />
+            app:layout_constraintTop_toTopOf="@+id/day" />
 
         <ImageButton
             android:id="@+id/right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
             android:background="@color/background"
             android:contentDescription="right"
             android:src="@drawable/baseline_arrow_forward_ios_24"
+            app:layout_constraintBottom_toTopOf="@+id/all"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/day"
-            app:layout_constraintTop_toTopOf="@+id/left" />
+            app:layout_constraintStart_toEndOf="@+id/day" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="375dp"
+            android:layout_height="411dp"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="25dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="148dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.272"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/left" />
+            app:layout_constraintTop_toBottomOf="@+id/income" />
+
+        <TextView
+            android:id="@+id/income"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:text="Пополнения"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/expenses"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/expenses"
+            app:layout_constraintTop_toTopOf="@+id/expenses"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="32dp"
+            android:padding="4dp"
+            android:text="Все"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/recyclerView"
+            app:layout_constraintEnd_toStartOf="@+id/expenses"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/expenses"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:padding="4dp"
+            android:text="Траты"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/all"
+            app:layout_constraintEnd_toStartOf="@+id/income"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/all"
+            app:layout_constraintTop_toTopOf="@+id/all"
+            app:layout_constraintVertical_bias="0.6" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
