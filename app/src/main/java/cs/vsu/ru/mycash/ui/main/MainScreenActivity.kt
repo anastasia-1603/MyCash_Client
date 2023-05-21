@@ -19,6 +19,7 @@ class MainScreenActivity : AppCompatActivity() {
         navController = Navigation.findNavController(this, R.id.nav_host_fragment)
         binding.navView.setupWithNavController(navController)
 
+
     }
 
 }
