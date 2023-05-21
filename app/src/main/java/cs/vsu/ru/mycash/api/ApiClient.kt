@@ -36,8 +36,8 @@ object ApiClient {
         val client = OkHttpClient.Builder()
             .addInterceptor { chain ->
                 val request = chain.request().newBuilder()
-//                    .addHeader("ngrok-skip-browser-warning", true.toString())
-//                    .addHeader("User-Agent", "MyCash")
+                    .addHeader("ngrok-skip-browser-warning", true.toString())
+                    .addHeader("User-Agent", "MyCash")
                     .build()
                 chain.proceed(request)
             }
