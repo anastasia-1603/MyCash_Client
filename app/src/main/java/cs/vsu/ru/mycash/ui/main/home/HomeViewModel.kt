@@ -10,10 +10,13 @@ class HomeViewModel : ViewModel() {
     private val _accountName: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
+
+    val accountName: LiveData<String> = _accountName
+
     private val _balance: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
-    val accountName: LiveData<String> = _accountName
+
     val balance: LiveData<String> = _balance
 
     private val _operationList: MutableLiveData<List<Operation>> by lazy {
@@ -28,6 +31,10 @@ class HomeViewModel : ViewModel() {
     }
 
     fun setBalance(balance: String) {
-        _balance.value = balance
+        _balance.value = balance + "₽"
+    }
+
+    fun setOperationList(operationList: List<Operation>) {
+        _operationList.value = operationList
     }
 }
