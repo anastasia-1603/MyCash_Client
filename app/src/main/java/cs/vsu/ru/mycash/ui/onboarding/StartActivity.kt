@@ -20,10 +20,6 @@ import retrofit2.Response
 class StartActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityStartBinding
-//    private lateinit var authViewModel: AuthViewModel
-//    private lateinit var tokenViewModel: TokenViewModel
-//    private lateinit var tokenManager: TokenManager
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,21 +43,6 @@ class StartActivity : AppCompatActivity() {
             {
 
                 val apiService = ApiClient.initClient().create(ApiService::class.java)
-//                val call = apiService.test()
-//
-//                call.enqueue(object : Callback<String> {
-//                    override fun onResponse(call: Call<String>, response: Response<String>) {
-//
-//                        Toast.makeText(applicationContext, response.body().toString(), Toast.LENGTH_LONG).show()
-//
-//                    }
-//
-//                    override fun onFailure(call: Call<String>, t: Throwable) {
-//                        Toast.makeText(applicationContext, t.message, Toast.LENGTH_SHORT).show()
-//                    }
-//
-//                })
-
                 val call = apiService.init(AccountInit(
                     accountName.text.toString(),
                     balance.text.toString()))
@@ -74,7 +55,7 @@ class StartActivity : AppCompatActivity() {
                         preferences.edit().putString("TOKEN", token).apply()
 //                        Log.d("tag", token.toString())
 //                        Toast.makeText(applicationContext, token.toString(), Toast.LENGTH_SHORT).show()
-                        binding.editTextAccountName.setText(token)
+//                        binding.editTextAccountName.setText(token)
                     }
 
                     override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
@@ -85,30 +66,6 @@ class StartActivity : AppCompatActivity() {
 
                 val intent = Intent(this@StartActivity, MainScreenActivity::class.java)
                 startActivity(intent)
-
-//                authViewModel.tokenResponse.observe(this) {
-//                    when(it) {
-//                        is ApiResponse.Failure ->
-//                        {
-//                            Toast.makeText(applicationContext, it.errorMessage, Toast.LENGTH_SHORT).show()
-//                        }
-//                        is ApiResponse.Loading -> Toast.makeText(applicationContext, "Loading", Toast.LENGTH_SHORT).show()
-//                        is ApiResponse.Success -> {
-//                            tokenViewModel.saveToken(it.data.token)
-//                            Toast.makeText(applicationContext, "Success", Toast.LENGTH_SHORT).show()
-//                        }
-//
-//                    }
-//                }
-//
-//                authViewModel.init(
-//                    AccountInit(balance.text.toString(), accountName.text.toString()),
-//                    object: CoroutinesErrorHandler {
-//                        override fun onError(message: String) {
-//                            Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
-//                        }
-//                    }
-//                )
             }
 
         }
