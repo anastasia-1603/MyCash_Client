@@ -87,6 +87,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
             android:text="День"
+            android:textColor="@color/black"
             android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@+id/right"
             app:layout_constraintEnd_toEndOf="parent"
@@ -157,13 +158,17 @@
             android:layout_height="wrap_content"
             android:padding="4dp"
             android:text="Пополнения"
+            android:textColor="@color/textview_colors"
             android:textSize="16sp"
+            android:clickable="true"
+            android:onClick="textviewOnClick"
             app:layout_constraintBottom_toBottomOf="@+id/expenses"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/expenses"
             app:layout_constraintTop_toTopOf="@+id/expenses"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.0"
+            android:focusable="true" />
 
         <TextView
             android:id="@+id/all"
@@ -174,13 +179,16 @@
             android:layout_marginBottom="32dp"
             android:padding="4dp"
             android:text="Все"
+            android:clickable="true"
+            android:textColor="@color/textview_colors"
             android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@+id/recyclerView"
             app:layout_constraintEnd_toStartOf="@+id/expenses"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/right" />
+            app:layout_constraintTop_toBottomOf="@+id/right"
+            android:focusable="true" />
 
         <TextView
             android:id="@+id/expenses"
@@ -189,13 +197,16 @@
             android:layout_marginEnd="10dp"
             android:padding="4dp"
             android:text="Траты"
+            android:clickable="true"
+            android:textColor="@color/textview_colors"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@+id/all"
             app:layout_constraintEnd_toStartOf="@+id/income"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/all"
             app:layout_constraintTop_toTopOf="@+id/all"
-            app:layout_constraintVertical_bias="0.6" />
+            app:layout_constraintVertical_bias="0.6"
+            android:focusable="true" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
