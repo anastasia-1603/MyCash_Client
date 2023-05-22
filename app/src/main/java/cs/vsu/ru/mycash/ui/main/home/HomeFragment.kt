@@ -51,7 +51,7 @@ class HomeFragment : Fragment() {
 
         val manager = LinearLayoutManager(context)
         adapter = OperationAdapter(OperationAdapter.OnClickListener { operation ->
-            Toast.makeText(activity, operation.category.color, Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, operation.category.name, Toast.LENGTH_SHORT).show()
         })
         operationService = OperationService() //test
         adapter.data = operationService.operations //test
@@ -68,6 +68,20 @@ class HomeFragment : Fragment() {
         val balance: TextView = binding.balance
         homeViewModel.balance.observe(viewLifecycleOwner) {
             balance.text = it
+        }
+
+        val all = binding.all
+        val income = binding.income
+        val expenses = binding.expenses
+
+        all.setOnClickListener{
+            Toast.makeText(context, "text", Toast.LENGTH_SHORT).show()
+        }
+        income.setOnClickListener{
+            Toast.makeText(context, "text", Toast.LENGTH_SHORT).show()
+        }
+        expenses.setOnClickListener{
+            Toast.makeText(context, "text", Toast.LENGTH_SHORT).show()
         }
 
         val preferences = activity?.getSharedPreferences("MY_APP", Context.MODE_PRIVATE)
