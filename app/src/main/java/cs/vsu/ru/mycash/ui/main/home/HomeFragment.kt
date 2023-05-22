@@ -1,5 +1,6 @@
 package cs.vsu.ru.mycash.ui.main.home
 
+import android.app.DatePickerDialog
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
@@ -7,6 +8,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.DatePicker
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -28,13 +31,16 @@ import cs.vsu.ru.mycash.service.OperationService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
+import java.util.*
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private lateinit var adapter: OperationAdapter
     private lateinit var operationService: OperationService
+    private var cal = Calendar.getInstance()
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -65,6 +71,31 @@ class HomeFragment : Fragment() {
             balance.text = it
         }
 
+        val date: Button = binding.date
+        homeViewModel.date.observe(viewLifecycleOwner) {
+            date.text = it
+        }
+
+        val dateSetListener =
+            DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
+                cal.set(Calendar.YEAR, year)
+                cal.set(Calendar.MONTH, monthOfYear)
+                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                updateDateInView()
+            }
+
+        binding.date.setOnClickListener {
+            context?.let { it1 ->
+                DatePickerDialog(
+                    it1,
+                    dateSetListener,
+                    cal.get(Calendar.YEAR),
+                    cal.get(Calendar.MONTH),
+                    cal.get(Calendar.DAY_OF_MONTH)
+                ).show()
+            }
+        }
+
         val viewPager = binding.viewPager
         viewPager.adapter = HomePagerAdapter(this)
         val tabLayoutMediator = TabLayoutMediator(binding.tabLayout, binding.viewPager){ tab, position ->
@@ -75,6 +106,9 @@ class HomeFragment : Fragment() {
             }
         }
         tabLayoutMediator.attach()
+
+
+
 
 
         val preferences = activity?.getSharedPreferences("MY_APP", Context.MODE_PRIVATE)
@@ -120,5 +154,11 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun updateDateInView() {
+        val myFormat = "d MMMM" // mention the format you need
+        val sdf = SimpleDateFormat(myFormat, Locale.getDefault())
+        binding.date.text = sdf.format(cal.time)
     }
 }
