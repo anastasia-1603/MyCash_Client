@@ -10,9 +10,15 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.google.android.material.tabs.TabLayoutMediator
 import cs.vsu.ru.mycash.adapter.OperationAdapter
 import cs.vsu.ru.mycash.api.ApiClient
 import cs.vsu.ru.mycash.api.ApiService
@@ -46,19 +52,8 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-//        homeViewModel.setBalance("1000") //test
-//        homeViewModel.setAccountName("Новый счет") //test
-
-        val manager = LinearLayoutManager(context)
-        adapter = OperationAdapter(OperationAdapter.OnClickListener { operation ->
-            Toast.makeText(activity, operation.category.name, Toast.LENGTH_SHORT).show()
-        })
-        operationService = OperationService() //test
-        adapter.data = operationService.operations //test
-        binding.recyclerView.layoutManager = manager
-        binding.recyclerView.adapter = adapter
-        binding.accountName.text = operationService.operations[1].account.name
-        binding.balance.text = operationService.operations[1].account.balance.toString()
+        homeViewModel.setBalance("1000") //test
+        homeViewModel.setAccountName("Новый счет") //test
 
         val accountName: TextView = binding.accountName
         homeViewModel.accountName.observe(viewLifecycleOwner) {
@@ -70,23 +65,21 @@ class HomeFragment : Fragment() {
             balance.text = it
         }
 
-        val all = binding.all
-        val income = binding.income
-        val expenses = binding.expenses
+        val viewPager = binding.viewPager
+        viewPager.adapter = HomePagerAdapter(this)
+        val tabLayoutMediator = TabLayoutMediator(binding.tabLayout, binding.viewPager){ tab, position ->
+            when(position) {
+                0 -> tab.text = "Все"
+                1 -> tab.text = "Расходы"
+                2 -> tab.text = "Доходы"
+            }
+        }
+        tabLayoutMediator.attach()
 
-        all.setOnClickListener{
-            Toast.makeText(context, "text", Toast.LENGTH_SHORT).show()
-        }
-        income.setOnClickListener{
-            Toast.makeText(context, "text", Toast.LENGTH_SHORT).show()
-        }
-        expenses.setOnClickListener{
-            Toast.makeText(context, "text", Toast.LENGTH_SHORT).show()
-        }
 
         val preferences = activity?.getSharedPreferences("MY_APP", Context.MODE_PRIVATE)
         val token = preferences?.getString("TOKEN", "token")
-        binding.day.text = token
+//        binding.day.text = token
 
 //        val apiService = token?.let { ApiClient.getClient(it).create(ApiService::class.java) }
 //
@@ -106,6 +99,23 @@ class HomeFragment : Fragment() {
 //        })
         return root
     }
+
+    class HomePagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
+
+        override fun getItemCount(): Int {
+            return 3
+        }
+
+        override fun createFragment(position: Int): Fragment {
+            return when (position) {
+                0 -> TabAllFragment()
+                1 -> TabIncomeFragment()
+                2 -> TabExpensesFragment()
+                else -> throw IllegalArgumentException("Invalid position")
+            }
+        }
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
