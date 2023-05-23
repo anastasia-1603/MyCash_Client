@@ -73,5 +73,6 @@ dependencies {
     implementation 'androidx.fragment:fragment-ktx:1.5.7'
     implementation "androidx.activity:activity-ktx:1.7.1"
     implementation 'android.arch.navigation:navigation-ui:1.0.0'
+    implementation 'io.github.dzmitry-lakisau:month-year-picker-dialog:1.0.0'
 
 }
