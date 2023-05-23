@@ -4,10 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import android.util.Patterns
-import cs.vsu.ru.mycash.ui.data.LoginRepository
-import cs.vsu.ru.mycash.ui.data.Result
-
-import cs.vsu.ru.mycash.ui.R
+import cs.vsu.ru.mycash.R
+import cs.vsu.ru.mycash.data.LoginRepository
+import cs.vsu.ru.mycash.data.Result
 
 class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
 

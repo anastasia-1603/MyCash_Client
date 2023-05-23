@@ -2,8 +2,8 @@ package cs.vsu.ru.mycash.ui.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import cs.vsu.ru.mycash.ui.data.LoginDataSource
-import cs.vsu.ru.mycash.ui.data.LoginRepository
+import cs.vsu.ru.mycash.data.LoginDataSource
+import cs.vsu.ru.mycash.data.LoginRepository
 
 /**
  * ViewModel provider factory to instantiate LoginViewModel.

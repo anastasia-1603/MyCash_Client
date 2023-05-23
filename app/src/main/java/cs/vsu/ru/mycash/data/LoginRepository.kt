@@ -1,6 +1,6 @@
-package cs.vsu.ru.mycash.ui.data
+package cs.vsu.ru.mycash.data
 
-import cs.vsu.ru.mycash.ui.data.model.LoggedInUser
+import cs.vsu.ru.mycash.data.model.LoggedInUser
 
 /**
  * Class that requests authentication and user information from the remote data source and

@@ -1,4 +1,4 @@
-package cs.vsu.ru.mycash.ui.data.model
+package cs.vsu.ru.mycash.data.model
 
 /**
  * Data class that captures user information for logged in users retrieved from LoginRepository
