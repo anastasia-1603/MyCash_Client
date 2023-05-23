@@ -20,10 +20,12 @@ interface ApiService {
     @GET(TEST)
     fun test(): Call<String>
 
-    @GET()
-    fun getAccountInfo(@Query("date") date: LocalDateTime,
-                       @Query("type") type: CategoryType) :
-            Call<Map<Account, List<Operation>>>
+    @GET("main/get/{account}/{year}/{month}/{day}")
+    fun getAccountInfo(@Path("account") account: String,
+                       @Path("year") year: Int,
+                       @Path("month") month: Int,
+                       @Path("day") day: Int) :
+            Call<List<Operation>>
 
 
 }
