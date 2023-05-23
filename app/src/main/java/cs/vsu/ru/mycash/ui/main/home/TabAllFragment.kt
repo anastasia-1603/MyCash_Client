@@ -19,16 +19,10 @@ import cs.vsu.ru.mycash.service.OperationService
 class TabAllFragment : Fragment() {
     private lateinit var binding: FragmentTabAllBinding
     private lateinit var adapter: OperationAdapter
-    private lateinit var operationService: OperationService
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-        val homeViewModel = ViewModelProvider(requireActivity())[HomeViewModel::class.java]
-        val operationsList = homeViewModel.operationList.value
 
         binding = FragmentTabAllBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -36,17 +30,18 @@ class TabAllFragment : Fragment() {
         adapter = OperationAdapter(OperationAdapter.OnClickListener { operation ->
             Toast.makeText(activity, operation.category.name, Toast.LENGTH_SHORT).show()
         })
+
+        val homeViewModel = ViewModelProvider(requireActivity())[HomeViewModel::class.java]
+        val operationsList = homeViewModel.operationList.value
         if (operationsList != null) {
             adapter.data = operationsList
         }
         binding.recyclerView.layoutManager = manager
         binding.recyclerView.adapter = adapter
 
-
         homeViewModel.operationList.observe(viewLifecycleOwner) {
             adapter.notifyDataSetChanged()
         }
-
 
         return root
     }
