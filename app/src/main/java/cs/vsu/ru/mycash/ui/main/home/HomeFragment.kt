@@ -2,37 +2,26 @@ package cs.vsu.ru.mycash.ui.main.home
 
 import android.app.DatePickerDialog
 import android.content.Context
-import android.content.SharedPreferences
+import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.DatePicker
 import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import by.dzmitry_lakisau.month_year_picker_dialog.MonthYearPickerDialog
 import com.google.android.material.tabs.TabLayoutMediator
+import cs.vsu.ru.mycash.R
 import cs.vsu.ru.mycash.adapter.OperationAdapter
-import cs.vsu.ru.mycash.api.ApiClient
-import cs.vsu.ru.mycash.api.ApiService
 import cs.vsu.ru.mycash.data.*
 import cs.vsu.ru.mycash.databinding.FragmentHomeBinding
 import cs.vsu.ru.mycash.service.OperationService
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
 import java.util.*
 
 class HomeFragment : Fragment() {
@@ -76,6 +65,19 @@ class HomeFragment : Fragment() {
             date.text = it
         }
 
+//        this.context?.let {
+//            MonthYearPickerDialog.Builder(
+//                context = it,
+//                themeResId = R.style.Theme_MyCash,
+//                onDateSetListener = { year, month ->
+//                    date.text = year.toString()
+//                }
+//            )
+//                .setNegativeButton("Отменить")
+//                .setPositiveButton("Ок")
+//                .build()
+//        }
+
         val dateSetListener =
             DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
                 cal.set(Calendar.YEAR, year)
@@ -106,10 +108,6 @@ class HomeFragment : Fragment() {
             }
         }
         tabLayoutMediator.attach()
-
-
-
-
 
         val preferences = activity?.getSharedPreferences("MY_APP", Context.MODE_PRIVATE)
         val token = preferences?.getString("TOKEN", "token")
@@ -157,7 +155,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun updateDateInView() {
-        val myFormat = "d MMMM" // mention the format you need
+        val myFormat = "d MMMM"
         val sdf = SimpleDateFormat(myFormat, Locale.getDefault())
         binding.date.text = sdf.format(cal.time)
     }
