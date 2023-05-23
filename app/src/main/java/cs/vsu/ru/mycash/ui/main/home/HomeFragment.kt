@@ -18,11 +18,16 @@ import by.dzmitry_lakisau.month_year_picker_dialog.MonthYearPickerDialog
 import com.google.android.material.tabs.TabLayoutMediator
 import cs.vsu.ru.mycash.R
 import cs.vsu.ru.mycash.adapter.OperationAdapter
+import cs.vsu.ru.mycash.api.ApiClient
+import cs.vsu.ru.mycash.api.ApiService
 import cs.vsu.ru.mycash.data.*
 import cs.vsu.ru.mycash.databinding.FragmentHomeBinding
 import cs.vsu.ru.mycash.service.OperationService
+import retrofit2.Call
 import java.text.SimpleDateFormat
 import java.util.*
+import retrofit2.Callback;
+import retrofit2.Response;
 
 class HomeFragment : Fragment() {
 
@@ -47,8 +52,6 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        homeViewModel.setBalance("1000") //test
-        homeViewModel.setAccountName("Новый счет") //test
 
         val accountName: TextView = binding.accountName
         homeViewModel.accountName.observe(viewLifecycleOwner) {
@@ -64,6 +67,7 @@ class HomeFragment : Fragment() {
         homeViewModel.date.observe(viewLifecycleOwner) {
             date.text = it
         }
+
 
 //        this.context?.let {
 //            MonthYearPickerDialog.Builder(
@@ -84,7 +88,15 @@ class HomeFragment : Fragment() {
                 cal.set(Calendar.MONTH, monthOfYear)
                 cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
                 updateDateInView()
+                val myFormat = "d MMMM"
+                val sdf = SimpleDateFormat(myFormat, Locale.getDefault())
+                sdf.format(cal.time)
             }
+
+        /*
+        homeViewModel.setBalance("1000") //test
+        homeViewModel.setAccountName("Новый счет") //test
+         */
 
         binding.date.setOnClickListener {
             context?.let { it1 ->
@@ -97,6 +109,8 @@ class HomeFragment : Fragment() {
                 ).show()
             }
         }
+
+
 
         val viewPager = binding.viewPager
         viewPager.adapter = HomePagerAdapter(this)
@@ -113,22 +127,31 @@ class HomeFragment : Fragment() {
         val token = preferences?.getString("TOKEN", "token")
 //        binding.day.text = token
 
-//        val apiService = token?.let { ApiClient.getClient(it).create(ApiService::class.java) }
-//
-//        apiService?.getAccountInfo(LocalDateTime.now(), CategoryType.ALL)
-//            ?.enqueue(object : Callback<Map<Account, List<Operation>>> {
-//            override fun onResponse(call: Call<Map<Account, List<Operation>>>, response: Response<Map<Account, List<Operation>>>) {
-//                // accountname = response[1].account.name условно
-//                // и тд
-//                // вернее homeViewModel.setAccountName
-//
-//            }
-//
-//            override fun onFailure(call: Call<Map<Account, List<Operation>>>, t: Throwable) {
-//                // обработка ошибки
-//            }
-//
-//        })
+
+
+
+        val apiService = ApiClient.getClient(token!!).create(ApiService::class.java)
+
+        val call = apiService.getAccountInfo(
+            binding.accountName.text.toString(),
+            cal.get(Calendar.YEAR),
+            cal.get(Calendar.MONTH),
+            cal.get(Calendar.DAY_OF_MONTH))
+
+        call.enqueue(object : Callback<List<Operation>> {
+            override fun onResponse(
+                call: Call<List<Operation>>,
+                response: Response<List<Operation>>
+            ) {
+                response.body()?.let { homeViewModel.setOperationList(it) }
+            }
+
+            override fun onFailure(call: Call<List<Operation>>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+
+        })
         return root
     }
 
@@ -157,6 +180,7 @@ class HomeFragment : Fragment() {
     private fun updateDateInView() {
         val myFormat = "d MMMM"
         val sdf = SimpleDateFormat(myFormat, Locale.getDefault())
-        binding.date.text = sdf.format(cal.time)
+//        sdf.format(cal.time)
     }
 }
+
