@@ -1,8 +1,10 @@
 package cs.vsu.ru.mycash.adapter
 
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.NonNull
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import cs.vsu.ru.mycash.R
@@ -30,6 +32,7 @@ class OperationAdapter(private val onClickListener: OnClickListener) : RecyclerV
         return OperationViewHolder(binding)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: OperationViewHolder, position: Int) {
         val operation = data[position]
 
@@ -40,7 +43,7 @@ class OperationAdapter(private val onClickListener: OnClickListener) : RecyclerV
             value.text = operation.value.toString()
             time.text = operation.date.toString()
 
-            imageView.setColorFilter(operation.category.color)
+            imageView.setColorFilter(operation.category.color.toArgb())
 
             holder.itemView.setOnClickListener {
                 onClickListener.onClick(operation)

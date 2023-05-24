@@ -12,9 +12,9 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.Toast
+import cs.vsu.ru.mycash.R
 import cs.vsu.ru.mycash.databinding.ActivityLoginBinding
 
-import cs.vsu.ru.mycash.ui.R
 
 class LoginActivity : AppCompatActivity() {
 
@@ -39,7 +39,9 @@ class LoginActivity : AppCompatActivity() {
             val loginState = it ?: return@Observer
 
             // disable login button unless both username / password is valid
-            login.isEnabled = loginState.isDataValid
+            if (login != null) {
+                login.isEnabled = loginState.isDataValid
+            }
 
             if (loginState.usernameError != null) {
                 username.error = getString(loginState.usernameError)
@@ -91,9 +93,11 @@ class LoginActivity : AppCompatActivity() {
                 false
             }
 
-            login.setOnClickListener {
-                loading.visibility = View.VISIBLE
-                loginViewModel.login(username.text.toString(), password.text.toString())
+            if (login != null) {
+                login.setOnClickListener {
+                    loading.visibility = View.VISIBLE
+                    loginViewModel.login(username.text.toString(), password.text.toString())
+                }
             }
         }
     }
