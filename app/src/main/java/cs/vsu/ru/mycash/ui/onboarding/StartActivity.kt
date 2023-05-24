@@ -56,6 +56,8 @@ class StartActivity : AppCompatActivity() {
 //                        Log.d("tag", token.toString())
 //                        Toast.makeText(applicationContext, token.toString(), Toast.LENGTH_SHORT).show()
 //                        binding.editTextAccountName.setText(token)
+                        val intent = Intent(this@StartActivity, MainScreenActivity::class.java)
+                        startActivity(intent)
                     }
 
                     override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
@@ -64,8 +66,7 @@ class StartActivity : AppCompatActivity() {
 
                 })
 
-                val intent = Intent(this@StartActivity, MainScreenActivity::class.java)
-                startActivity(intent)
+
             }
 
         }

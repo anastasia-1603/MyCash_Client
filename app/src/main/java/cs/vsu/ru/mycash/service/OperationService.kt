@@ -25,17 +25,17 @@ class OperationService {
     init {
         val category = Category(1,
             "Транспорт",
-            Color.GREEN,
+            Color.valueOf(170),
             CategoryType.ALL,
             false, 0.0)
         val category2 = Category(2,
             "Еда",
-            Color.CYAN,
+            Color.valueOf(0),
             CategoryType.ALL,
             false, 0.0)
         val category3 = Category(3,
             "Развлечения",
-            Color.MAGENTA,
+            Color.valueOf(200),
             CategoryType.ALL,
             false, 0.0)
         val account = Account(1, "Новый счет", 1000.0, 10.0, 10000.0)

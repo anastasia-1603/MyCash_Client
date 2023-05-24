@@ -3,7 +3,9 @@ package cs.vsu.ru.mycash.ui.main.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import cs.vsu.ru.mycash.data.CategoryType
 import cs.vsu.ru.mycash.data.Operation
+import java.util.Calendar
 
 class HomeViewModel : ViewModel() {
 
@@ -23,10 +25,25 @@ class HomeViewModel : ViewModel() {
     }
     val operationList: LiveData<List<Operation>> = _operationList
 
-    private val _date: MutableLiveData<String> by lazy {
-        MutableLiveData<String>()
+
+    private val _filteredOperationsList: MutableLiveData<List<Operation>> by lazy {
+        MutableLiveData<List<Operation>>()
     }
-    val date: LiveData<String> = _date
+    val filteredOperationsList: LiveData<List<Operation>> = _filteredOperationsList
+
+    fun filterOperationsByCategory(categoryType: CategoryType) {
+        val filteredList = operationList.value?.filter { it.category.type == categoryType }
+        _filteredOperationsList.value = filteredList
+    }
+
+    private val _date: MutableLiveData<Calendar> by lazy {
+        MutableLiveData<Calendar>()
+    }
+    val date: LiveData<Calendar> = _date
+
+    fun setDate(date: Calendar) {
+        _date.value = date
+    }
 
     fun setAccountName(accountName: String) {
         _accountName.value = accountName
@@ -38,9 +55,5 @@ class HomeViewModel : ViewModel() {
 
     fun setOperationList(operationList: List<Operation>) {
         _operationList.value = operationList
-    }
-
-    fun setDate(date: String) {
-        _date.value = date
     }
 }
