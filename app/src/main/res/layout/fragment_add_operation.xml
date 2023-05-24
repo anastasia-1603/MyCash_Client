@@ -13,16 +13,31 @@
         android:background="@color/background"
         tools:context=".ui.onboarding.StartActivity">
 
-        <Spinner
-            android:id="@+id/spinner5"
-            android:layout_width="350dp"
-            android:layout_height="35dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="10dp"
+        <TextView
+            android:id="@+id/textViewAddOperation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:maxLength="@integer/material_motion_duration_short_1"
+            android:text="Добавление"
+            android:textColor="@color/black"
+            android:textSize="28sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinner2" />
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/spendingButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#F3EFEF"
+            android:text="Расходы"
+            app:layout_constraintBottom_toBottomOf="@+id/addButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/addButton"
+            app:layout_constraintTop_toTopOf="@+id/addButton"
+            app:layout_constraintVertical_bias="0.0" />
 
         <EditText
             android:id="@+id/editTextAccountName2"
@@ -73,18 +88,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewAccountName" />
 
-        <Button
-            android:id="@+id/button10"
-            android:layout_width="135dp"
-            android:layout_height="51dp"
-            android:text="Отменить"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.168"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="683dp" />
-
         <Spinner
-            android:id="@+id/spinner2"
+            android:id="@+id/spinner1"
             android:layout_width="350dp"
             android:layout_height="35dp"
             android:layout_marginStart="10dp"
@@ -94,8 +99,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextAccountName2" />
 
+        <Spinner
+            android:id="@+id/spinner5"
+            android:layout_width="350dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/spinner1" />
+
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/textViewDay"
             android:layout_width="108dp"
             android:layout_height="34dp"
             android:layout_marginStart="42dp"
@@ -105,7 +121,7 @@
             app:layout_constraintTop_toBottomOf="@+id/spinner5" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/textViewDate"
             android:layout_width="108dp"
             android:layout_height="34dp"
             android:layout_marginTop="32dp"
@@ -114,17 +130,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/spinner5" />
 
+
         <Button
-            android:id="@+id/button13"
+            android:id="@+id/addButtonPhoto"
             android:layout_width="46dp"
             android:layout_height="52dp"
+            android:layout_marginBottom="109dp"
             android:backgroundTint="#EEEFF1"
             android:text="+"
             app:cornerRadius="150dp"
+            app:layout_constraintBottom_toTopOf="@+id/cancelButton"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.269"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="522dp" />
+            app:layout_constraintHorizontal_bias="0.334"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/textView2"
@@ -137,8 +155,32 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextAccountName" />
 
+
         <Button
-            android:id="@+id/button12"
+            android:id="@+id/addButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="Доходы"
+            app:layout_constraintEnd_toStartOf="@+id/spendingButton"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewAccountName" />
+
+
+        <Button
+            android:id="@+id/cancelButton"
+            android:layout_width="135dp"
+            android:layout_height="51dp"
+            android:layout_marginBottom="130dp"
+            android:text="Отменить"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.168"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/saveButton"
             android:layout_width="135dp"
             android:layout_height="51dp"
             android:layout_marginEnd="46dp"
@@ -147,62 +189,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <Button
-            android:id="@+id/button6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:text="Доходы"
-            app:layout_constraintEnd_toStartOf="@+id/button7"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewAccountName" />
 
-
-        <Button
-            android:id="@+id/button7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#F3EFEF"
-            android:text="Расходы"
-            app:layout_constraintBottom_toBottomOf="@+id/button6"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/button6"
-            app:layout_constraintTop_toTopOf="@+id/button6" />
-
-        <TextView
-            android:id="@+id/textViewAccountName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:maxLength="@integer/material_motion_duration_short_1"
-            android:text="Добавление"
-            android:textColor="@color/black"
-            android:textSize="28sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/button10"
-            android:layout_width="135dp"
-            android:layout_height="51dp"
-            android:text="Отменить"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.168"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="683dp" />
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="108dp"
-            android:layout_height="34dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="147dp"
-            android:text="TextView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinner5" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
