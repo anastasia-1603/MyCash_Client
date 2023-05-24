@@ -32,12 +32,9 @@ import retrofit2.Response;
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
-    private lateinit var adapter: OperationAdapter
-    private lateinit var operationService: OperationService
     private var cal = Calendar.getInstance()
+    private val dateFormat = "d MMMM"
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -52,7 +49,6 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-
         val accountName: TextView = binding.accountName
         homeViewModel.accountName.observe(viewLifecycleOwner) {
             accountName.text = it
@@ -65,38 +61,19 @@ class HomeFragment : Fragment() {
 
         val date: Button = binding.date
         homeViewModel.date.observe(viewLifecycleOwner) {
-            date.text = it
+            val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
+            date.text = sdf.format(it.time)
         }
-
-
-//        this.context?.let {
-//            MonthYearPickerDialog.Builder(
-//                context = it,
-//                themeResId = R.style.Theme_MyCash,
-//                onDateSetListener = { year, month ->
-//                    date.text = year.toString()
-//                }
-//            )
-//                .setNegativeButton("Отменить")
-//                .setPositiveButton("Ок")
-//                .build()
-//        }
 
         val dateSetListener =
             DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
                 cal.set(Calendar.YEAR, year)
                 cal.set(Calendar.MONTH, monthOfYear)
                 cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                updateDateInView()
-                val myFormat = "d MMMM"
-                val sdf = SimpleDateFormat(myFormat, Locale.getDefault())
+                val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
                 sdf.format(cal.time)
+                homeViewModel.setDate(cal)
             }
-
-        /*
-        homeViewModel.setBalance("1000") //test
-        homeViewModel.setAccountName("Новый счет") //test
-         */
 
         binding.date.setOnClickListener {
             context?.let { it1 ->
@@ -109,8 +86,6 @@ class HomeFragment : Fragment() {
                 ).show()
             }
         }
-
-
 
         val viewPager = binding.viewPager
         viewPager.adapter = HomePagerAdapter(this)
@@ -125,10 +100,6 @@ class HomeFragment : Fragment() {
 
         val preferences = activity?.getSharedPreferences("MY_APP", Context.MODE_PRIVATE)
         val token = preferences?.getString("TOKEN", "token")
-//        binding.day.text = token
-
-
-
 
         val apiService = ApiClient.getClient(token!!).create(ApiService::class.java)
 
@@ -177,10 +148,5 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 
-    private fun updateDateInView() {
-        val myFormat = "d MMMM"
-        val sdf = SimpleDateFormat(myFormat, Locale.getDefault())
-//        sdf.format(cal.time)
-    }
 }
 
