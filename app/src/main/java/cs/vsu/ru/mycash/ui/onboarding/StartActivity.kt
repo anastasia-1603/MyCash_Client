@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import cs.vsu.ru.mycash.api.ApiClient
 import cs.vsu.ru.mycash.api.ApiService
@@ -20,6 +21,7 @@ import retrofit2.Response
 class StartActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityStartBinding
+    private val viewModel: AccountInitViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +47,7 @@ class StartActivity : AppCompatActivity() {
                 val apiService = ApiClient.initClient().create(ApiService::class.java)
                 val call = apiService.init(AccountInit(
                     accountName.text.toString(),
-                    balance.text.toString()))
+                    balance.text.toString().toDouble()))
 
                 call.enqueue(object : Callback<TokenResponse> {
                     override fun onResponse(call: Call<TokenResponse>, response: Response<TokenResponse>) {
@@ -53,9 +55,10 @@ class StartActivity : AppCompatActivity() {
                         val token = response.body()?.token ?: "-1"
 
                         preferences.edit().putString("TOKEN", token).apply()
-//                        Log.d("tag", token.toString())
+                        Log.e("token1", token)
 //                        Toast.makeText(applicationContext, token.toString(), Toast.LENGTH_SHORT).show()
 //                        binding.editTextAccountName.setText(token)
+
                         val intent = Intent(this@StartActivity, MainScreenActivity::class.java)
                         startActivity(intent)
                     }
