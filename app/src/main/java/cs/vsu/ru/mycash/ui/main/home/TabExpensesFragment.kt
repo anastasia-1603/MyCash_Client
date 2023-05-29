@@ -1,6 +1,7 @@
 package cs.vsu.ru.mycash.ui.main.home
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -26,7 +27,6 @@ class TabExpensesFragment : Fragment() {
     ): View {
 
         val homeViewModel = ViewModelProvider(requireActivity())[HomeViewModel::class.java]
-        homeViewModel.filterOperationsByCategory(CategoryType.EXPENSE)
 
         binding = FragmentTabExpensesBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -35,20 +35,34 @@ class TabExpensesFragment : Fragment() {
             Toast.makeText(activity, operation.category.name, Toast.LENGTH_SHORT).show()
         })
 
-        val operationsList= homeViewModel.filteredOperationsList.value
+//        val operationsList = homeViewModel.filteredOperationsList.value
+//
+//        if (operationsList != null) {
+//            adapter.data = operationsList
+//        }
 
-        if (operationsList != null) {
-            adapter.data = operationsList
-        }
+        val expenseOperationsList = homeViewModel.expenseOperations.value
+        Log.e("exp", homeViewModel.expenseOperations.value.toString())
+//        val operationsList =  OperationService().operations
+        adapter.data = expenseOperationsList ?: emptyList()
 
         binding.recyclerView.layoutManager = manager
         binding.recyclerView.adapter = adapter
         val text = "1000"
         binding.textView.text = text
 
-        homeViewModel.operationList.observe(viewLifecycleOwner) {
-            adapter.notifyDataSetChanged()
+
+        homeViewModel.expenseOperations.observe(viewLifecycleOwner) {
+            adapter.data = it
         }
+//        homeViewModel.expenseOperations.observe(viewLifecycleOwner) {
+//            adapter.data = it ?: emptyList()
+//            adapter.notifyDataSetChanged()
+//        }
+
+
+
+
 
         return root
     }
