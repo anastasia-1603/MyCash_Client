@@ -3,7 +3,6 @@ package cs.vsu.ru.mycash.data
 import java.time.LocalDateTime
 
 data class Operation (
-    val id: Long,
     val category: Category,
     val account: Account,
     val value: Double,
