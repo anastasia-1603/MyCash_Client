@@ -41,9 +41,9 @@ class OperationAdapter(private val onClickListener: OnClickListener) : RecyclerV
 
             categoryName.text = operation.category.name
             value.text = operation.value.toString()
-            time.text = operation.date.toString()
+            time.text = operation.date
 
-            imageView.setColorFilter(operation.category.color.toArgb())
+            imageView.setColorFilter(operation.category.color)
 
             holder.itemView.setOnClickListener {
                 onClickListener.onClick(operation)
