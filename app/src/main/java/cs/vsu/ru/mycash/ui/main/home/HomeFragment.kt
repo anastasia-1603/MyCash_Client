@@ -5,11 +5,14 @@ import android.content.Context
 import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
+import android.widget.ToggleButton
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -18,6 +21,7 @@ import by.dzmitry_lakisau.month_year_picker_dialog.MonthYearPickerDialog
 import com.google.android.material.tabs.TabLayoutMediator
 import cs.vsu.ru.mycash.R
 import cs.vsu.ru.mycash.adapter.OperationAdapter
+import cs.vsu.ru.mycash.api.ApiAuthClient
 import cs.vsu.ru.mycash.api.ApiClient
 import cs.vsu.ru.mycash.api.ApiService
 import cs.vsu.ru.mycash.data.*
@@ -87,6 +91,9 @@ class HomeFragment : Fragment() {
             }
         }
 
+        val operationService = OperationService()
+
+
         val viewPager = binding.viewPager
         viewPager.adapter = HomePagerAdapter(this)
         val tabLayoutMediator = TabLayoutMediator(binding.tabLayout, binding.viewPager){ tab, position ->
@@ -99,30 +106,47 @@ class HomeFragment : Fragment() {
         tabLayoutMediator.attach()
 
         val preferences = activity?.getSharedPreferences("MY_APP", Context.MODE_PRIVATE)
+
         val token = preferences?.getString("TOKEN", "token")
-
-        val apiService = ApiClient.getClient(token!!).create(ApiService::class.java)
-
-        val call = apiService.getAccountInfo(
-            binding.accountName.text.toString(),
-            cal.get(Calendar.YEAR),
-            cal.get(Calendar.MONTH),
-            cal.get(Calendar.DAY_OF_MONTH))
-
-        call.enqueue(object : Callback<List<Operation>> {
-            override fun onResponse(
-                call: Call<List<Operation>>,
-                response: Response<List<Operation>>
-            ) {
-                response.body()?.let { homeViewModel.setOperationList(it) }
-            }
-
-            override fun onFailure(call: Call<List<Operation>>, t: Throwable) {
-                TODO("Not yet implemented")
-            }
+        Log.e("token2", token.toString())
 
 
-        })
+        val apiService = token?.let { ApiAuthClient.getClient(it).create(ApiService::class.java) }
+
+        homeViewModel.setAccountName("основа")
+
+        val call = apiService?.getAccountInfo(
+            "основа",
+            2023,
+            5,
+            6)
+
+        if (call != null) {
+            call.enqueue(object : Callback<List<Operation>> {
+                override fun onResponse(
+                    call: Call<List<Operation>>,
+                    response: Response<List<Operation>>
+                ) {
+                    response.body()?.let { homeViewModel.setOperationList(it) }
+                    Log.e("op", response.body().toString())
+                    val op = response.body()?.get(0)
+                    val operations = operationService.operations
+                    homeViewModel.setOperationList(operations)
+                    homeViewModel.setExpenseList(operations.filter { it.category.type == CategoryType.EXPENSE })
+                    homeViewModel.setIncomeList(operations.filter { it.category.type == CategoryType.INCOME })
+
+                }
+
+                override fun onFailure(call: Call<List<Operation>>, t: Throwable) {
+                    val operations = operationService.operations
+                    homeViewModel.setOperationList(operations)
+                    homeViewModel.setExpenseList(operations.filter { it.category.type == CategoryType.EXPENSE })
+                    homeViewModel.setIncomeList(operations.filter { it.category.type == CategoryType.INCOME })
+                    Toast.makeText(context, "ошибка", Toast.LENGTH_SHORT).show()
+                }
+            })
+        }
+
         return root
     }
 
