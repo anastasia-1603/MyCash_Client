@@ -7,26 +7,29 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import cs.vsu.ru.mycash.R
 import cs.vsu.ru.mycash.adapter.OperationAdapter
 import cs.vsu.ru.mycash.data.CategoryType
+import cs.vsu.ru.mycash.data.Operation
 import cs.vsu.ru.mycash.databinding.FragmentTabAllBinding
 import cs.vsu.ru.mycash.databinding.FragmentTabExpensesBinding
-import cs.vsu.ru.mycash.service.OperationService
+//import cs.vsu.ru.mycash.service.OperationService
 
 
 class TabExpensesFragment : Fragment() {
     private lateinit var binding: FragmentTabExpensesBinding
     private lateinit var adapter: OperationAdapter
+    private val operationViewModel : OperationViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
-        val homeViewModel = ViewModelProvider(requireActivity())[HomeViewModel::class.java]
+//        val operationViewModel = ViewModelProvider(requireActivity())[OperationViewModel::class.java]
 
         binding = FragmentTabExpensesBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -41,18 +44,18 @@ class TabExpensesFragment : Fragment() {
 //            adapter.data = operationsList
 //        }
 
-        val expenseOperationsList = homeViewModel.expenseOperations.value
-        Log.e("exp", homeViewModel.expenseOperations.value.toString())
+        val expenseOperationsList = operationViewModel.expenseOperations.value
+        Log.e("exp", operationViewModel.expenseOperations.value.toString())
 //        val operationsList =  OperationService().operations
         adapter.data = expenseOperationsList ?: emptyList()
 
         binding.recyclerView.layoutManager = manager
         binding.recyclerView.adapter = adapter
-        val text = "1000"
-        binding.textView.text = text
+        //val text = "1000"
+        binding.textView.text = expenseOperationsList?.let { sum(it).toString() }
 
 
-        homeViewModel.expenseOperations.observe(viewLifecycleOwner) {
+        operationViewModel.expenseOperations.observe(viewLifecycleOwner) {
             adapter.data = it
         }
 //        homeViewModel.expenseOperations.observe(viewLifecycleOwner) {
@@ -60,10 +63,11 @@ class TabExpensesFragment : Fragment() {
 //            adapter.notifyDataSetChanged()
 //        }
 
-
-
-
-
         return root
+    }
+
+    fun sum(list : List<Operation>) : Double
+    {
+        return list.sumOf { it.value }
     }
 }

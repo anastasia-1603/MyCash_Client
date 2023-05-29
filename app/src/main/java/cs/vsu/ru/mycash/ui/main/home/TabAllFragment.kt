@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,12 +15,14 @@ import cs.vsu.ru.mycash.R
 import cs.vsu.ru.mycash.adapter.OperationAdapter
 import cs.vsu.ru.mycash.databinding.FragmentHomeBinding
 import cs.vsu.ru.mycash.databinding.FragmentTabAllBinding
-import cs.vsu.ru.mycash.service.OperationService
+//import cs.vsu.ru.mycash.service.OperationService
 
 
 class TabAllFragment : Fragment() {
     private lateinit var binding: FragmentTabAllBinding
     private lateinit var adapter: OperationAdapter
+    private val operationViewModel: OperationViewModel by activityViewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -32,18 +35,18 @@ class TabAllFragment : Fragment() {
             Toast.makeText(activity, operation.category.name, Toast.LENGTH_SHORT).show()
         })
 
-        val homeViewModel = ViewModelProvider(requireActivity())[HomeViewModel::class.java]
+//        val operationViewModel = ViewModelProvider(requireActivity())[OperationViewModel::class.java]
 
 
-        val operationList = homeViewModel.operationList.value
-        Log.e("taball", homeViewModel.operationList.value.toString())
+        val operationList = operationViewModel.operationList.value
+        Log.e("taball", operationViewModel.operationList.value.toString())
 
 //        val operationList =  OperationService().operations
         adapter.data = operationList ?: emptyList()
         binding.recyclerView.layoutManager = manager
         binding.recyclerView.adapter = adapter
 
-        homeViewModel.operationList.observe(viewLifecycleOwner) {
+        operationViewModel.operationList.observe(viewLifecycleOwner) {
             adapter.data = it
         }
 
