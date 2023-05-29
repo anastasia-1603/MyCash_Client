@@ -3,13 +3,11 @@ package cs.vsu.ru.mycash.adapter
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import cs.vsu.ru.mycash.R
 import cs.vsu.ru.mycash.data.Operation
 import cs.vsu.ru.mycash.databinding.ItemOperationBinding
+import java.time.LocalDateTime
 
 class OperationAdapter(private val onClickListener: OnClickListener) : RecyclerView.Adapter<OperationAdapter.OperationViewHolder>() {
 
@@ -41,7 +39,7 @@ class OperationAdapter(private val onClickListener: OnClickListener) : RecyclerV
 
             categoryName.text = operation.category.name
             value.text = operation.value.toString()
-            time.text = operation.date
+            time.text = operation.created.format("hh:mm")
 
             imageView.setColorFilter(operation.category.color)
 
