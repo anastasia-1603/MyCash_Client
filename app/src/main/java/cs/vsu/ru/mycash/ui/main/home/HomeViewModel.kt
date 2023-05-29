@@ -9,7 +9,6 @@ import java.util.Calendar
 
 class HomeViewModel : ViewModel() {
 
-
     private val _accountName: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
@@ -25,16 +24,15 @@ class HomeViewModel : ViewModel() {
     }
     val operationList: LiveData<List<Operation>> = _operationList
 
-
-    private val _filteredOperationsList: MutableLiveData<List<Operation>> by lazy {
+    private val _incomeOperations: MutableLiveData<List<Operation>> by lazy {
         MutableLiveData<List<Operation>>()
     }
-    val filteredOperationsList: LiveData<List<Operation>> = _filteredOperationsList
+    val incomeOperations: LiveData<List<Operation>> = _incomeOperations
 
-    fun filterOperationsByCategory(categoryType: CategoryType) {
-        val filteredList = operationList.value?.filter { it.category.type == categoryType }
-        _filteredOperationsList.value = filteredList
+    private val _expenseOperations: MutableLiveData<List<Operation>> by lazy {
+        MutableLiveData<List<Operation>>()
     }
+    val expenseOperations: LiveData<List<Operation>> = _expenseOperations
 
     private val _date: MutableLiveData<Calendar> by lazy {
         MutableLiveData<Calendar>()
@@ -53,7 +51,26 @@ class HomeViewModel : ViewModel() {
         _balance.value = balance + "₽"
     }
 
-    fun setOperationList(operationList: List<Operation>) {
-        _operationList.value = operationList
+    fun setOperationList(operations: List<Operation>) {
+        _operationList.value = operations
     }
+
+    fun setIncomeList(operations: List<Operation>) {
+        _incomeOperations.value = operations
+    }
+
+    fun setExpenseList(operations: List<Operation>) {
+        _expenseOperations.value = operations
+    }
+
+//
+//    init {
+//        _operationList.observeForever { operations ->
+//            val incomeList = operations.filter { it.category.type == CategoryType.INCOME }
+//            _incomeOperations.value = incomeList
+//            val expenseList = operations.filter { it.category.type == CategoryType.EXPENSE }
+//            _expenseOperations.value = expenseList
+//        }
+//    }
+
 }
