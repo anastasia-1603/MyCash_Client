@@ -23,29 +23,28 @@ class OperationService {
 
 
     init {
-        val category = Category(1,
+        val category = Category(
             "Транспорт",
-            Color.valueOf(170),
-            CategoryType.ALL,
+            170,
+            CategoryType.EXPENSE,
             false, 0.0)
-        val category2 = Category(2,
+        val category2 = Category(
             "Еда",
-            Color.valueOf(0),
-            CategoryType.ALL,
+            170,
+            CategoryType.EXPENSE,
             false, 0.0)
-        val category3 = Category(3,
+        val category3 = Category(
             "Развлечения",
-            Color.valueOf(200),
-            CategoryType.ALL,
+            170,
+            CategoryType.INCOME,
             false, 0.0)
-        val account = Account(1, "Новый счет", 1000.0, 10.0, 10000.0)
+        val account = Account( "Новый счет", 1000.0, 10.0, 10000.0, true)
 //        val account2 = Account(2, "Второй счет", 1000.0, 10.0, 10000.0)
 
         val categories = listOf(category, category2, category3)
 
         operations = (1..10).map {
             Operation(
-                id = it.toLong(),
                 account = account,
                 category = categories[Random.nextInt(categories.size)],
                 date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm")),
