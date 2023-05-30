@@ -1,24 +1,24 @@
 package cs.vsu.ru.mycash.ui.main.home
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import cs.vsu.ru.mycash.R
-import cs.vsu.ru.mycash.adapter.OperationAdapter
-import cs.vsu.ru.mycash.databinding.FragmentHomeBinding
+import cs.vsu.ru.mycash.utils.OperationAdapter
 import cs.vsu.ru.mycash.databinding.FragmentTabAllBinding
-import cs.vsu.ru.mycash.service.OperationService
+//import cs.vsu.ru.mycash.service.OperationService
 
 
 class TabAllFragment : Fragment() {
     private lateinit var binding: FragmentTabAllBinding
     private lateinit var adapter: OperationAdapter
+    private val operationViewModel: OperationViewModel by activityViewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -31,16 +31,19 @@ class TabAllFragment : Fragment() {
             Toast.makeText(activity, operation.category.name, Toast.LENGTH_SHORT).show()
         })
 
-        val homeViewModel = ViewModelProvider(requireActivity())[HomeViewModel::class.java]
-        val operationsList = homeViewModel.operationList.value
-        if (operationsList != null) {
-            adapter.data = operationsList
-        }
+//        val operationViewModel = ViewModelProvider(requireActivity())[OperationViewModel::class.java]
+
+
+        val operationList = operationViewModel.operationList.value
+        Log.e("taball", operationViewModel.operationList.value.toString())
+
+//        val operationList =  OperationService().operations
+        adapter.data = operationList ?: emptyList()
         binding.recyclerView.layoutManager = manager
         binding.recyclerView.adapter = adapter
 
-        homeViewModel.operationList.observe(viewLifecycleOwner) {
-            adapter.notifyDataSetChanged()
+        operationViewModel.operationList.observe(viewLifecycleOwner) {
+            adapter.data = it
         }
 
         return root

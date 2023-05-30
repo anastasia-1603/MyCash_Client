@@ -2,27 +2,26 @@ package cs.vsu.ru.mycash.ui.main.home
 
 import android.app.DatePickerDialog
 import android.content.Context
-import android.content.res.Resources
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import by.dzmitry_lakisau.month_year_picker_dialog.MonthYearPickerDialog
 import com.google.android.material.tabs.TabLayoutMediator
-import cs.vsu.ru.mycash.R
-import cs.vsu.ru.mycash.adapter.OperationAdapter
-import cs.vsu.ru.mycash.api.ApiClient
+import cs.vsu.ru.mycash.api.ApiAuthClient
 import cs.vsu.ru.mycash.api.ApiService
 import cs.vsu.ru.mycash.data.*
 import cs.vsu.ru.mycash.databinding.FragmentHomeBinding
-import cs.vsu.ru.mycash.service.OperationService
 import retrofit2.Call
 import java.text.SimpleDateFormat
 import java.util.*
@@ -34,7 +33,7 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private var cal = Calendar.getInstance()
     private val dateFormat = "d MMMM"
-
+    private val operationViewModel : OperationViewModel by activityViewModels()
     private val binding get() = _binding!!
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -43,8 +42,9 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val homeViewModel =
-            ViewModelProvider(this)[HomeViewModel::class.java]
+
+        val homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
+//        val operationViewModel = ViewModelProvider(this)[OperationViewModel::class.java]
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -70,8 +70,8 @@ class HomeFragment : Fragment() {
                 cal.set(Calendar.YEAR, year)
                 cal.set(Calendar.MONTH, monthOfYear)
                 cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
-                sdf.format(cal.time)
+//                val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
+//                sdf.format(cal.time)
                 homeViewModel.setDate(cal)
             }
 
@@ -87,42 +87,68 @@ class HomeFragment : Fragment() {
             }
         }
 
+//        val operationService = OperationService()
+
+
         val viewPager = binding.viewPager
         viewPager.adapter = HomePagerAdapter(this)
-        val tabLayoutMediator = TabLayoutMediator(binding.tabLayout, binding.viewPager){ tab, position ->
-            when(position) {
-                0 -> tab.text = "Все"
-                1 -> tab.text = "Расходы"
-                2 -> tab.text = "Доходы"
+        val tabLayoutMediator =
+            TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+                when (position) {
+                    0 -> tab.text = "Все"
+                    1 -> tab.text = "Расходы"
+                    2 -> tab.text = "Доходы"
+                }
             }
-        }
         tabLayoutMediator.attach()
 
         val preferences = activity?.getSharedPreferences("MY_APP", Context.MODE_PRIVATE)
+
         val token = preferences?.getString("TOKEN", "token")
+        Log.e("token2", token.toString())
 
-        val apiService = ApiClient.getClient(token!!).create(ApiService::class.java)
 
-        val call = apiService.getAccountInfo(
-            binding.accountName.text.toString(),
+        val apiService = token?.let { ApiAuthClient.getClient(it).create(ApiService::class.java) }
+
+        homeViewModel.setAccountName("основа")
+
+        apiService?.getAccountInfo(
+            "основа",
             cal.get(Calendar.YEAR),
-            cal.get(Calendar.MONTH),
-            cal.get(Calendar.DAY_OF_MONTH))
-
-        call.enqueue(object : Callback<List<Operation>> {
+            cal.get(Calendar.MONTH) + 1,
+            cal.get(Calendar.DAY_OF_MONTH)
+        )?.enqueue(object : Callback<List<Operation>> {
             override fun onResponse(
                 call: Call<List<Operation>>,
                 response: Response<List<Operation>>
             ) {
-                response.body()?.let { homeViewModel.setOperationList(it) }
+                response.body()?.let { operationViewModel.setOperationList(it) }
+                //                    Log.e("op", response.body().toString())
+                //                    val op = response.body()?.get(0)
+                //                    val operations = operationService.operations
+                //                    operationViewModel.setOperationList(operations)
+
+                operationViewModel.operationList.value?.let { operations ->
+                    operationViewModel.setExpenseList(
+                        operations.filter { it.category.type == CategoryType.EXPENSE })
+                }
+                operationViewModel.operationList.value?.let { operations ->
+                    operationViewModel.setIncomeList(
+                        operations.filter { it.category.type == CategoryType.INCOME })
+                }
+                //                    operationViewModel.setIncomeList(operations.filter { it.category.type == CategoryType.INCOME })
+
             }
 
             override fun onFailure(call: Call<List<Operation>>, t: Throwable) {
-                TODO("Not yet implemented")
+                //                    val operations = operationService.operations
+                //                    operationViewModel.setOperationList(operations)
+                //                    operationViewModel.setExpenseList(operations.filter { it.category.type == CategoryType.EXPENSE })
+                //                    operationViewModel.setIncomeList(operations.filter { it.category.type == CategoryType.INCOME })
+                t.message?.let { Log.e("t", it) }
             }
-
-
         })
+
         return root
     }
 
@@ -135,8 +161,8 @@ class HomeFragment : Fragment() {
         override fun createFragment(position: Int): Fragment {
             return when (position) {
                 0 -> TabAllFragment()
-                1 -> TabIncomeFragment()
-                2 -> TabExpensesFragment()
+                1 -> TabExpensesFragment()
+                2 -> TabIncomeFragment()
                 else -> throw IllegalArgumentException("Invalid position")
             }
         }
