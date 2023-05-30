@@ -3,8 +3,6 @@ package cs.vsu.ru.mycash.ui.onboarding
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import cs.vsu.ru.mycash.R
 import cs.vsu.ru.mycash.databinding.ActivityWelcomeBinding
 
 class WelcomeActivity : AppCompatActivity() {
@@ -22,3 +20,5 @@ class WelcomeActivity : AppCompatActivity() {
         }
     }
 }
+
+
