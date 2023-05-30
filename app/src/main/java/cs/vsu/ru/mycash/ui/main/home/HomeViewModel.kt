@@ -19,21 +19,6 @@ class HomeViewModel : ViewModel() {
     }
     val balance: LiveData<String> = _balance
 
-//    private val _operationList: MutableLiveData<List<Operation>> by lazy {
-//        MutableLiveData<List<Operation>>()
-//    }
-//    val operationList: LiveData<List<Operation>> = _operationList
-//
-//    private val _incomeOperations: MutableLiveData<List<Operation>> by lazy {
-//        MutableLiveData<List<Operation>>()
-//    }
-//    val incomeOperations: LiveData<List<Operation>> = _incomeOperations
-//
-//    private val _expenseOperations: MutableLiveData<List<Operation>> by lazy {
-//        MutableLiveData<List<Operation>>()
-//    }
-//    val expenseOperations: LiveData<List<Operation>> = _expenseOperations
-
     private val _date: MutableLiveData<Calendar> by lazy {
         MutableLiveData<Calendar>()
     }
@@ -50,27 +35,5 @@ class HomeViewModel : ViewModel() {
     fun setBalance(balance: String) {
         _balance.value = balance + "₽"
     }
-
-//    fun setOperationList(operations: List<Operation>) {
-//        _operationList.value = operations
-//    }
-//
-//    fun setIncomeList(operations: List<Operation>) {
-//        _incomeOperations.value = operations
-//    }
-//
-//    fun setExpenseList(operations: List<Operation>) {
-//        _expenseOperations.value = operations
-//    }
-
-//
-//    init {
-//        _operationList.observeForever { operations ->
-//            val incomeList = operations.filter { it.category.type == CategoryType.INCOME }
-//            _incomeOperations.value = incomeList
-//            val expenseList = operations.filter { it.category.type == CategoryType.EXPENSE }
-//            _expenseOperations.value = expenseList
-//        }
-//    }
 
 }
