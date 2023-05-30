@@ -1,4 +1,4 @@
-package cs.vsu.ru.mycash.adapter
+package cs.vsu.ru.mycash.utils
 
 import android.os.Build
 import android.view.LayoutInflater
@@ -7,7 +7,6 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import cs.vsu.ru.mycash.data.Operation
 import cs.vsu.ru.mycash.databinding.ItemOperationBinding
-import java.time.LocalDateTime
 
 class OperationAdapter(private val onClickListener: OnClickListener) : RecyclerView.Adapter<OperationAdapter.OperationViewHolder>() {
 
