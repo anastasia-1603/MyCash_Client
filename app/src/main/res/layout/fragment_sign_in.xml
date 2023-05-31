@@ -17,7 +17,7 @@
         android:background="@color/background">
 
         <TextView
-            android:id="@+id/balance"
+            android:id="@+id/signInText"
             app:layout_constraintBottom_toTopOf="@+id/username"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -58,7 +58,7 @@
             android:selectAllOnFocus="true" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/continueBtn"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
