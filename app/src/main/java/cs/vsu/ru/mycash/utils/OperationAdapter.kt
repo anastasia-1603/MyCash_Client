@@ -38,7 +38,7 @@ class OperationAdapter(private val onClickListener: OnClickListener) : RecyclerV
 
             categoryName.text = operation.category.name
             value.text = operation.value.toString()
-            time.text = operation.created.format("hh:mm")
+            time.text = operation.dateTime
 
             imageView.setColorFilter(operation.category.color)
 
