@@ -154,7 +154,7 @@ class HomeFragment : Fragment() {
             }
             else
             {
-                cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) + 1) //todo не упадет ли если долистать до 0
+                cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 1)
             }
             homeViewModel.setDate(cal)
 
@@ -163,12 +163,12 @@ class HomeFragment : Fragment() {
         binding.right.setOnClickListener {
             if (homeViewModel.mode.value == HomeViewModel.Mode.DAY)
             {
-                cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) - 1)
+                cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) + 1)
 
             }
             else
             {
-                cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) + 1) //todo не упадет ли если долистать до 0
+                cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) + 1)
             }
             homeViewModel.setDate(cal)
         }
@@ -192,8 +192,6 @@ class HomeFragment : Fragment() {
         val preferences = activity?.getSharedPreferences("MY_APP", Context.MODE_PRIVATE)
 
         val token = preferences?.getString("TOKEN", "token")
-        Log.e("token2", token.toString())
-
 
         val apiService = token?.let { ApiAuthClient.getClient(it).create(ApiService::class.java) }
 
