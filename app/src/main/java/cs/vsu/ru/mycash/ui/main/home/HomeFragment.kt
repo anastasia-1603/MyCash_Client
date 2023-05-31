@@ -42,7 +42,6 @@ class HomeFragment : Fragment() {
     ): View {
 
         val homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
-//        val operationViewModel = ViewModelProvider(this)[OperationViewModel::class.java]
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -104,9 +103,6 @@ class HomeFragment : Fragment() {
             homeViewModel.setDate(cal)
         }
 
-//        val operationService = OperationService()
-
-
         val viewPager = binding.viewPager
         viewPager.adapter = HomePagerAdapter(this)
         val tabLayoutMediator =
@@ -140,11 +136,6 @@ class HomeFragment : Fragment() {
                 response: Response<List<Operation>>
             ) {
                 response.body()?.let { operationViewModel.setOperationList(it) }
-                //                    Log.e("op", response.body().toString())
-                //                    val op = response.body()?.get(0)
-                //                    val operations = operationService.operations
-                //                    operationViewModel.setOperationList(operations)
-
                 operationViewModel.operationList.value?.let { operations ->
                     operationViewModel.setExpenseList(
                         operations.filter { it.category.type == CategoryType.EXPENSE })
@@ -153,15 +144,10 @@ class HomeFragment : Fragment() {
                     operationViewModel.setIncomeList(
                         operations.filter { it.category.type == CategoryType.INCOME })
                 }
-                //                    operationViewModel.setIncomeList(operations.filter { it.category.type == CategoryType.INCOME })
 
             }
 
             override fun onFailure(call: Call<List<Operation>>, t: Throwable) {
-                //                    val operations = operationService.operations
-                //                    operationViewModel.setOperationList(operations)
-                //                    operationViewModel.setExpenseList(operations.filter { it.category.type == CategoryType.EXPENSE })
-                //                    operationViewModel.setIncomeList(operations.filter { it.category.type == CategoryType.INCOME })
                 t.message?.let { Log.e("t", it) }
             }
         })
