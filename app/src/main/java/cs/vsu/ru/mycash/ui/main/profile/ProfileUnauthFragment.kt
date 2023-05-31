@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import cs.vsu.ru.mycash.R
 import cs.vsu.ru.mycash.databinding.FragmentProfileBinding
 import cs.vsu.ru.mycash.databinding.FragmentProfileUnauthBinding
@@ -23,6 +24,16 @@ class ProfileUnauthFragment : Fragment() {
     ): View {
         _binding = FragmentProfileUnauthBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
+        val registerBtn = binding.registerBtn
+        registerBtn.setOnClickListener{
+            findNavController().navigate(R.id.registerFragment)
+        }
+
+        val signInBtn = binding.sigInBtn
+        signInBtn.setOnClickListener {
+            findNavController().navigate(R.id.signInFragment)
+        }
 
         return root
     }
