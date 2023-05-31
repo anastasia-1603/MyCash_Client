@@ -12,33 +12,8 @@
     android:background="@color/background"
     tools:context=".ui.login.LoginActivity">
 
-
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="248dp"
-        android:text="Логин"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ProgressBar
-        android:id="@+id/loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="64dp"
-        android:layout_marginBottom="64dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.3"
-        tools:layout_editor_absoluteX="16dp" />
-
-
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/profilePhoto"
         android:layout_width="99dp"
         android:layout_height="88dp"
         android:layout_marginTop="72dp"
@@ -48,58 +23,72 @@
         app:srcCompat="@drawable/profile" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/nameProfile"
         android:layout_width="86dp"
         android:layout_height="17dp"
         android:text="murashoovva"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+        app:layout_constraintTop_toBottomOf="@+id/profilePhoto" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/settingsProfile"
         android:layout_width="138dp"
         android:layout_height="21dp"
         android:layout_marginTop="8dp"
         android:text="Настройки профиля:"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintTop_toBottomOf="@+id/nameProfile" />
 
-    <EditText
-        android:id="@+id/editTextNumberPassword"
-        android:layout_width="237dp"
-        android:layout_height="42dp"
+
+    <TextView
+        android:id="@+id/login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="48dp"
-        android:ems="10"
-        android:inputType="numberPassword"
+        android:layout_marginTop="16dp"
+        android:text="Логин"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+        app:layout_constraintTop_toBottomOf="@+id/settingsProfile" />
 
     <EditText
-        android:id="@+id/editTextText"
+        android:id="@+id/nameLogin"
         android:layout_width="234dp"
         android:layout_height="43dp"
         android:layout_marginStart="48dp"
         android:layout_marginTop="5dp"
         android:ems="10"
         android:inputType="text"
-        android:text="murashoovva"
+        android:hint="murashoovva"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+        app:layout_constraintTop_toBottomOf="@+id/login" />
+
+
+    <EditText
+        android:id="@+id/editTextNumberPassword"
+        android:layout_width="237dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="5dp"
+        android:ems="10"
+        android:inputType="numberPassword"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewPassword" />
+
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/textViewPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="52dp"
+        android:layout_marginStart="48dp"
         android:layout_marginTop="24dp"
         android:text="Пароль"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText" />
+        app:layout_constraintTop_toBottomOf="@+id/nameLogin" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/buttonSave"
         android:layout_width="127dp"
         android:layout_height="42dp"
         android:layout_marginStart="112dp"
@@ -109,7 +98,7 @@
         app:layout_constraintTop_toBottomOf="@+id/editTextNumberPassword" />
 
     <Button
-        android:id="@+id/button5"
+        android:id="@+id/buttonGoOut"
         android:layout_width="92dp"
         android:layout_height="35dp"
         android:layout_marginTop="32dp"
