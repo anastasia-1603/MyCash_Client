@@ -30,5 +30,20 @@
         android:name="cs.vsu.ru.mycash.ui.main.profile.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/profileUnauthFragment"
+        android:name="cs.vsu.ru.mycash.ui.main.profile.ProfileUnauthFragment"
+        android:label="ProfileUnauthFragment"
+        tools:layout="@layout/fragment_profile_unauth"/>
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="cs.vsu.ru.mycash.ui.login.SignInFragment"
+        android:label="fragment_sign_in"
+        tools:layout="@layout/fragment_sign_in" />
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="cs.vsu.ru.mycash.ui.login.RegisterFragment"
+        android:label="fragment_register"
+        tools:layout="@layout/fragment_register" />
 
 </navigation>

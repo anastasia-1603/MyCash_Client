@@ -2,7 +2,6 @@ package cs.vsu.ru.mycash.ui.main.home
 
 import android.app.DatePickerDialog
 import android.content.Context
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -11,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -23,10 +21,10 @@ import cs.vsu.ru.mycash.api.ApiService
 import cs.vsu.ru.mycash.data.*
 import cs.vsu.ru.mycash.databinding.FragmentHomeBinding
 import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
-import retrofit2.Callback;
-import retrofit2.Response;
 
 class HomeFragment : Fragment() {
 
@@ -44,7 +42,6 @@ class HomeFragment : Fragment() {
     ): View {
 
         val homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
-//        val operationViewModel = ViewModelProvider(this)[OperationViewModel::class.java]
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -59,10 +56,62 @@ class HomeFragment : Fragment() {
             balance.text = it
         }
 
-        val date: Button = binding.date
+
+        val dateBtn: Button = binding.date
+        val dayBtn: Button = binding.day
+        val monthBtn: Button = binding.month
+
+        dayBtn.setOnClickListener {
+            homeViewModel.setMode(HomeViewModel.Mode.DAY)
+            dayBtn.isEnabled = false
+            monthBtn.isEnabled = true
+        }
+
+        monthBtn.setOnClickListener {
+            homeViewModel.setMode(HomeViewModel.Mode.MONTH)
+
+            dayBtn.isEnabled = true
+            monthBtn.isEnabled = false
+        }
+
         homeViewModel.date.observe(viewLifecycleOwner) {
-            val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
-            date.text = sdf.format(it.time)
+            if (homeViewModel.mode.value == HomeViewModel.Mode.DAY)
+            {
+                val current = Calendar.getInstance()
+                val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
+                val sdf1 = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+
+                if (sdf1.format(it.time).equals(sdf1.format(current.time)))
+                {
+                    dateBtn.text = "Сегодня"
+                }
+                else
+                {
+                    dateBtn.text = sdf.format(it.time)
+                }
+
+            }
+            else
+            {
+                val monthNames = arrayOf(
+                    "Январь",
+                    "Февраль",
+                    "Март",
+                    "Апрель",
+                    "Май",
+                    "Июнь",
+                    "Июль",
+                    "Август",
+                    "Сентябрь",
+                    "Октябрь",
+                    "Ноябрь",
+                    "Декабрь"
+                )
+
+                dateBtn.text = monthNames[cal.get(Calendar.MONTH)]
+            }
+
+
         }
 
         val dateSetListener =
@@ -70,25 +119,56 @@ class HomeFragment : Fragment() {
                 cal.set(Calendar.YEAR, year)
                 cal.set(Calendar.MONTH, monthOfYear)
                 cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-//                val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
-//                sdf.format(cal.time)
                 homeViewModel.setDate(cal)
             }
 
         binding.date.setOnClickListener {
-            context?.let { it1 ->
-                DatePickerDialog(
-                    it1,
-                    dateSetListener,
-                    cal.get(Calendar.YEAR),
-                    cal.get(Calendar.MONTH),
-                    cal.get(Calendar.DAY_OF_MONTH)
-                ).show()
+            if (homeViewModel.mode.value == HomeViewModel.Mode.DAY)
+            {
+                context?.let { it1 ->
+                    DatePickerDialog(
+                        it1,
+                        dateSetListener,
+                        cal.get(Calendar.YEAR),
+                        cal.get(Calendar.MONTH),
+                        cal.get(Calendar.DAY_OF_MONTH)
+                    ).show()
+                }
             }
+            else
+            {
+                Log.e("month", "month")
+
+            }
+
         }
 
-//        val operationService = OperationService()
+        binding.left.setOnClickListener {
+            if (homeViewModel.mode.value == HomeViewModel.Mode.DAY)
+            {
+                cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) - 1)
 
+            }
+            else
+            {
+                cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 1) //todo не упадет ли если долистать до 0
+            }
+            homeViewModel.setDate(cal)
+
+        }
+
+        binding.right.setOnClickListener {
+            if (homeViewModel.mode.value == HomeViewModel.Mode.DAY)
+            {
+                cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) - 1)
+
+            }
+            else
+            {
+                cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) + 1) //todo не упадет ли если долистать до 0
+            }
+            homeViewModel.setDate(cal)
+        }
 
         val viewPager = binding.viewPager
         viewPager.adapter = HomePagerAdapter(this)
@@ -123,11 +203,6 @@ class HomeFragment : Fragment() {
                 response: Response<List<Operation>>
             ) {
                 response.body()?.let { operationViewModel.setOperationList(it) }
-                //                    Log.e("op", response.body().toString())
-                //                    val op = response.body()?.get(0)
-                //                    val operations = operationService.operations
-                //                    operationViewModel.setOperationList(operations)
-
                 operationViewModel.operationList.value?.let { operations ->
                     operationViewModel.setExpenseList(
                         operations.filter { it.category.type == CategoryType.EXPENSE })
@@ -136,15 +211,10 @@ class HomeFragment : Fragment() {
                     operationViewModel.setIncomeList(
                         operations.filter { it.category.type == CategoryType.INCOME })
                 }
-                //                    operationViewModel.setIncomeList(operations.filter { it.category.type == CategoryType.INCOME })
 
             }
 
             override fun onFailure(call: Call<List<Operation>>, t: Throwable) {
-                //                    val operations = operationService.operations
-                //                    operationViewModel.setOperationList(operations)
-                //                    operationViewModel.setExpenseList(operations.filter { it.category.type == CategoryType.EXPENSE })
-                //                    operationViewModel.setIncomeList(operations.filter { it.category.type == CategoryType.INCOME })
                 t.message?.let { Log.e("t", it) }
             }
         })

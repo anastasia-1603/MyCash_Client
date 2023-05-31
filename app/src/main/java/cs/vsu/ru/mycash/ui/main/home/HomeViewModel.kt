@@ -24,6 +24,15 @@ class HomeViewModel : ViewModel() {
     }
     val date: LiveData<Calendar> = _date
 
+    private val _mode: MutableLiveData<Mode> by lazy {
+        MutableLiveData<Mode>()
+    }
+    val mode: LiveData<Mode> = _mode
+
+    fun setMode(mode: Mode) {
+        _mode.value = mode
+    }
+
     fun setDate(date: Calendar) {
         _date.value = date
     }
@@ -36,4 +45,9 @@ class HomeViewModel : ViewModel() {
         _balance.value = balance + "₽"
     }
 
+
+    enum class Mode {
+        DAY,
+        MONTH
+    }
 }
