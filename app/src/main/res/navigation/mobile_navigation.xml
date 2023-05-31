@@ -30,5 +30,10 @@
         android:name="cs.vsu.ru.mycash.ui.main.profile.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/profileUnauthFragment"
+        android:name="cs.vsu.ru.mycash.ui.main.profile.ProfileUnauthFragment"
+        android:label="ProfileUnauthFragment"
+        tools:layout="@layout/fragment_profile_unauth"/>
 
 </navigation>

@@ -2,6 +2,7 @@ package cs.vsu.ru.mycash.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -31,7 +32,18 @@ class MainScreenActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         navController = Navigation.findNavController(this, R.id.nav_host_fragment)
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id == R.id.profileFragment) {
+                Log.e("is auth", appPrefs.isAuth.toString())
+                if (! appPrefs.isAuth) {
+
+                    navController.navigate(R.id.profileUnauthFragment)
+                }
+            }
+        }
         binding.navView.setupWithNavController(navController)
+
+
 
     }
 
