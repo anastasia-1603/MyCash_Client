@@ -2,7 +2,6 @@ package cs.vsu.ru.mycash.ui.main.home
 
 import android.app.DatePickerDialog
 import android.content.Context
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -11,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -59,10 +57,21 @@ class HomeFragment : Fragment() {
             balance.text = it
         }
 
-        val date: Button = binding.date
+        val dateBtn: Button = binding.date
         homeViewModel.date.observe(viewLifecycleOwner) {
+            val current = Calendar.getInstance()
             val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
-            date.text = sdf.format(it.time)
+            val sdf1 = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+
+            if (sdf1.format(it.time).equals(sdf1.format(current.time)))
+            {
+                dateBtn.text = "Сегодня"
+            }
+            else
+            {
+                dateBtn.text = sdf.format(it.time)
+            }
+
         }
 
         val dateSetListener =
@@ -70,8 +79,6 @@ class HomeFragment : Fragment() {
                 cal.set(Calendar.YEAR, year)
                 cal.set(Calendar.MONTH, monthOfYear)
                 cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-//                val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
-//                sdf.format(cal.time)
                 homeViewModel.setDate(cal)
             }
 
@@ -85,6 +92,16 @@ class HomeFragment : Fragment() {
                     cal.get(Calendar.DAY_OF_MONTH)
                 ).show()
             }
+        }
+
+        binding.left.setOnClickListener {
+            cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) - 1)
+            homeViewModel.setDate(cal)
+        }
+
+        binding.right.setOnClickListener {
+            cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) + 1)
+            homeViewModel.setDate(cal)
         }
 
 //        val operationService = OperationService()
