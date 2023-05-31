@@ -1,8 +1,10 @@
 package cs.vsu.ru.mycash.data
 
 data class Operation (
+    val id: Long,
     val category: Category,
-    val account: Account,
+    val accountName: String,
     val value: Double,
-    val created: String
+    val dateTime: String,
+    val comment: String
 )
