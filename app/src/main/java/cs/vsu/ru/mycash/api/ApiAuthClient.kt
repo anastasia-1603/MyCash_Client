@@ -16,7 +16,6 @@ object ApiAuthClient {
                     .addHeader("ngrok-skip-browser-warning", true.toString())
                     .addHeader("User-Agent", "MyCash")
                     .build()
-                Log.e("token3", request.header("Authorization").toString())
                 chain.proceed(request)
             }
             .build()
