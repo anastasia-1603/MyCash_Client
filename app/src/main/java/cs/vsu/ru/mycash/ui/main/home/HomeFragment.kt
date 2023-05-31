@@ -21,10 +21,10 @@ import cs.vsu.ru.mycash.api.ApiService
 import cs.vsu.ru.mycash.data.*
 import cs.vsu.ru.mycash.databinding.FragmentHomeBinding
 import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
-import retrofit2.Callback;
-import retrofit2.Response;
 
 class HomeFragment : Fragment() {
 
@@ -56,20 +56,61 @@ class HomeFragment : Fragment() {
             balance.text = it
         }
 
-        val dateBtn: Button = binding.date
-        homeViewModel.date.observe(viewLifecycleOwner) {
-            val current = Calendar.getInstance()
-            val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
-            val sdf1 = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
 
-            if (sdf1.format(it.time).equals(sdf1.format(current.time)))
+        val dateBtn: Button = binding.date
+        val dayBtn: Button = binding.day
+        val monthBtn: Button = binding.month
+
+        dayBtn.setOnClickListener {
+            homeViewModel.setMode(HomeViewModel.Mode.DAY)
+            dayBtn.isEnabled = false
+            monthBtn.isEnabled = true
+        }
+
+        monthBtn.setOnClickListener {
+            homeViewModel.setMode(HomeViewModel.Mode.MONTH)
+
+            dayBtn.isEnabled = true
+            monthBtn.isEnabled = false
+        }
+
+        homeViewModel.date.observe(viewLifecycleOwner) {
+            if (homeViewModel.mode.value == HomeViewModel.Mode.DAY)
             {
-                dateBtn.text = "Сегодня"
+                val current = Calendar.getInstance()
+                val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
+                val sdf1 = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+
+                if (sdf1.format(it.time).equals(sdf1.format(current.time)))
+                {
+                    dateBtn.text = "Сегодня"
+                }
+                else
+                {
+                    dateBtn.text = sdf.format(it.time)
+                }
+
             }
             else
             {
-                dateBtn.text = sdf.format(it.time)
+                val monthNames = arrayOf(
+                    "Январь",
+                    "Февраль",
+                    "Март",
+                    "Апрель",
+                    "Май",
+                    "Июнь",
+                    "Июль",
+                    "Август",
+                    "Сентябрь",
+                    "Октябрь",
+                    "Ноябрь",
+                    "Декабрь"
+                )
+
+                dateBtn.text = monthNames[cal.get(Calendar.MONTH)]
             }
+
 
         }
 
@@ -82,24 +123,50 @@ class HomeFragment : Fragment() {
             }
 
         binding.date.setOnClickListener {
-            context?.let { it1 ->
-                DatePickerDialog(
-                    it1,
-                    dateSetListener,
-                    cal.get(Calendar.YEAR),
-                    cal.get(Calendar.MONTH),
-                    cal.get(Calendar.DAY_OF_MONTH)
-                ).show()
+            if (homeViewModel.mode.value == HomeViewModel.Mode.DAY)
+            {
+                context?.let { it1 ->
+                    DatePickerDialog(
+                        it1,
+                        dateSetListener,
+                        cal.get(Calendar.YEAR),
+                        cal.get(Calendar.MONTH),
+                        cal.get(Calendar.DAY_OF_MONTH)
+                    ).show()
+                }
             }
+            else
+            {
+                Log.e("month", "month")
+
+            }
+
         }
 
         binding.left.setOnClickListener {
-            cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) - 1)
+            if (homeViewModel.mode.value == HomeViewModel.Mode.DAY)
+            {
+                cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) - 1)
+
+            }
+            else
+            {
+                cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 1) //todo не упадет ли если долистать до 0
+            }
             homeViewModel.setDate(cal)
+
         }
 
         binding.right.setOnClickListener {
-            cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) + 1)
+            if (homeViewModel.mode.value == HomeViewModel.Mode.DAY)
+            {
+                cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) - 1)
+
+            }
+            else
+            {
+                cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) + 1) //todo не упадет ли если долистать до 0
+            }
             homeViewModel.setDate(cal)
         }
 
