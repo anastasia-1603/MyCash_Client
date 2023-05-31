@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background"
-        tools:context=".ui.onboarding.StartActivity">
+        tools:context=".ui.main.operation.AddOperationFragment">
 
         <TextView
             android:id="@+id/textViewAddOperation"
@@ -25,6 +25,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
 
         <Button
             android:id="@+id/spendingButton"
@@ -40,10 +41,10 @@
             app:layout_constraintVertical_bias="0.0" />
 
         <EditText
-            android:id="@+id/editTextAccountName2"
+            android:id="@+id/editTextSum"
             android:layout_width="350dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="108dp"
+            android:layout_marginTop="30dp"
             android:autofillHints="Введите сумму"
             android:ems="10"
             android:hint="Введите сумму"
@@ -51,11 +52,11 @@
             android:maxLength="@integer/material_motion_duration_short_1"
             android:textColor="@color/black"
             android:textColorHint="@color/gray"
-            android:textSize="24sp"
 
+            android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewAccountName" />
+            app:layout_constraintTop_toBottomOf="@+id/addButton" />
 
         <TextView
             android:id="@+id/textViewAccountName"
@@ -74,82 +75,73 @@
             android:id="@+id/editTextAccountName"
             android:layout_width="350dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="376dp"
+            android:layout_marginTop="30dp"
             android:autofillHints="Введите сумму"
             android:ems="10"
-            android:hint="Введите сумму"
+            android:hint="Комментарий"
             android:inputType="text"
             android:maxLength="@integer/material_motion_duration_short_1"
             android:textColor="@color/black"
-            android:textColorHint="@color/gray"
 
+            android:textColorHint="@color/gray"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewAccountName" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewDay" />
 
         <Spinner
-            android:id="@+id/spinner1"
-            android:layout_width="350dp"
+            android:id="@+id/spinnerAccounts"
+            android:layout_width="0dp"
             android:layout_height="35dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="31dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="30dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.444"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextAccountName2" />
+            app:layout_constraintTop_toBottomOf="@+id/editTextSum" />
 
         <Spinner
-            android:id="@+id/spinner5"
-            android:layout_width="350dp"
+            android:id="@+id/spinnerCategories"
+            android:layout_width="0dp"
             android:layout_height="35dp"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="30dp"
             android:layout_marginTop="20dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="30dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinner1" />
+            app:layout_constraintTop_toBottomOf="@+id/spinnerAccounts" />
 
         <TextView
             android:id="@+id/textViewDay"
-            android:layout_width="108dp"
-            android:layout_height="34dp"
-            android:layout_marginStart="42dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="35dp"
             android:layout_marginTop="32dp"
-            android:text="TextView"
+            android:text="Сегодня"
+            android:textSize="24sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinner5" />
-
-        <TextView
-            android:id="@+id/textViewDate"
-            android:layout_width="108dp"
-            android:layout_height="34dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="147dp"
-            android:text="TextView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinner5" />
+            app:layout_constraintTop_toBottomOf="@+id/spinnerCategories" />
 
 
         <Button
             android:id="@+id/addButtonPhoto"
             android:layout_width="46dp"
             android:layout_height="52dp"
-            android:layout_marginBottom="109dp"
+            android:layout_marginStart="20dp"
             android:backgroundTint="#EEEFF1"
             android:text="+"
             app:cornerRadius="150dp"
-            app:layout_constraintBottom_toTopOf="@+id/cancelButton"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.334"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintBottom_toBottomOf="@+id/textPhoto"
+            app:layout_constraintStart_toEndOf="@+id/textPhoto"
+            app:layout_constraintTop_toTopOf="@+id/textPhoto" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/textPhoto"
             android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="41dp"
-            android:layout_marginTop="24dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="35dp"
+            android:layout_marginTop="30dp"
             android:text="Фото"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -172,23 +164,34 @@
             android:id="@+id/cancelButton"
             android:layout_width="135dp"
             android:layout_height="51dp"
-            android:layout_marginBottom="130dp"
+            android:layout_marginTop="50dp"
             android:text="Отменить"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.168"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintEnd_toStartOf="@+id/saveButton"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textPhoto" />
 
         <Button
             android:id="@+id/saveButton"
             android:layout_width="135dp"
             android:layout_height="51dp"
-            android:layout_marginEnd="46dp"
-            android:layout_marginBottom="130dp"
             android:text="Сохранить"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintBottom_toBottomOf="@+id/cancelButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/cancelButton"
+            app:layout_constraintTop_toTopOf="@+id/cancelButton" />
 
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:background="@color/background"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewDay"
+            app:layout_constraintStart_toEndOf="@+id/textViewDay"
+            app:layout_constraintTop_toTopOf="@+id/textViewDay"
+            app:srcCompat="@drawable/calendar" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
