@@ -142,12 +142,13 @@
             android:layout_marginTop="10dp"
             android:background="@color/background"
             android:contentDescription="left"
-            android:src="@drawable/baseline_arrow_back_ios_new_24"
+            android:src="@drawable/arrow_left_disabled"
             app:layout_constraintEnd_toStartOf="@+id/date"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/day" />
+            app:layout_constraintTop_toBottomOf="@+id/day"
+            app:tint="@color/textview_colors"/>
 
         <ImageButton
             android:id="@+id/right"
@@ -156,12 +157,13 @@
             android:layout_margin="10dp"
             android:background="@color/background"
             android:contentDescription="right"
-            android:src="@drawable/baseline_arrow_forward_ios_24"
+            android:src="@drawable/arrow_right_disabled"
             app:layout_constraintBottom_toBottomOf="@+id/date"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/date"
-            app:layout_constraintTop_toTopOf="@+id/date" />
+            app:layout_constraintTop_toTopOf="@+id/date"
+            app:tint="@color/textview_colors" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
