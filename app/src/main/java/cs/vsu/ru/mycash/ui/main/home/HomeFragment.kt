@@ -56,6 +56,9 @@ class HomeFragment : Fragment() {
             balance.text = it
         }
 
+//        cal = Calendar.getInstance()
+//        homeViewModel.setMode(HomeViewModel.Mode.DAY)
+
 
         val dateBtn: Button = binding.date
         val dayBtn: Button = binding.day
@@ -69,9 +72,46 @@ class HomeFragment : Fragment() {
 
         monthBtn.setOnClickListener {
             homeViewModel.setMode(HomeViewModel.Mode.MONTH)
-
             dayBtn.isEnabled = true
             monthBtn.isEnabled = false
+        }
+
+        homeViewModel.mode.observe(viewLifecycleOwner) {
+            if (homeViewModel.mode.value == HomeViewModel.Mode.DAY)
+            {
+                val current = Calendar.getInstance()
+                val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
+                val sdf1 = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+
+                if (sdf1.format(cal.time).equals(sdf1.format(current.time)))
+                {
+                    dateBtn.text = "Сегодня"
+                }
+                else
+                {
+                    dateBtn.text = sdf.format(cal.time)
+                }
+
+            }
+            else
+            {
+                val monthNames = arrayOf(
+                    "Январь",
+                    "Февраль",
+                    "Март",
+                    "Апрель",
+                    "Май",
+                    "Июнь",
+                    "Июль",
+                    "Август",
+                    "Сентябрь",
+                    "Октябрь",
+                    "Ноябрь",
+                    "Декабрь"
+                )
+
+                dateBtn.text = monthNames[cal.get(Calendar.MONTH)]
+            }
         }
 
         homeViewModel.date.observe(viewLifecycleOwner) {
