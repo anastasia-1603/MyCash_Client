@@ -1,13 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".EditAccountFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Hello" />
+        android:background="@color/background"
+        tools:context=".ui.main.MainScreenActivity"
+        tools:layout_editor_absoluteX="-53dp"
+        tools:layout_editor_absoluteY="-32dp">
 
-</FrameLayout>
+
+        <EditText
+            android:id="@+id/editTextNumber2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:ems="10"
+            android:inputType="number"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/limit" />
+
+        <TextView
+            android:id="@+id/limit"
+            android:layout_width="116dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="17dp"
+            android:layout_marginTop="15dp"
+            android:text="Лимит"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextNumber" />
+
+        <EditText
+            android:id="@+id/masterAccounts"
+            android:layout_width="292dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="16dp"
+            android:ems="10"
+            android:inputType="text"
+            android:text="Основной счет"
+            android:textSize="24sp"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:layout_editor_absoluteY="40dp" />
+
+        <TextView
+            android:id="@+id/financialGoal"
+            android:layout_width="116dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="17dp"
+            android:layout_marginTop="52dp"
+            android:text="Финансовая цель"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/masterAccounts" />
+
+        <EditText
+            android:id="@+id/editTextNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="17dp"
+            android:ems="10"
+            android:inputType="number"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/financialGoal" />
+
+
+        <Button
+            android:id="@+id/deleteButtonAccount"
+            android:layout_width="135dp"
+            android:layout_height="51dp"
+            android:layout_marginTop="85dp"
+            android:text="Удалить"
+            app:layout_constraintEnd_toStartOf="@+id/saveButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextNumber2" />
+
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="135dp"
+            android:layout_height="51dp"
+            android:layout_marginEnd="56dp"
+            android:text="Сохранить"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/deleteButtonAccount" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
