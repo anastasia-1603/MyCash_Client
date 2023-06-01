@@ -9,7 +9,6 @@ import java.util.Calendar
 
 class HomeViewModel : ViewModel() {
 
-
     private val _accountName: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
@@ -20,26 +19,19 @@ class HomeViewModel : ViewModel() {
     }
     val balance: LiveData<String> = _balance
 
-    private val _operationList: MutableLiveData<List<Operation>> by lazy {
-        MutableLiveData<List<Operation>>()
-    }
-    val operationList: LiveData<List<Operation>> = _operationList
-
-
-    private val _filteredOperationsList: MutableLiveData<List<Operation>> by lazy {
-        MutableLiveData<List<Operation>>()
-    }
-    val filteredOperationsList: LiveData<List<Operation>> = _filteredOperationsList
-
-    fun filterOperationsByCategory(categoryType: CategoryType) {
-        val filteredList = operationList.value?.filter { it.category.type == categoryType }
-        _filteredOperationsList.value = filteredList
-    }
-
     private val _date: MutableLiveData<Calendar> by lazy {
         MutableLiveData<Calendar>()
     }
     val date: LiveData<Calendar> = _date
+
+    private val _mode: MutableLiveData<Mode> by lazy {
+        MutableLiveData<Mode>()
+    }
+    val mode: LiveData<Mode> = _mode
+
+    fun setMode(mode: Mode) {
+        _mode.value = mode
+    }
 
     fun setDate(date: Calendar) {
         _date.value = date
@@ -53,7 +45,9 @@ class HomeViewModel : ViewModel() {
         _balance.value = balance + "₽"
     }
 
-    fun setOperationList(operationList: List<Operation>) {
-        _operationList.value = operationList
+
+    enum class Mode {
+        DAY,
+        MONTH
     }
 }

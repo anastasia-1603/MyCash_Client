@@ -6,25 +6,28 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import cs.vsu.ru.mycash.R
+import cs.vsu.ru.mycash.databinding.FragmentAddOperationBinding
 
 class AddOperationFragment : Fragment() {
+    private var _binding: FragmentAddOperationBinding? = null
+    private val binding get() = _binding!!
 
-    companion object {
-        fun newInstance() = AddOperationFragment()
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        val viewModel = ViewModelProvider(this)[AddOperationViewModel::class.java]
+
+        _binding = FragmentAddOperationBinding.inflate(inflater, container, false)
+
+
+        return binding.root
     }
 
-    private lateinit var viewModel: AddOperationViewModel
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_add_operation, container, false)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(AddOperationViewModel::class.java)
-        // TODO: Use the ViewModel
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

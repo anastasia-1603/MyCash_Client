@@ -63,33 +63,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/accountName" />
 
-        <!--        <com.google.android.material.tabs.TabLayout-->
-        <!--            android:id="@+id/tab_layout"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:background="@color/background"-->
-        <!--            app:layout_constraintEnd_toEndOf="parent"-->
-        <!--            app:layout_constraintStart_toStartOf="parent"-->
-        <!--            app:layout_constraintTop_toBottomOf="@+id/balance" >-->
-
-        <!--            <com.google.android.material.tabs.TabItem-->
-        <!--                android:layout_width="wrap_content"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:text="День" />-->
-
-        <!--            <com.google.android.material.tabs.TabItem-->
-        <!--                android:layout_width="wrap_content"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:text="Месяц" />-->
-
-        <!--        </com.google.android.material.tabs.TabLayout>-->
-
-        <!--        <FrameLayout-->
-        <!--            android:id="@+id/frame"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="match_parent">-->
-
-        <!--        </FrameLayout>-->
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tab_layout"
@@ -115,14 +88,13 @@
             app:layout_constraintTop_toBottomOf="@+id/tab_layout" />
 
 
-        <ToggleButton
+        <Button
             android:id="@+id/month"
             style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textOn="Месяц"
-            android:textOff="Месяц"
-            android:textColor="@color/black"
+            android:enabled="true"
+            android:text="Месяц"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@+id/day"
             app:layout_constraintEnd_toEndOf="parent"
@@ -132,17 +104,14 @@
             app:layout_constraintVertical_bias="0.0" />
 
 
-        <ToggleButton
-
+        <Button
             android:id="@+id/day"
             style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:textOn="День"
-            android:textOff="День"
-            android:checked="true"
-            android:textColor="@color/black"
+            android:enabled="false"
+            android:text="День"
             android:textSize="16sp"
             app:layout_constraintEnd_toStartOf="@+id/month"
             app:layout_constraintHorizontal_bias="0.0"
@@ -153,11 +122,12 @@
         <Button
             android:id="@+id/date"
             style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
-            android:layout_width="251dp"
+            android:layout_width="234dp"
             android:layout_height="wrap_content"
             android:layout_margin="0dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:text="Сегодня"
-            android:textColor="@color/black"
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="@+id/left"
             app:layout_constraintEnd_toStartOf="@+id/right"
@@ -173,12 +143,13 @@
             android:layout_marginTop="10dp"
             android:background="@color/background"
             android:contentDescription="left"
-            android:src="@drawable/baseline_arrow_back_ios_new_24"
+            android:src="@drawable/arrow_left_disabled"
             app:layout_constraintEnd_toStartOf="@+id/date"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/day" />
+            app:layout_constraintTop_toBottomOf="@+id/day"
+            app:tint="@color/textview_colors"/>
 
         <ImageButton
             android:id="@+id/right"
@@ -187,12 +158,13 @@
             android:layout_margin="10dp"
             android:background="@color/background"
             android:contentDescription="right"
-            android:src="@drawable/baseline_arrow_forward_ios_24"
+            android:src="@drawable/arrow_right_disabled"
             app:layout_constraintBottom_toBottomOf="@+id/date"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/date"
-            app:layout_constraintTop_toTopOf="@+id/date" />
+            app:layout_constraintTop_toTopOf="@+id/date"
+            app:tint="@color/textview_colors" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
