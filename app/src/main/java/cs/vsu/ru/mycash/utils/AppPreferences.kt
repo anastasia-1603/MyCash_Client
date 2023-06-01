@@ -1,5 +1,6 @@
 package cs.vsu.ru.mycash.utils
 
+import android.content.Context
 import android.content.SharedPreferences
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -13,7 +14,7 @@ class AppPreferences(context: FragmentActivity) {
     private val IS_AUTH = "is_auth"
     private val TOKEN = "TOKEN"
 
-    private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, 0)
+    private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
     var isFirstTimeLaunch: Boolean
         get() = prefs.getBoolean(IS_FIRST_TIME_LAUNCH, true)

@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import cs.vsu.ru.mycash.api.ApiClient
+import cs.vsu.ru.mycash.api.ApiAuthClient
 import cs.vsu.ru.mycash.api.ApiService
 import cs.vsu.ru.mycash.data.RegisterRequest
 import cs.vsu.ru.mycash.data.TokenResponse
@@ -46,25 +46,41 @@ class RegisterFragment : Fragment() {
                 password.error = "Введите пароль"
             }
 
+//            val preferences = activity?.getSharedPreferences("MY_APP", Context.MODE_PRIVATE)
+
+
+            val token = appPrefs.token
+            if (token != null) {
+                Log.e("token register", token)
+            }
+            else {
+                Log.e("token register", "null")
+            }
+
+
+            Log.e("token register prefs", appPrefs.token.toString())
+
             if (valid) {
-                val apiService = ApiClient.initClient().create(ApiService::class.java)
-                val call = apiService.register(
+                val apiService = token?.let { it1 ->
+                    ApiAuthClient.getClient(it1).create(ApiService::class.java)
+                }
+
+                apiService?.register(
                     RegisterRequest(
                         username.text.toString(),
                         password.text.toString()
                     )
-                )
-
-                call.enqueue(object : Callback<TokenResponse> {
+                )?.enqueue(object : Callback<TokenResponse> {
                     override fun onResponse(
                         call: Call<TokenResponse>,
                         response: Response<TokenResponse>
                     ) {
-                        val preferences =
-                            activity?.getSharedPreferences("MY_APP", Context.MODE_PRIVATE)
-                        val token = response.body()?.token ?: "-1"
-                        preferences?.edit()?.putString("TOKEN", token)?.apply()
-                        appPrefs.isAuth = true
+                        val tokenResponse = response.body()?.token ?: "-1"
+                        Log.e("token response", tokenResponse)
+                        appPrefs.token = tokenResponse
+                        Log.e("token response prefs", appPrefs.token.toString())
+                        //preferences.edit()?.putString("TOKEN", tokenResponse)?.apply()
+
                     }
 
                     override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
