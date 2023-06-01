@@ -22,6 +22,7 @@ import cs.vsu.ru.mycash.api.ApiAuthClient
 import cs.vsu.ru.mycash.api.ApiService
 import cs.vsu.ru.mycash.data.*
 import cs.vsu.ru.mycash.databinding.FragmentHomeBinding
+import cs.vsu.ru.mycash.utils.AppPreferences
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -33,6 +34,7 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private var cal = Calendar.getInstance()
     private val dateFormat = "d MMMM"
+    private lateinit var appPrefs: AppPreferences
     private val operationViewModel : OperationViewModel by activityViewModels()
     private val binding get() = _binding!!
 
@@ -42,7 +44,7 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
+        appPrefs = activity?.let { AppPreferences(it) }!!
         val homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -57,11 +59,6 @@ class HomeFragment : Fragment() {
         homeViewModel.balance.observe(viewLifecycleOwner) {
             balance.text = it
         }
-
-//        cal = Calendar.getInstance()
-//        homeViewModel.setMode(HomeViewModel.Mode.DAY)
-
-
         val dateBtn: Button = binding.date
         val dayBtn: Button = binding.day
         val monthBtn: Button = binding.month
@@ -81,6 +78,11 @@ class HomeFragment : Fragment() {
         homeViewModel.mode.observe(viewLifecycleOwner) {
             if (homeViewModel.mode.value == HomeViewModel.Mode.DAY)
             {
+                if (!dayBtn.isEnabled)
+                {
+                    dayBtn.isEnabled = true
+                    monthBtn.isEnabled = false
+                }
                 val current = Calendar.getInstance()
                 val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
                 val sdf1 = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
@@ -97,6 +99,11 @@ class HomeFragment : Fragment() {
             }
             else
             {
+                if (!monthBtn.isEnabled)
+                {
+                    monthBtn.isEnabled = true
+                    dayBtn.isEnabled = false
+                }
                 val monthNames = arrayOf(
                     "Январь",
                     "Февраль",
@@ -182,7 +189,6 @@ class HomeFragment : Fragment() {
             else
             {
                 Log.e("month", "month")
-
             }
 
         }
@@ -229,12 +235,16 @@ class HomeFragment : Fragment() {
             }
         tabLayoutMediator.attach()
 
-        val preferences = activity?.getSharedPreferences("MY_APP", Context.MODE_PRIVATE)
+//        val preferences = activity?.getSharedPreferences("MY_APP", Context.MODE_PRIVATE)
 
-        val token = preferences?.getString("TOKEN", "token")
-
-        val apiService = token?.let { ApiAuthClient.getClient(it).create(ApiService::class.java) }
-
+        val token = appPrefs.token
+        if (token != null) {
+            Log.e("token home", token)
+        }
+        Log.e("token home prefs", appPrefs.token.toString())
+        //val apiService = token?.let { ApiAuthClient.getClient(it).create(ApiService::class.java) }
+        val apiService = ApiAuthClient.getClient(appPrefs.token.toString()).create(ApiService::class.java)
+        Log.e("token home prefs", appPrefs.token.toString())
         homeViewModel.setAccountName("основа")
 
         apiService?.getAccountInfo(
