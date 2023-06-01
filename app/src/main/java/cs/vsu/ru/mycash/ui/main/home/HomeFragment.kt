@@ -245,6 +245,7 @@ class HomeFragment : Fragment() {
         //val apiService = token?.let { ApiAuthClient.getClient(it).create(ApiService::class.java) }
         val apiService = ApiAuthClient.getClient(appPrefs.token.toString()).create(ApiService::class.java)
         Log.e("token home prefs", appPrefs.token.toString())
+        Log.e("t", ApiAuthClient.getClient(appPrefs.token.toString()).toString())
         homeViewModel.setAccountName("основа")
 
         apiService?.getAccountInfo(

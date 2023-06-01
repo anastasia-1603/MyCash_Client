@@ -16,9 +16,11 @@ object ApiAuthClient {
                     .addHeader("ngrok-skip-browser-warning", true.toString())
                     .addHeader("User-Agent", "MyCash")
                     .build()
+                Log.e("t", request.header("Authorization").toString())
                 chain.proceed(request)
             }
             .build()
+
 
         if (retrofit == null) {
             retrofit = Retrofit.Builder()
