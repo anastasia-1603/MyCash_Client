@@ -4,6 +4,6 @@ data class Account(
     val name: String,
     val balance: Double,
     val target: Double,
-    val limit: Double,
+    val spendingLimit: Double,
     val isLimited: Boolean
 )
