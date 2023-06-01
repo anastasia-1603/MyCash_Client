@@ -43,7 +43,6 @@ class StartActivity : AppCompatActivity() {
             }
             if (valid)
             {
-
                 val apiService = ApiClient.initClient().create(ApiService::class.java)
                 val call = apiService.init(AccountInit(
                     accountName.text.toString(),
@@ -55,10 +54,6 @@ class StartActivity : AppCompatActivity() {
                         val token = response.body()?.token ?: "-1"
 
                         preferences.edit().putString("TOKEN", token).apply()
-                        Log.e("token1", token)
-//                        Toast.makeText(applicationContext, token.toString(), Toast.LENGTH_SHORT).show()
-//                        binding.editTextAccountName.setText(token)
-
                         val intent = Intent(this@StartActivity, MainScreenActivity::class.java)
                         startActivity(intent)
                     }

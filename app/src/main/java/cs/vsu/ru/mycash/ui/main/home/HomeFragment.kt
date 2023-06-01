@@ -14,8 +14,10 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
+import cs.vsu.ru.mycash.R
 import cs.vsu.ru.mycash.api.ApiAuthClient
 import cs.vsu.ru.mycash.api.ApiService
 import cs.vsu.ru.mycash.data.*
@@ -162,6 +164,8 @@ class HomeFragment : Fragment() {
                 homeViewModel.setDate(cal)
             }
 
+
+
         binding.date.setOnClickListener {
             if (homeViewModel.mode.value == HomeViewModel.Mode.DAY)
             {
@@ -187,11 +191,10 @@ class HomeFragment : Fragment() {
             if (homeViewModel.mode.value == HomeViewModel.Mode.DAY)
             {
                 cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) - 1)
-
             }
             else
             {
-                cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 1) //todo не упадет ли если долистать до 0
+                cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 1)
             }
             homeViewModel.setDate(cal)
 
@@ -205,9 +208,13 @@ class HomeFragment : Fragment() {
             }
             else
             {
-                cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) + 1) //todo не упадет ли если долистать до 0
+                cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) + 1)
             }
             homeViewModel.setDate(cal)
+        }
+
+        binding.floatingActionButton.setOnClickListener {
+            findNavController().navigate(R.id.addOperationFragment)
         }
 
         val viewPager = binding.viewPager
@@ -225,8 +232,6 @@ class HomeFragment : Fragment() {
         val preferences = activity?.getSharedPreferences("MY_APP", Context.MODE_PRIVATE)
 
         val token = preferences?.getString("TOKEN", "token")
-        Log.e("token2", token.toString())
-
 
         val apiService = token?.let { ApiAuthClient.getClient(it).create(ApiService::class.java) }
 
