@@ -14,6 +14,7 @@ import cs.vsu.ru.mycash.data.AccountInit
 import cs.vsu.ru.mycash.data.TokenResponse
 import cs.vsu.ru.mycash.databinding.ActivityStartBinding
 import cs.vsu.ru.mycash.ui.main.MainScreenActivity
+import cs.vsu.ru.mycash.utils.AppPreferences
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -21,10 +22,11 @@ import retrofit2.Response
 class StartActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityStartBinding
-    private val viewModel: AccountInitViewModel by viewModels()
+    private lateinit var appPrefs: AppPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        appPrefs = AppPreferences(this)
         binding = ActivityStartBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val balance = binding.editTextBalance
@@ -50,10 +52,11 @@ class StartActivity : AppCompatActivity() {
 
                 call.enqueue(object : Callback<TokenResponse> {
                     override fun onResponse(call: Call<TokenResponse>, response: Response<TokenResponse>) {
-                        val preferences: SharedPreferences = getSharedPreferences("MY_APP", Context.MODE_PRIVATE)
-                        val token = response.body()?.token ?: "-1"
-
-                        preferences.edit().putString("TOKEN", token).apply()
+                        val token = response.body()?.token.toString()
+                        appPrefs.token = token
+                        Log.e("token start activity", token)
+                        Log.e("token start  prefs", appPrefs.token.toString())
+//                        preferences.edit().putString("TOKEN", token).apply()
                         val intent = Intent(this@StartActivity, MainScreenActivity::class.java)
                         startActivity(intent)
                     }

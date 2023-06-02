@@ -1,7 +1,6 @@
 package cs.vsu.ru.mycash.ui.main.home
 
 import android.app.DatePickerDialog
-import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -22,6 +21,7 @@ import cs.vsu.ru.mycash.api.ApiAuthClient
 import cs.vsu.ru.mycash.api.ApiService
 import cs.vsu.ru.mycash.data.*
 import cs.vsu.ru.mycash.databinding.FragmentHomeBinding
+import cs.vsu.ru.mycash.utils.AppPreferences
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -33,8 +33,11 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private var cal = Calendar.getInstance()
     private val dateFormat = "d MMMM"
-    private val operationViewModel : OperationViewModel by activityViewModels()
+    private val operationViewModel: OperationViewModel by activityViewModels()
     private val binding get() = _binding!!
+
+    private lateinit var apiService: ApiService
+    private lateinit var appPrefs: AppPreferences
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
@@ -44,6 +47,7 @@ class HomeFragment : Fragment() {
     ): View {
 
         val homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
+        appPrefs = AppPreferences(requireActivity())
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -57,8 +61,6 @@ class HomeFragment : Fragment() {
         homeViewModel.balance.observe(viewLifecycleOwner) {
             balance.text = it
         }
-
-
         val dateBtn: Button = binding.date
         val dayBtn: Button = binding.day
         val monthBtn: Button = binding.month
@@ -67,34 +69,36 @@ class HomeFragment : Fragment() {
             homeViewModel.setMode(HomeViewModel.Mode.DAY)
             dayBtn.isEnabled = false
             monthBtn.isEnabled = true
+
         }
 
         monthBtn.setOnClickListener {
             homeViewModel.setMode(HomeViewModel.Mode.MONTH)
-
             dayBtn.isEnabled = true
             monthBtn.isEnabled = false
         }
 
-        homeViewModel.date.observe(viewLifecycleOwner) {
-            if (homeViewModel.mode.value == HomeViewModel.Mode.DAY)
-            {
+        homeViewModel.mode.observe(viewLifecycleOwner) {
+            if (homeViewModel.mode.value == HomeViewModel.Mode.DAY) {
+                if (!dayBtn.isEnabled) {
+                    dayBtn.isEnabled = true
+                    monthBtn.isEnabled = false
+                }
                 val current = Calendar.getInstance()
                 val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
                 val sdf1 = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
 
-                if (sdf1.format(it.time).equals(sdf1.format(current.time)))
-                {
+                if (sdf1.format(cal.time).equals(sdf1.format(current.time))) {
                     dateBtn.text = "Сегодня"
-                }
-                else
-                {
-                    dateBtn.text = sdf.format(it.time)
+                } else {
+                    dateBtn.text = sdf.format(cal.time)
                 }
 
-            }
-            else
-            {
+            } else {
+                if (!monthBtn.isEnabled) {
+                    monthBtn.isEnabled = true
+                    dayBtn.isEnabled = false
+                }
                 val monthNames = arrayOf(
                     "Январь",
                     "Февраль",
@@ -112,8 +116,40 @@ class HomeFragment : Fragment() {
 
                 dateBtn.text = monthNames[cal.get(Calendar.MONTH)]
             }
+            loadOperations()
+        }
 
+        homeViewModel.date.observe(viewLifecycleOwner) {
+            if (homeViewModel.mode.value == HomeViewModel.Mode.DAY) {
+                val current = Calendar.getInstance()
+                val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
+                val sdf1 = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
 
+                if (sdf1.format(it.time).equals(sdf1.format(current.time))) {
+                    dateBtn.text = "Сегодня"
+                } else {
+                    dateBtn.text = sdf.format(it.time)
+                }
+
+            } else {
+                val monthNames = arrayOf(
+                    "Январь",
+                    "Февраль",
+                    "Март",
+                    "Апрель",
+                    "Май",
+                    "Июнь",
+                    "Июль",
+                    "Август",
+                    "Сентябрь",
+                    "Октябрь",
+                    "Ноябрь",
+                    "Декабрь"
+                )
+
+                dateBtn.text = monthNames[cal.get(Calendar.MONTH)]
+            }
+            loadOperations()
         }
 
         val dateSetListener =
@@ -124,11 +160,8 @@ class HomeFragment : Fragment() {
                 homeViewModel.setDate(cal)
             }
 
-
-
         binding.date.setOnClickListener {
-            if (homeViewModel.mode.value == HomeViewModel.Mode.DAY)
-            {
+            if (homeViewModel.mode.value == HomeViewModel.Mode.DAY) {
                 context?.let { it1 ->
                     DatePickerDialog(
                         it1,
@@ -138,22 +171,16 @@ class HomeFragment : Fragment() {
                         cal.get(Calendar.DAY_OF_MONTH)
                     ).show()
                 }
-            }
-            else
-            {
+            } else {
                 Log.e("month", "month")
-
             }
 
         }
 
         binding.left.setOnClickListener {
-            if (homeViewModel.mode.value == HomeViewModel.Mode.DAY)
-            {
+            if (homeViewModel.mode.value == HomeViewModel.Mode.DAY) {
                 cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) - 1)
-            }
-            else
-            {
+            } else {
                 cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 1)
             }
             homeViewModel.setDate(cal)
@@ -161,13 +188,10 @@ class HomeFragment : Fragment() {
         }
 
         binding.right.setOnClickListener {
-            if (homeViewModel.mode.value == HomeViewModel.Mode.DAY)
-            {
+            if (homeViewModel.mode.value == HomeViewModel.Mode.DAY) {
                 cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) + 1)
 
-            }
-            else
-            {
+            } else {
                 cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) + 1)
             }
             homeViewModel.setDate(cal)
@@ -189,44 +213,11 @@ class HomeFragment : Fragment() {
             }
         tabLayoutMediator.attach()
 
-        val preferences = activity?.getSharedPreferences("MY_APP", Context.MODE_PRIVATE)
-
-        val token = preferences?.getString("TOKEN", "token")
-
-        val apiService = token?.let { ApiAuthClient.getClient(it).create(ApiService::class.java) }
-
         homeViewModel.setAccountName("основа")
 
-        apiService?.getAccountInfo(
-            "основа",
-            cal.get(Calendar.YEAR),
-            cal.get(Calendar.MONTH) + 1,
-            cal.get(Calendar.DAY_OF_MONTH)
-        )?.enqueue(object : Callback<List<Operation>> {
-            override fun onResponse(
-                call: Call<List<Operation>>,
-                response: Response<List<Operation>>
-            ) {
-                response.body()?.let { operationViewModel.setOperationList(it) }
-                operationViewModel.operationList.value?.let { operations ->
-                    operationViewModel.setExpenseList(
-                        operations.filter { it.category.type == CategoryType.EXPENSE })
-                }
-                operationViewModel.operationList.value?.let { operations ->
-                    operationViewModel.setIncomeList(
-                        operations.filter { it.category.type == CategoryType.INCOME })
-                }
-
-            }
-
-            override fun onFailure(call: Call<List<Operation>>, t: Throwable) {
-                t.message?.let { Log.e("t", it) }
-            }
-        })
 
         return root
     }
-
     class HomePagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
 
         override fun getItemCount(): Int {
@@ -243,6 +234,39 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun loadOperations() {
+        initApiService()
+
+        apiService.getAccountInfo(
+            "основа",
+            cal.get(Calendar.YEAR),
+            cal.get(Calendar.MONTH) + 1,
+            cal.get(Calendar.DAY_OF_MONTH)
+        ).enqueue(object : Callback<List<Operation>> {
+            override fun onResponse(
+                call: Call<List<Operation>>,
+                response: Response<List<Operation>>
+            ) {
+                response.body()?.let { operationViewModel.setOperationList(it) }
+                operationViewModel.operationList.value?.let { operations ->
+                    operationViewModel.setExpenseList(operations.filter { it.category.type == CategoryType.EXPENSE })
+                }
+                operationViewModel.operationList.value?.let { operations ->
+                    operationViewModel.setIncomeList(
+                        operations.filter { it.category.type == CategoryType.INCOME })
+                }
+            }
+
+            override fun onFailure(call: Call<List<Operation>>, t: Throwable) {
+                t.message?.let { Log.e("t", it) }
+            }
+        })
+    }
+
+    private fun initApiService()
+    {
+        apiService =  ApiAuthClient.getClient(requireActivity()).create(ApiService::class.java)
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
