@@ -24,7 +24,7 @@ class CategoriesFragment : Fragment() {
     private val binding get() = _binding!!
     private val categoriesViewModel: CategoriesViewModel by activityViewModels()
     private lateinit var apiService: ApiService
-//    private lateinit var appPrefs: AppPreferences
+    private lateinit var appPrefs: AppPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,6 +33,8 @@ class CategoriesFragment : Fragment() {
     ): View {
 //        val categoriesViewModel =
 //            ViewModelProvider(this).get(CategoriesViewModel::class.java)
+
+        appPrefs = activity?.let { AppPreferences(it) }!!
 
         _binding = FragmentCategoriesBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -54,7 +56,10 @@ class CategoriesFragment : Fragment() {
 
     fun loadCategories()
     {
-        apiService = ApiAuthClient.getClient(requireActivity()).create(ApiService::class.java)
+        val token = appPrefs.token.toString()
+        Log.e("token home prefs", appPrefs.token.toString())
+        val apiService = ApiAuthClient.getClient(token).create(ApiService::class.java)
+//        apiService = ApiAuthClient.getClient(requireActivity()).create(ApiService::class.java)
         apiService.getCategories().enqueue(object : Callback<List<Category>> {
             override fun onResponse(
                 call: Call<List<Category>>,

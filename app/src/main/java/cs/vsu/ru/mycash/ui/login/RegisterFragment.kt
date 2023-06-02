@@ -31,6 +31,8 @@ class RegisterFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
+        appPrefs = activity?.let { AppPreferences(it) }!!
+
         _binding = FragmentRegisterBinding.inflate(inflater, container, false)
         binding.continueBtn.setOnClickListener {
             register()
@@ -38,9 +40,12 @@ class RegisterFragment : Fragment() {
         return binding.root
     }
     private fun register() {
+        val token = appPrefs.token.toString()
+        Log.e("token home prefs", appPrefs.token.toString())
+        val apiService = ApiAuthClient.getClient(token).create(ApiService::class.java)
         if (checkValid()) {
-            appPrefs = AppPreferences(requireActivity())
-            val apiService = ApiAuthClient.getClient(requireActivity()).create(ApiService::class.java)
+//            appPrefs = AppPreferences(requireActivity())
+//            val apiService = ApiAuthClient.getClient(requireActivity()).create(ApiService::class.java)
             apiService.register(RegisterRequest(
                 binding.username.text.toString(),
                 binding.password.text.toString())

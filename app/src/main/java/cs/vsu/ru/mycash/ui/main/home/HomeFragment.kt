@@ -22,6 +22,10 @@ import cs.vsu.ru.mycash.api.ApiService
 import cs.vsu.ru.mycash.data.*
 import cs.vsu.ru.mycash.databinding.FragmentHomeBinding
 import cs.vsu.ru.mycash.utils.AppPreferences
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -49,16 +53,11 @@ class HomeFragment : Fragment() {
 
         appPrefs = activity?.let { AppPreferences(it) }!!
 
-
         homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
 //        appPrefs = AppPreferences(requireActivity())
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
-
-        getAccounts()
-
-
 
         val accountName: TextView = binding.accountName
         homeViewModel.accountName.observe(viewLifecycleOwner) {
@@ -70,9 +69,6 @@ class HomeFragment : Fragment() {
             balance.text = it
         }
 
-        homeViewModel.setAccountName(homeViewModel.accountList.value?.get(0)?.name ?: "Default_name")
-
-        homeViewModel.setBalance((homeViewModel.accountList.value?.get(0)?.balance ?: "0") as String)
         val dateBtn: Button = binding.date
         val dayBtn: Button = binding.day
         val monthBtn: Button = binding.month
@@ -90,9 +86,9 @@ class HomeFragment : Fragment() {
             monthBtn.isEnabled = false
         }
 
-        homeViewModel.date.observe(viewLifecycleOwner) {
-            loadOperations()
-        }
+//        homeViewModel.date.observe(viewLifecycleOwner) {
+//            loadOperations()
+//        }
 
         homeViewModel.mode.observe(viewLifecycleOwner) {
             if (homeViewModel.mode.value == HomeViewModel.Mode.DAY) {
@@ -227,6 +223,28 @@ class HomeFragment : Fragment() {
         tabLayoutMediator.attach()
         return root
     }
+
+    override fun onResume() {
+        super.onResume()
+
+        GlobalScope.launch {
+            val accounts = apiService.getAccounts().execute().body()
+            withContext(Dispatchers.Main) {
+                if (accounts != null) {
+                    homeViewModel.setAccountsList(accounts)
+                }
+            }
+
+            homeViewModel.setAccountName(
+                homeViewModel.accountList.value?.get(0)?.name ?: "Default_name"
+            )
+            homeViewModel.setBalance(
+                (homeViewModel.accountList.value?.get(0)?.balance ?: "0") as String
+            )
+            loadOperations()
+        }
+    }
+
     class HomePagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
 
         override fun getItemCount(): Int {
@@ -243,62 +261,97 @@ class HomeFragment : Fragment() {
         }
     }
 
-
     private fun getAccounts() {
-        initApiService()
-        apiService.getAccounts()
-            .enqueue(object : Callback<List<Account>> {
-                override fun onResponse(
-                    call: Call<List<Account>>,
-                    response: Response<List<Account>>)
-                {
-                    val accounts = response.body()
-                    if (accounts != null) {
-                        homeViewModel.setAccountsList(accounts)
-                    }
 
+        val token = appPrefs.token.toString()
+        apiService = ApiAuthClient.getClient(token).create(ApiService::class.java)
+        GlobalScope.launch {
+            val accounts = apiService.getAccounts().execute().body()
+            withContext(Dispatchers.Main) {
+                if (accounts != null) {
+                    homeViewModel.setAccountsList(accounts)
                 }
-
-                override fun onFailure(call: Call<List<Account>>, t: Throwable) {
-                    t.message?.let { Log.e("t", it) }
-                }
-            })
-
+            }
+        }
     }
 
-    private fun loadOperations() {
-        initApiService()
+//    private fun getAccounts() {
+//        val token = appPrefs.token.toString()
+//        Log.e("token home prefs", appPrefs.token.toString())
+//        apiService = ApiAuthClient.getClient(token).create(ApiService::class.java)
+//        val accounts = apiService.getAccounts().execute().body()
+//        Log.e("account", accounts.toString())
+//        if (accounts != null) {
+//            homeViewModel.setAccountsList(accounts)
+//        }
+//    }
 
-        apiService.getAccountInfo(
+    //        apiService.getAccounts()
+//            .enqueue(object : Callback<List<Account>> {
+//                override fun onResponse(
+//                    call: Call<List<Account>>,
+//                    response: Response<List<Account>>)
+//                {
+//                    val accounts = response.body()
+//                    Log.e("account", accounts.toString())
+//                    if (accounts != null) {
+//                        homeViewModel.setAccountsList(accounts)
+//                    }
+//                }
+//
+//                override fun onFailure(call: Call<List<Account>>, t: Throwable) {
+//                    t.message?.let { Log.e("t", it) }
+//                }
+//            })
+
+    private suspend fun loadOperations() {
+        val token = appPrefs.token.toString()
+        apiService = ApiAuthClient.getClient(token).create(ApiService::class.java)
+        val operations = apiService.getAccountInfo(
             homeViewModel.accountName.value.toString(),
             cal.get(Calendar.YEAR),
             cal.get(Calendar.MONTH) + 1,
-            cal.get(Calendar.DAY_OF_MONTH)
-        ).enqueue(object : Callback<List<Operation>> {
-            override fun onResponse(
-                call: Call<List<Operation>>,
-                response: Response<List<Operation>>
-            ) {
-                response.body()?.let { operationViewModel.setOperationList(it) }
-                operationViewModel.operationList.value?.let { operations ->
-                    operationViewModel.setExpenseList(operations.filter { it.category.type == CategoryType.EXPENSE })
-                }
-                operationViewModel.operationList.value?.let { operations ->
-                    operationViewModel.setIncomeList(
-                        operations.filter { it.category.type == CategoryType.INCOME })
-                }
+            cal.get(Calendar.DAY_OF_MONTH)).execute().body()
+        withContext(Dispatchers.Main) {
+            if (operations != null) {
+                operationViewModel.setOperationList(operations)
             }
-
-            override fun onFailure(call: Call<List<Operation>>, t: Throwable) {
-                t.message?.let { Log.e("t", it) }
-            }
-        })
+        }
     }
 
-    private fun initApiService()
-    {
-        apiService = ApiAuthClient.getClient(requireActivity()).create(ApiService::class.java)
-    }
+//    private fun loadOperations() {
+//        val token = appPrefs.token.toString()
+//        apiService = ApiAuthClient.getClient(token).create(ApiService::class.java)
+//        apiService.getAccountInfo(
+//            homeViewModel.accountName.value.toString(),
+//            cal.get(Calendar.YEAR),
+//            cal.get(Calendar.MONTH) + 1,
+//            cal.get(Calendar.DAY_OF_MONTH)
+//        ).enqueue(object : Callback<List<Operation>> {
+//            override fun onResponse(
+//                call: Call<List<Operation>>,
+//                response: Response<List<Operation>>
+//            ) {
+//                response.body()?.let { operationViewModel.setOperationList(it) }
+//                operationViewModel.operationList.value?.let { operations ->
+//                    operationViewModel.setExpenseList(operations.filter { it.category.type == CategoryType.EXPENSE })
+//                }
+//                operationViewModel.operationList.value?.let { operations ->
+//                    operationViewModel.setIncomeList(
+//                        operations.filter { it.category.type == CategoryType.INCOME })
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<List<Operation>>, t: Throwable) {
+//                t.message?.let { Log.e("t", it) }
+//            }
+//        })
+//    }
+
+//    private fun initApiService()
+//    {
+//        apiService = ApiAuthClient.getClient(requireActivity()).create(ApiService::class.java)
+//    }
 
     override fun onDestroyView() {
         super.onDestroyView()

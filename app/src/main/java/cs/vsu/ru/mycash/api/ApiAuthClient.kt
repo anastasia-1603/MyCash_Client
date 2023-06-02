@@ -11,9 +11,7 @@ object ApiAuthClient {
     private var retrofit: Retrofit? = null
     private lateinit var appPrefs: AppPreferences
 
-    fun getClient(context: Context): Retrofit {
-        appPrefs = AppPreferences(context)
-        val token = appPrefs.token
+    fun getClient(token: String): Retrofit {
         val client = OkHttpClient.Builder()
             .addInterceptor { chain ->
                 val request = chain.request().newBuilder()
@@ -25,6 +23,21 @@ object ApiAuthClient {
             }
             .cache(null)
             .build()
+
+//    fun getClient(context: Context): Retrofit {
+//        appPrefs = AppPreferences(context)
+//        val token = appPrefs.token
+//        val client = OkHttpClient.Builder()
+//            .addInterceptor { chain ->
+//                val request = chain.request().newBuilder()
+//                    .addHeader("Authorization", "Bearer $token")
+//                    .addHeader("ngrok-skip-browser-warning", true.toString())
+//                    .addHeader("User-Agent", "MyCash")
+//                    .build()
+//                chain.proceed(request)
+//            }
+//            .cache(null)
+//            .build()
 
 
         if (retrofit == null) {
