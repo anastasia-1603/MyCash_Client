@@ -1,36 +1,38 @@
 package cs.vsu.ru.mycash.ui.main.categories
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
-import cs.vsu.ru.mycash.R
+import cs.vsu.ru.mycash.api.ApiAuthClient
+import cs.vsu.ru.mycash.api.ApiService
+import cs.vsu.ru.mycash.data.Category
+import cs.vsu.ru.mycash.data.CategoryType
 import cs.vsu.ru.mycash.databinding.FragmentCategoriesBinding
-import cs.vsu.ru.mycash.ui.main.categories.CategoriesViewModel
-import cs.vsu.ru.mycash.ui.main.diagrams.DiagramsAllFragment
-import cs.vsu.ru.mycash.ui.main.diagrams.DiagramsExpensesFragment
-import cs.vsu.ru.mycash.ui.main.diagrams.DiagramsFragment
-import cs.vsu.ru.mycash.ui.main.diagrams.DiagramsIncomeFragment
+import cs.vsu.ru.mycash.utils.AppPreferences
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class CategoriesFragment : Fragment() {
     private var _binding: FragmentCategoriesBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
+    private val categoriesViewModel: CategoriesViewModel by activityViewModels()
+    private lateinit var apiService: ApiService
+//    private lateinit var appPrefs: AppPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val categoriesViewModel =
-            ViewModelProvider(this).get(CategoriesViewModel::class.java)
+//        val categoriesViewModel =
+//            ViewModelProvider(this).get(CategoriesViewModel::class.java)
 
         _binding = FragmentCategoriesBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -45,7 +47,34 @@ class CategoriesFragment : Fragment() {
                 }
             }
         tabLayoutMediator.attach()
+        loadCategories()
+
         return root
+    }
+
+    fun loadCategories()
+    {
+        apiService = ApiAuthClient.getClient(requireActivity()).create(ApiService::class.java)
+        apiService.getCategories().enqueue(object : Callback<List<Category>> {
+            override fun onResponse(
+                call: Call<List<Category>>,
+                response: Response<List<Category>>
+            ) {
+                response.body()?.let { categoriesViewModel.setCategoryList(it) }
+                categoriesViewModel.categoryList.value?.let { categories ->
+                    categoriesViewModel.setExpenseList(
+                        categories.filter { it.type == CategoryType.EXPENSE })
+                }
+                categoriesViewModel.categoryList.value?.let { categories ->
+                    categoriesViewModel.setIncomeList(
+                        categories.filter { it.type == CategoryType.INCOME })
+                }
+            }
+
+            override fun onFailure(call: Call<List<Category>>, t: Throwable) {
+                t.message?.let { Log.e("t", it) }
+            }
+        })
     }
 
     override fun onDestroyView() {
