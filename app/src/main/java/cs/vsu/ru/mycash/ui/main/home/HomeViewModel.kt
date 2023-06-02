@@ -3,6 +3,7 @@ package cs.vsu.ru.mycash.ui.main.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import cs.vsu.ru.mycash.data.Account
 import cs.vsu.ru.mycash.data.CategoryType
 import cs.vsu.ru.mycash.data.Operation
 import java.util.Calendar
@@ -13,6 +14,16 @@ class HomeViewModel : ViewModel() {
         MutableLiveData<String>()
     }
     val accountName: LiveData<String> = _accountName
+
+    private val _accountList: MutableLiveData<List<Account>> by lazy {
+        MutableLiveData<List<Account>>()
+    }
+    val accountList : LiveData<List<Account>> = _accountList
+
+    fun setAccountsList(accounts: List<Account>)
+    {
+        _accountList.value = accounts
+    }
 
     private val _balance: MutableLiveData<String> by lazy {
         MutableLiveData<String>()

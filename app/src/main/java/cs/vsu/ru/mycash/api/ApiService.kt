@@ -2,6 +2,7 @@ package cs.vsu.ru.mycash.api
 
 
 import android.service.autofill.UserData
+import cs.vsu.ru.mycash.api.Constants.ACCOUNT_URL
 import cs.vsu.ru.mycash.api.Constants.CATEGORY_URL
 import cs.vsu.ru.mycash.api.Constants.INFO
 import cs.vsu.ru.mycash.api.Constants.INIT_URL
@@ -32,4 +33,6 @@ interface ApiService {
     @GET(CATEGORY_URL)
     fun getCategories() : Call<List<Category>>
 
+    @GET(ACCOUNT_URL)
+    fun getAccounts(): Call<List<Account>>
 }

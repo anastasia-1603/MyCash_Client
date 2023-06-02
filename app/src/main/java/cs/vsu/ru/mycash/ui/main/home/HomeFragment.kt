@@ -34,6 +34,7 @@ class HomeFragment : Fragment() {
     private var cal = Calendar.getInstance()
     private val dateFormat = "d MMMM"
     private val operationViewModel: OperationViewModel by activityViewModels()
+    private lateinit var homeViewModel: HomeViewModel
     private val binding get() = _binding!!
 
     private lateinit var apiService: ApiService
@@ -46,11 +47,18 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        val homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
-        appPrefs = AppPreferences(requireActivity())
+        appPrefs = activity?.let { AppPreferences(it) }!!
+
+
+        homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
+//        appPrefs = AppPreferences(requireActivity())
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
+        getAccounts()
+
+
 
         val accountName: TextView = binding.accountName
         homeViewModel.accountName.observe(viewLifecycleOwner) {
@@ -61,6 +69,10 @@ class HomeFragment : Fragment() {
         homeViewModel.balance.observe(viewLifecycleOwner) {
             balance.text = it
         }
+
+        homeViewModel.setAccountName(homeViewModel.accountList.value?.get(0)?.name ?: "Default_name")
+
+        homeViewModel.setBalance((homeViewModel.accountList.value?.get(0)?.balance ?: "0") as String)
         val dateBtn: Button = binding.date
         val dayBtn: Button = binding.day
         val monthBtn: Button = binding.month
@@ -76,6 +88,10 @@ class HomeFragment : Fragment() {
             homeViewModel.setMode(HomeViewModel.Mode.MONTH)
             dayBtn.isEnabled = true
             monthBtn.isEnabled = false
+        }
+
+        homeViewModel.date.observe(viewLifecycleOwner) {
+            loadOperations()
         }
 
         homeViewModel.mode.observe(viewLifecycleOwner) {
@@ -116,7 +132,6 @@ class HomeFragment : Fragment() {
 
                 dateBtn.text = monthNames[cal.get(Calendar.MONTH)]
             }
-            loadOperations()
         }
 
         homeViewModel.date.observe(viewLifecycleOwner) {
@@ -149,7 +164,6 @@ class HomeFragment : Fragment() {
 
                 dateBtn.text = monthNames[cal.get(Calendar.MONTH)]
             }
-            loadOperations()
         }
 
         val dateSetListener =
@@ -184,7 +198,6 @@ class HomeFragment : Fragment() {
                 cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 1)
             }
             homeViewModel.setDate(cal)
-
         }
 
         binding.right.setOnClickListener {
@@ -212,10 +225,6 @@ class HomeFragment : Fragment() {
                 }
             }
         tabLayoutMediator.attach()
-
-        homeViewModel.setAccountName("основа")
-
-
         return root
     }
     class HomePagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
@@ -234,11 +243,34 @@ class HomeFragment : Fragment() {
         }
     }
 
+
+    private fun getAccounts() {
+        initApiService()
+        apiService.getAccounts()
+            .enqueue(object : Callback<List<Account>> {
+                override fun onResponse(
+                    call: Call<List<Account>>,
+                    response: Response<List<Account>>)
+                {
+                    val accounts = response.body()
+                    if (accounts != null) {
+                        homeViewModel.setAccountsList(accounts)
+                    }
+
+                }
+
+                override fun onFailure(call: Call<List<Account>>, t: Throwable) {
+                    t.message?.let { Log.e("t", it) }
+                }
+            })
+
+    }
+
     private fun loadOperations() {
         initApiService()
 
         apiService.getAccountInfo(
-            "основа",
+            homeViewModel.accountName.value.toString(),
             cal.get(Calendar.YEAR),
             cal.get(Calendar.MONTH) + 1,
             cal.get(Calendar.DAY_OF_MONTH)
@@ -265,7 +297,7 @@ class HomeFragment : Fragment() {
 
     private fun initApiService()
     {
-        apiService =  ApiAuthClient.getClient(requireActivity()).create(ApiService::class.java)
+        apiService = ApiAuthClient.getClient(requireActivity()).create(ApiService::class.java)
     }
 
     override fun onDestroyView() {

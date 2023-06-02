@@ -17,7 +17,7 @@ object ApiAuthClient {
         val client = OkHttpClient.Builder()
             .addInterceptor { chain ->
                 val request = chain.request().newBuilder()
-                    .addHeader("Authorization", token.toString())
+                    .addHeader("Authorization", "Bearer $token")
                     .addHeader("ngrok-skip-browser-warning", true.toString())
                     .addHeader("User-Agent", "MyCash")
                     .build()
