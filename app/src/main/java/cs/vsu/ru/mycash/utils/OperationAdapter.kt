@@ -8,7 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import cs.vsu.ru.mycash.data.Operation
 import cs.vsu.ru.mycash.databinding.ItemOperationBinding
 
-class OperationAdapter(private val onClickListener: OnClickListener) : RecyclerView.Adapter<OperationAdapter.OperationViewHolder>() {
+class OperationAdapter(private val onClickListener: OnClickListener)
+    : RecyclerView.Adapter<OperationAdapter.OperationViewHolder>() {
 
     var data: List<Operation> = emptyList()
     set(newValue) {
