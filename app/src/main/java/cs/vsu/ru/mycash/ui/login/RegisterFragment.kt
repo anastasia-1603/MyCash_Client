@@ -1,11 +1,14 @@
 package cs.vsu.ru.mycash.ui.login
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import cs.vsu.ru.mycash.R
 import cs.vsu.ru.mycash.api.ApiAuthClient
 import cs.vsu.ru.mycash.api.ApiService
 import cs.vsu.ru.mycash.data.RegisterRequest
@@ -48,6 +51,18 @@ class RegisterFragment : Fragment() {
                 ) {
                     val tokenResponse = response.body()?.token.toString()
                     appPrefs.token = tokenResponse
+                    val navController = findNavController()
+                    val alertDialogBuilder = AlertDialog.Builder(requireContext())
+                    alertDialogBuilder.setMessage("Вы успешно зарегистрированы")
+
+                    alertDialogBuilder.setPositiveButton("OK") { dialog, _ ->
+                        appPrefs.isAuth = true
+                        dialog.dismiss()
+                        navController.navigate(R.id.profileFragment)
+                    }
+
+                    val alertDialog = alertDialogBuilder.create()
+                    alertDialog.show()
                 }
 
                 override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
