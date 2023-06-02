@@ -1,4 +1,4 @@
-package cs.vsu.ru.mycash
+package cs.vsu.ru.mycash.ui.main.accounts
 
 import androidx.lifecycle.ViewModel
 
