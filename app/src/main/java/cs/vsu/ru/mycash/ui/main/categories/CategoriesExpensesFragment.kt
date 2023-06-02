@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import cs.vsu.ru.mycash.databinding.FragmentCategoriesExpensesBinding
 
@@ -25,7 +26,7 @@ class CategoriesExpensesFragment : Fragment() {
         val root: View = binding.root
         val manager = LinearLayoutManager(context)
         adapter = CategoriesAdapter(CategoriesAdapter.OnClickListener { category ->
-            Toast.makeText(activity, category.name, Toast.LENGTH_SHORT).show()
+            // todo findNavController().navigate()
         })
 
         val expenseCategoriesList = categoriesViewModel.expenseCategories.value
