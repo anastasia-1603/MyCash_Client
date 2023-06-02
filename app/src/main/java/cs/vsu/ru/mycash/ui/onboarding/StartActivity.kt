@@ -22,7 +22,6 @@ import retrofit2.Response
 class StartActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityStartBinding
-    private val viewModel: AccountInitViewModel by viewModels()
     private lateinit var appPrefs: AppPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,8 +52,7 @@ class StartActivity : AppCompatActivity() {
 
                 call.enqueue(object : Callback<TokenResponse> {
                     override fun onResponse(call: Call<TokenResponse>, response: Response<TokenResponse>) {
-//                        val preferences: SharedPreferences = getSharedPreferences("MY_APP", Context.MODE_PRIVATE)
-                        val token = response.body()?.token ?: "-1"
+                        val token = response.body()?.token.toString()
                         appPrefs.token = token
                         Log.e("token start activity", token)
                         Log.e("token start  prefs", appPrefs.token.toString())

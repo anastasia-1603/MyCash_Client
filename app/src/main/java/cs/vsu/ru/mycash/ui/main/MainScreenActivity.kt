@@ -9,6 +9,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.ui.setupWithNavController
 import cs.vsu.ru.mycash.R
 import cs.vsu.ru.mycash.databinding.ActivityMainScreenBinding
+import cs.vsu.ru.mycash.ui.main.home.HomeFragment
 import cs.vsu.ru.mycash.ui.onboarding.WelcomeActivity
 import cs.vsu.ru.mycash.utils.AppPreferences
 

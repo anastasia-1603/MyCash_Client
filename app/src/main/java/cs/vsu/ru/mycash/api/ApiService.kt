@@ -27,10 +27,10 @@ interface ApiService {
                        @Path("day") day: Int) :
             Call<List<Operation>>
 
-    @POST("/register")
+    @POST("auth/register")
     fun register(@Body registerRequest: RegisterRequest) : Call<TokenResponse>
 
-    @POST("/login")
+    @POST("auth/login")
     fun signIn(@Body registerRequest: RegisterRequest) : Call<TokenResponse>
 
 }
