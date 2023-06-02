@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import cs.vsu.ru.mycash.R
 import cs.vsu.ru.mycash.databinding.FragmentProfileBinding
 import cs.vsu.ru.mycash.databinding.FragmentProfileUnauthBinding
@@ -25,6 +26,9 @@ class ProfileUnauthFragment : Fragment() {
         _binding = FragmentProfileUnauthBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        val menu = requireActivity().findViewById<BottomNavigationView>(R.id.nav_view).menu
+        menu.findItem(R.id.profileFragment).isChecked = true
+
         val registerBtn = binding.registerBtn
         registerBtn.setOnClickListener{
             findNavController().navigate(R.id.registerFragment)
@@ -34,6 +38,7 @@ class ProfileUnauthFragment : Fragment() {
         signInBtn.setOnClickListener {
             findNavController().navigate(R.id.signInFragment)
         }
+
 
         return root
     }

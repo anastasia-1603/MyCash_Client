@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import cs.vsu.ru.mycash.R
 import cs.vsu.ru.mycash.databinding.FragmentProfileBinding
 
 class ProfileFragment : Fragment() {
@@ -25,10 +27,6 @@ class ProfileFragment : Fragment() {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textProfile
-        profileViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
         return root
     }
 
