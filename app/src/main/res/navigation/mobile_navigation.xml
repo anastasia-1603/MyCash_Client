@@ -64,5 +64,15 @@
         android:name="cs.vsu.ru.mycash.ui.main.operation.AddOperationFragment"
         android:label="AddOperationFragment"
         tools:layout="@layout/fragment_add_operation"/>
+    <fragment
+        android:id="@+id/editAccountFragment"
+        android:name="cs.vsu.ru.mycash.ui.main.accounts.EditAccountFragment"
+        android:label="EditAccountFragment"
+        tools:layout="@layout/fragment_edit_account"/>
+    <fragment
+        android:id="@+id/profileEditFragment"
+        android:name="cs.vsu.ru.mycash.ui.main.profile.ProfileEditFragment"
+        android:label="ProfileEditFragment"
+        tools:layout="@layout/fragment_profile_edit" />
 
 </navigation>
