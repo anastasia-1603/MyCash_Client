@@ -2,6 +2,7 @@ package cs.vsu.ru.mycash.ui.main.home
 
 import android.app.DatePickerDialog
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -37,6 +38,7 @@ class HomeFragment : Fragment() {
     private lateinit var appPrefs: AppPreferences
     private val operationViewModel : OperationViewModel by activityViewModels()
     private val binding get() = _binding!!
+    private lateinit var apiService: ApiService
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
@@ -44,7 +46,7 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        appPrefs = activity?.let { AppPreferences(it) }!!
+
         val homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -159,8 +161,6 @@ class HomeFragment : Fragment() {
 
                 dateBtn.text = monthNames[cal.get(Calendar.MONTH)]
             }
-
-
         }
 
         val dateSetListener =
@@ -170,8 +170,6 @@ class HomeFragment : Fragment() {
                 cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
                 homeViewModel.setDate(cal)
             }
-
-
 
         binding.date.setOnClickListener {
             if (homeViewModel.mode.value == HomeViewModel.Mode.DAY)
@@ -235,48 +233,18 @@ class HomeFragment : Fragment() {
             }
         tabLayoutMediator.attach()
 
-//        val preferences = activity?.getSharedPreferences("MY_APP", Context.MODE_PRIVATE)
-
-        val token = appPrefs.token
-        if (token != null) {
-            Log.e("token home", token)
-        }
-        Log.e("token home prefs", appPrefs.token.toString())
-        //val apiService = token?.let { ApiAuthClient.getClient(it).create(ApiService::class.java) }
-        val apiService = ApiAuthClient.getClient(appPrefs.token.toString()).create(ApiService::class.java)
-        Log.e("token home prefs", appPrefs.token.toString())
-        Log.e("t", ApiAuthClient.getClient(appPrefs.token.toString()).toString())
         homeViewModel.setAccountName("основа")
 
-        apiService?.getAccountInfo(
-            "основа",
-            cal.get(Calendar.YEAR),
-            cal.get(Calendar.MONTH) + 1,
-            cal.get(Calendar.DAY_OF_MONTH)
-        )?.enqueue(object : Callback<List<Operation>> {
-            override fun onResponse(
-                call: Call<List<Operation>>,
-                response: Response<List<Operation>>
-            ) {
-                response.body()?.let { operationViewModel.setOperationList(it) }
-                operationViewModel.operationList.value?.let { operations ->
-                    operationViewModel.setExpenseList(
-                        operations.filter { it.category.type == CategoryType.EXPENSE })
-                }
-                operationViewModel.operationList.value?.let { operations ->
-                    operationViewModel.setIncomeList(
-                        operations.filter { it.category.type == CategoryType.INCOME })
-                }
 
-            }
-
-            override fun onFailure(call: Call<List<Operation>>, t: Throwable) {
-                t.message?.let { Log.e("t", it) }
-            }
-        })
 
         return root
     }
+    override fun onStart() {
+        super.onStart()
+        loadOperations()
+
+    }
+
 
     class HomePagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
 
@@ -293,7 +261,37 @@ class HomeFragment : Fragment() {
             }
         }
     }
+private fun loadOperations() {
+    appPrefs = AppPreferences(requireActivity())
+    val token = appPrefs.token.toString()
+    apiService = ApiAuthClient.getClient(token).create(ApiService::class.java)
 
+    apiService.getAccountInfo(
+        "основа",
+        cal.get(Calendar.YEAR),
+        cal.get(Calendar.MONTH) + 1,
+        cal.get(Calendar.DAY_OF_MONTH)
+    ).enqueue(object : Callback<List<Operation>> {
+        override fun onResponse(
+            call: Call<List<Operation>>,
+            response: Response<List<Operation>>
+        )
+        {
+            response.body()?.let { operationViewModel.setOperationList(it) }
+            operationViewModel.operationList.value?.let { operations ->
+                operationViewModel.setExpenseList(operations.filter { it.category.type == CategoryType.EXPENSE })
+            }
+            operationViewModel.operationList.value?.let { operations ->
+                operationViewModel.setIncomeList(
+                    operations.filter { it.category.type == CategoryType.INCOME })
+            }
+        }
+
+        override fun onFailure(call: Call<List<Operation>>, t: Throwable) {
+            t.message?.let { Log.e("t", it) }
+        }
+    })
+}
 
     override fun onDestroyView() {
         super.onDestroyView()

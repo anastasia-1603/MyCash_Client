@@ -1,6 +1,8 @@
 package cs.vsu.ru.mycash.api
 
 import android.util.Log
+import androidx.core.content.ContentProviderCompat.requireContext
+import cs.vsu.ru.mycash.utils.AppPreferences
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

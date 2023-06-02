@@ -1,6 +1,7 @@
 package cs.vsu.ru.mycash.ui.login
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -22,78 +23,71 @@ class RegisterFragment : Fragment() {
     private var _binding: FragmentRegisterBinding? = null
     private lateinit var appPrefs: AppPreferences
     private val binding get() = _binding!!
+    private lateinit var apiService: ApiService
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val viewModel = ViewModelProvider(this)[LoginViewModel::class.java]
-
-        appPrefs = activity?.let { AppPreferences(it) }!!
         _binding = FragmentRegisterBinding.inflate(inflater, container, false)
-
-        val username = binding.username
-        val password = binding.password
-
         binding.continueBtn.setOnClickListener {
-            var valid = true
-            if (username.text.trim().isEmpty()) {
-                username.error = "Введите логин"
-                valid = false
-            }
-            if (password.text.trim().isEmpty()) {
-                password.error = "Введите пароль"
-            }
+            register()
+        }
+        return binding.root
+    }
 
-//            val preferences = activity?.getSharedPreferences("MY_APP", Context.MODE_PRIVATE)
+    private fun register() {
+        appPrefs = AppPreferences(requireActivity())
+        val token = appPrefs.token.toString()
+        apiService = ApiAuthClient.getClient(token).create(ApiService::class.java)
+        Log.e("token register", token)
+        Log.e("token register prefs", appPrefs.token.toString())
 
-
-            val token = appPrefs.token
-            if (token != null) {
-                Log.e("token register", token)
-            }
-            else {
-                Log.e("token register", "null")
+        if (checkValid()) {
+            val apiService = token.let { it1 ->
+                ApiAuthClient.getClient(it1).create(ApiService::class.java)
             }
 
+            apiService?.register(
+                RegisterRequest(
+                    binding.username.text.toString(),
+                    binding.password.text.toString()
+                )
+            )?.enqueue(object : Callback<TokenResponse> {
+                override fun onResponse(
+                    call: Call<TokenResponse>,
+                    response: Response<TokenResponse>
+                ) {
+                    Log.e("response", response.body().toString())
+                    val tokenResponse = response.body()?.token ?: "-1"
+                    Log.e("token response", tokenResponse)
+                    appPrefs.token = tokenResponse
+                    Log.e("token response prefs", appPrefs.token.toString())
 
-            Log.e("token register prefs", appPrefs.token.toString())
-
-            if (valid) {
-                val apiService = token?.let { it1 ->
-                    ApiAuthClient.getClient(it1).create(ApiService::class.java)
                 }
 
-                apiService?.register(
-                    RegisterRequest(
-                        username.text.toString(),
-                        password.text.toString()
-                    )
-                )?.enqueue(object : Callback<TokenResponse> {
-                    override fun onResponse(
-                        call: Call<TokenResponse>,
-                        response: Response<TokenResponse>
-                    ) {
-                        val tokenResponse = response.body()?.token ?: "-1"
-                        Log.e("token response", tokenResponse)
-                        appPrefs.token = tokenResponse
-                        Log.e("token response prefs", appPrefs.token.toString())
-                        //preferences.edit()?.putString("TOKEN", tokenResponse)?.apply()
+                override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
+                    t.message?.let { Log.e("failure register", it) }
+                }
 
-                    }
-
-                    override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
-                        t.message?.let { Log.e("failure register", it) }
-                    }
-
-                })
-            }
+            })
         }
 
+    }
 
-
-        return binding.root
+    private fun checkValid(): Boolean {
+        val username = binding.username
+        val password = binding.password
+        var valid = true
+        if (username.text.trim().isEmpty()) {
+            username.error = "Введите логин"
+            valid = false
+        }
+        if (password.text.trim().isEmpty()) {
+            password.error = "Введите пароль"
+        }
+        return valid
     }
 
     override fun onDestroyView() {
