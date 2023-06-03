@@ -31,17 +31,16 @@
             android:id="@+id/spendingButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="#F3EFEF"
             android:text="Расходы"
-            app:layout_constraintBottom_toBottomOf="@+id/addButton"
+            app:layout_constraintBottom_toBottomOf="@+id/incomeBtn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/addButton"
-            app:layout_constraintTop_toTopOf="@+id/addButton"
+            app:layout_constraintStart_toEndOf="@+id/incomeBtn"
+            app:layout_constraintTop_toTopOf="@+id/incomeBtn"
             app:layout_constraintVertical_bias="0.0" />
 
         <Button
-            android:id="@+id/addButton"
+            android:id="@+id/incomeBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -59,7 +58,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addButton"
+            app:layout_constraintTop_toBottomOf="@+id/incomeBtn"
             app:layout_constraintVertical_bias="1.0">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -85,25 +84,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-
-                <!--        <EditText-->
-                <!--            android:id="@+id/editTextAccountName"-->
-                <!--            android:layout_width="350dp"-->
-                <!--            android:layout_height="wrap_content"-->
-                <!--            android:layout_marginTop="30dp"-->
-                <!--            android:autofillHints="Введите сумму"-->
-                <!--            android:ems="10"-->
-                <!--            android:hint="Комментарий"-->
-                <!--            android:inputType="textMultiLine"-->
-                <!--            android:lines="2"-->
-                <!--            android:maxLength="@integer/material_motion_duration_short_1"-->
-                <!--            android:textColor="@color/black"-->
-
-                <!--            android:textColorHint="@color/gray"-->
-                <!--            android:textSize="24sp"-->
-                <!--            app:layout_constraintEnd_toEndOf="parent"-->
-                <!--            app:layout_constraintStart_toStartOf="parent"-->
-                <!--            app:layout_constraintTop_toBottomOf="@+id/textViewDay" />-->
 
                 <EditText
                     android:id="@+id/comment"
@@ -197,7 +177,7 @@
                     app:layout_constraintTop_toTopOf="@+id/cancelButton" />
 
                 <ImageButton
-                    android:id="@+id/imageButton"
+                    android:id="@+id/dateButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
@@ -208,7 +188,7 @@
                     app:srcCompat="@drawable/calendar" />
 
                 <ImageButton
-                    android:id="@+id/imageButton4"
+                    android:id="@+id/photoBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
@@ -220,162 +200,6 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
-        <!--        <ScrollView-->
-
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="100dp"-->
-        <!--            app:layout_constraintBottom_toTopOf="@+id/spendingButton"-->
-        <!--            app:layout_constraintEnd_toEndOf="parent"-->
-        <!--            app:layout_constraintStart_toStartOf="parent"-->
-        <!--            app:layout_constraintTop_toTopOf="parent">-->
-
-        <!--            <EditText-->
-        <!--                android:id="@+id/editTextSum"-->
-        <!--                android:layout_width="0dp"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:layout_marginTop="30dp"-->
-        <!--                android:autofillHints="Введите сумму"-->
-        <!--                android:ems="10"-->
-        <!--                android:hint="Введите сумму"-->
-        <!--                android:inputType="text"-->
-        <!--                android:maxLength="@integer/material_motion_duration_short_1"-->
-        <!--                android:textColor="@color/black"-->
-        <!--                android:textColorHint="@color/gray"-->
-        <!--                android:textSize="24sp"-->
-        <!--                app:layout_constraintEnd_toEndOf="parent"-->
-        <!--                app:layout_constraintStart_toStartOf="parent"-->
-        <!--                app:layout_constraintTop_toBottomOf="@+id/addButton" />-->
-
-        <!--            <TextView-->
-        <!--                android:id="@+id/textViewAccountName"-->
-        <!--                android:layout_width="wrap_content"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:layout_marginTop="40dp"-->
-        <!--                android:maxLength="@integer/material_motion_duration_short_1"-->
-        <!--                android:text="Добавление"-->
-        <!--                android:textColor="@color/black"-->
-        <!--                android:textSize="28sp"-->
-        <!--                app:layout_constraintEnd_toEndOf="parent"-->
-        <!--                app:layout_constraintStart_toStartOf="parent"-->
-        <!--                app:layout_constraintTop_toTopOf="parent" />-->
-
-
-        <!--            <EditText-->
-        <!--                android:id="@+id/shipper_field"-->
-        <!--                android:layout_width="match_parent"-->
-        <!--                android:layout_height="150dp"-->
-        <!--                android:background="@drawable/text_layout_stroke_normal"-->
-        <!--                android:gravity="top"-->
-        <!--                android:hint="Комментарий"-->
-        <!--                android:inputType="textMultiLine"-->
-        <!--                android:overScrollMode="always"-->
-        <!--                android:padding="15dp"-->
-        <!--                android:scrollbarStyle="insideInset"-->
-        <!--                android:scrollbars="vertical" />-->
-
-        <!--        <EditText-->
-        <!--            android:id="@+id/editTextAccountName"-->
-        <!--            android:layout_width="350dp"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_marginTop="30dp"-->
-        <!--            android:autofillHints="Введите сумму"-->
-        <!--            android:ems="10"-->
-        <!--            android:hint="Комментарий"-->
-        <!--            android:inputType="textMultiLine"-->
-        <!--            android:lines="2"-->
-        <!--            android:maxLength="@integer/material_motion_duration_short_1"-->
-        <!--            android:textColor="@color/black"-->
-
-        <!--            android:textColorHint="@color/gray"-->
-        <!--            android:textSize="24sp"-->
-        <!--            app:layout_constraintEnd_toEndOf="parent"-->
-        <!--            app:layout_constraintStart_toStartOf="parent"-->
-        <!--            app:layout_constraintTop_toBottomOf="@+id/textViewDay" />-->
-
-        <!--            <Spinner-->
-        <!--                android:id="@+id/spinnerAccounts"-->
-        <!--                android:layout_width="0dp"-->
-        <!--                android:layout_height="35dp"-->
-        <!--                android:layout_marginStart="30dp"-->
-        <!--                android:layout_marginTop="30dp"-->
-        <!--                android:layout_marginEnd="30dp"-->
-        <!--                app:layout_constraintEnd_toEndOf="parent"-->
-        <!--                app:layout_constraintHorizontal_bias="0.444"-->
-        <!--                app:layout_constraintStart_toStartOf="parent"-->
-        <!--                app:layout_constraintTop_toBottomOf="@+id/editTextSum" />-->
-
-        <!--            <Spinner-->
-        <!--                android:id="@+id/spinnerCategories"-->
-        <!--                android:layout_width="0dp"-->
-        <!--                android:layout_height="35dp"-->
-        <!--                android:layout_marginStart="30dp"-->
-        <!--                android:layout_marginTop="20dp"-->
-        <!--                android:layout_marginEnd="30dp"-->
-        <!--                app:layout_constraintEnd_toEndOf="parent"-->
-        <!--                app:layout_constraintStart_toStartOf="parent"-->
-        <!--                app:layout_constraintTop_toBottomOf="@+id/spinnerAccounts" />-->
-
-
-        <!--            <TextView-->
-        <!--                android:id="@+id/textViewDay"-->
-        <!--                android:layout_width="wrap_content"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:layout_marginTop="32dp"-->
-        <!--                android:text="Сегодня"-->
-        <!--                android:textSize="24sp"-->
-        <!--                app:layout_constraintEnd_toEndOf="parent"-->
-        <!--                app:layout_constraintHorizontal_bias="0.11"-->
-        <!--                app:layout_constraintStart_toStartOf="parent"-->
-        <!--                app:layout_constraintTop_toBottomOf="@+id/spinnerCategories" />-->
-
-
-        <!--            <TextView-->
-        <!--                android:id="@+id/textPhoto"-->
-        <!--                android:layout_width="0dp"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:layout_marginStart="35dp"-->
-        <!--                android:layout_marginTop="30dp"-->
-        <!--                android:text="Фото"-->
-        <!--                android:textSize="20sp"-->
-        <!--                app:layout_constraintStart_toStartOf="parent"-->
-        <!--                app:layout_constraintTop_toBottomOf="@+id/editTextAccountName" />-->
-
-
-        <!--            <Button-->
-        <!--                android:id="@+id/cancelButton"-->
-        <!--                android:layout_width="135dp"-->
-        <!--                android:layout_height="51dp"-->
-        <!--                android:layout_marginTop="50dp"-->
-        <!--                android:text="Отменить"-->
-        <!--                app:layout_constraintEnd_toStartOf="@+id/saveButton"-->
-        <!--                app:layout_constraintHorizontal_bias="0.5"-->
-        <!--                app:layout_constraintStart_toStartOf="parent"-->
-        <!--                app:layout_constraintTop_toBottomOf="@+id/textPhoto" />-->
-
-        <!--            <Button-->
-        <!--                android:id="@+id/saveButton"-->
-        <!--                android:layout_width="135dp"-->
-        <!--                android:layout_height="51dp"-->
-        <!--                android:text="Сохранить"-->
-        <!--                app:layout_constraintBottom_toBottomOf="@+id/cancelButton"-->
-        <!--                app:layout_constraintEnd_toEndOf="parent"-->
-        <!--                app:layout_constraintHorizontal_bias="0.5"-->
-        <!--                app:layout_constraintStart_toEndOf="@+id/cancelButton"-->
-        <!--                app:layout_constraintTop_toTopOf="@+id/cancelButton" />-->
-
-        <!--            <ImageButton-->
-        <!--                android:id="@+id/imageButton"-->
-        <!--                android:layout_width="wrap_content"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:layout_marginStart="30dp"-->
-        <!--                android:background="@color/background"-->
-        <!--                app:layout_constraintBottom_toBottomOf="@+id/textViewDay"-->
-        <!--                app:layout_constraintStart_toEndOf="@+id/textViewDay"-->
-        <!--                app:layout_constraintTop_toTopOf="@+id/textViewDay"-->
-        <!--                app:srcCompat="@drawable/calendar" />-->
-
-        <!--        </ScrollView>-->
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
