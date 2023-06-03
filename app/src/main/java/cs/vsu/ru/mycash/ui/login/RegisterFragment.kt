@@ -9,9 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import cs.vsu.ru.mycash.R
-import cs.vsu.ru.mycash.api.ApiAuthClient
 import cs.vsu.ru.mycash.api.ApiClient
-import cs.vsu.ru.mycash.api.ApiService
 import cs.vsu.ru.mycash.data.RegisterRequest
 import cs.vsu.ru.mycash.data.TokenResponse
 import cs.vsu.ru.mycash.databinding.FragmentRegisterBinding
