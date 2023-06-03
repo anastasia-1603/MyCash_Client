@@ -18,17 +18,15 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import cs.vsu.ru.mycash.R
 import cs.vsu.ru.mycash.api.ApiAuthClient
+import cs.vsu.ru.mycash.api.ApiClient
 import cs.vsu.ru.mycash.api.ApiService
 import cs.vsu.ru.mycash.data.*
 import cs.vsu.ru.mycash.databinding.FragmentHomeBinding
 import cs.vsu.ru.mycash.utils.AppPreferences
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -54,8 +52,6 @@ class HomeFragment : Fragment() {
         appPrefs = activity?.let { AppPreferences(it) }!!
 
         homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
-//        appPrefs = AppPreferences(requireActivity())
-
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
@@ -69,7 +65,18 @@ class HomeFragment : Fragment() {
             balance.text = it
         }
 
-        val dateBtn: Button = binding.date
+        homeViewModel.accountIndex.observe(viewLifecycleOwner) {
+            val accounts = operationViewModel.map.value?.keys?.toList()
+            val index = it
+            if (index != null) {
+                val account = accounts?.get(index)
+                if (account != null) {
+                    updateAccount(account)
+                }
+            }
+        }
+
+        val dateBtn : Button = binding.date
         val dayBtn: Button = binding.day
         val monthBtn: Button = binding.month
 
@@ -85,10 +92,6 @@ class HomeFragment : Fragment() {
             dayBtn.isEnabled = true
             monthBtn.isEnabled = false
         }
-
-//        homeViewModel.date.observe(viewLifecycleOwner) {
-//            loadOperations()
-//        }
 
         homeViewModel.mode.observe(viewLifecycleOwner) {
             if (homeViewModel.mode.value == HomeViewModel.Mode.DAY) {
@@ -160,7 +163,9 @@ class HomeFragment : Fragment() {
 
                 dateBtn.text = monthNames[cal.get(Calendar.MONTH)]
             }
+
         }
+
 
         val dateSetListener =
             DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
@@ -221,29 +226,21 @@ class HomeFragment : Fragment() {
                 }
             }
         tabLayoutMediator.attach()
+
         return root
     }
 
     override fun onResume() {
         super.onResume()
-
-        GlobalScope.launch {
-            val accounts = apiService.getAccounts().execute().body()
-            withContext(Dispatchers.Main) {
-                if (accounts != null) {
-                    homeViewModel.setAccountsList(accounts)
-                }
-            }
-
-            homeViewModel.setAccountName(
-                homeViewModel.accountList.value?.get(0)?.name ?: "Default_name"
-            )
-            homeViewModel.setBalance(
-                (homeViewModel.accountList.value?.get(0)?.balance ?: "0") as String
-            )
-            loadOperations()
-        }
+        loadOperations()
     }
+
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        loadOperations()
+//    }
+
+
 
     class HomePagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
 
@@ -261,97 +258,122 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun getAccounts() {
 
-        val token = appPrefs.token.toString()
-        apiService = ApiAuthClient.getClient(token).create(ApiService::class.java)
-        GlobalScope.launch {
-            val accounts = apiService.getAccounts().execute().body()
-            withContext(Dispatchers.Main) {
-                if (accounts != null) {
-                    homeViewModel.setAccountsList(accounts)
+    private fun loadOperations() {
+        apiService = ApiClient.getClient(appPrefs.token.toString())
+        val call: Call<Map<Account, List<Operation>>>
+        if (homeViewModel.mode.value == HomeViewModel.Mode.DAY)
+        {
+            call = apiService.getDataByDay(
+                cal.get(Calendar.YEAR), //todo поменять на date
+                cal.get(Calendar.MONTH) + 1,
+                cal.get(Calendar.DAY_OF_MONTH)
+            )
+        }
+        else
+        {
+            call = apiService.getDataByMonth(
+                cal.get(Calendar.YEAR),
+                cal.get(Calendar.MONTH) + 1)
+        }
+        call.enqueue(object : Callback<Map<Account, List<Operation>>> {
+            override fun onResponse(
+                call: Call<Map<Account, List<Operation>>>,
+                response: Response<Map<Account, List<Operation>>>
+            ) {
+                val map = response.body()
+                Log.e("map", map.toString())
+                if (map != null)
+                {
+                    updateMap(map)
                 }
             }
+            override fun onFailure(call: Call<Map<Account, List<Operation>>>, t: Throwable) {
+                t.message?.let { Log.e("t", t.message.toString()) }
+            }
+
+        })
+    }
+
+
+    private fun updateOperations(operationList: List<Operation>)
+    {
+        operationViewModel.setOperationList(operationList)
+        operationViewModel.operationList.value?.let { operations ->
+            operationViewModel.setExpenseList(operations.filter {
+                it.category.type == CategoryType.EXPENSE
+            })
+        }
+        operationViewModel.operationList.value?.let { operations ->
+            operationViewModel.setIncomeList(
+                operations.filter {
+                    it.category.type == CategoryType.INCOME
+                })
         }
     }
 
-//    private fun getAccounts() {
-//        val token = appPrefs.token.toString()
-//        Log.e("token home prefs", appPrefs.token.toString())
-//        apiService = ApiAuthClient.getClient(token).create(ApiService::class.java)
-//        val accounts = apiService.getAccounts().execute().body()
-//        Log.e("account", accounts.toString())
-//        if (accounts != null) {
-//            homeViewModel.setAccountsList(accounts)
-//        }
-//    }
+    private fun updateAccount(account: Account, operationList: List<Operation>)
+    {
+        homeViewModel.setAccountName(account.name.toString())
+        homeViewModel.setBalance(account.balance.toString())
+        updateOperations(operationList)
+    }
 
-    //        apiService.getAccounts()
-//            .enqueue(object : Callback<List<Account>> {
-//                override fun onResponse(
-//                    call: Call<List<Account>>,
-//                    response: Response<List<Account>>)
-//                {
-//                    val accounts = response.body()
-//                    Log.e("account", accounts.toString())
-//                    if (accounts != null) {
-//                        homeViewModel.setAccountsList(accounts)
-//                    }
-//                }
-//
-//                override fun onFailure(call: Call<List<Account>>, t: Throwable) {
-//                    t.message?.let { Log.e("t", it) }
-//                }
-//            })
-
-    private suspend fun loadOperations() {
-        val token = appPrefs.token.toString()
-        apiService = ApiAuthClient.getClient(token).create(ApiService::class.java)
-        val operations = apiService.getAccountInfo(
-            homeViewModel.accountName.value.toString(),
-            cal.get(Calendar.YEAR),
-            cal.get(Calendar.MONTH) + 1,
-            cal.get(Calendar.DAY_OF_MONTH)).execute().body()
-        withContext(Dispatchers.Main) {
-            if (operations != null) {
-                operationViewModel.setOperationList(operations)
+    private fun updateAccount(account: Account)
+    {
+        homeViewModel.setAccountName(account.name.toString())
+        homeViewModel.setBalance(account.balance.toString())
+        val operationList = operationViewModel.map.value?.get(account)
+        if (operationList != null) {
+            updateOperations(operationList)
+        }
+    }
+    private fun updateMap(map: Map<Account, List<Operation>>)
+    {
+        operationViewModel.setMap(map)
+        val accounts = operationViewModel.map.value?.keys?.toList()
+        val index = homeViewModel.accountIndex.value
+        if (index != null) {
+            val account = accounts?.get(index)
+            if (account != null) {
+                map[account]?.let { updateAccount(account, it) }
             }
         }
     }
 
-//    private fun loadOperations() {
-//        val token = appPrefs.token.toString()
-//        apiService = ApiAuthClient.getClient(token).create(ApiService::class.java)
-//        apiService.getAccountInfo(
-//            homeViewModel.accountName.value.toString(),
-//            cal.get(Calendar.YEAR),
-//            cal.get(Calendar.MONTH) + 1,
-//            cal.get(Calendar.DAY_OF_MONTH)
-//        ).enqueue(object : Callback<List<Operation>> {
-//            override fun onResponse(
-//                call: Call<List<Operation>>,
-//                response: Response<List<Operation>>
-//            ) {
-//                response.body()?.let { operationViewModel.setOperationList(it) }
-//                operationViewModel.operationList.value?.let { operations ->
-//                    operationViewModel.setExpenseList(operations.filter { it.category.type == CategoryType.EXPENSE })
-//                }
-//                operationViewModel.operationList.value?.let { operations ->
-//                    operationViewModel.setIncomeList(
-//                        operations.filter { it.category.type == CategoryType.INCOME })
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<List<Operation>>, t: Throwable) {
-//                t.message?.let { Log.e("t", it) }
-//            }
-//        })
-//    }
 
-//    private fun initApiService()
-//    {
-//        apiService = ApiAuthClient.getClient(requireActivity()).create(ApiService::class.java)
-//    }
+    private fun updateDate(newDate : Calendar) {
+
+        homeViewModel.setDate(newDate)
+        if (homeViewModel.mode.value == HomeViewModel.Mode.DAY) {
+            val current = Calendar.getInstance()
+            val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
+            val sdf1 = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+
+            if (sdf1.format(newDate.time).equals(sdf1.format(current.time))) {
+                binding.date.text = "Сегодня"
+            } else {
+                binding.date.text = sdf.format(newDate.time)
+            }
+
+        } else {
+            val monthNames = arrayOf(
+                "Январь",
+                "Февраль",
+                "Март",
+                "Апрель",
+                "Май",
+                "Июнь",
+                "Июль",
+                "Август",
+                "Сентябрь",
+                "Октябрь",
+                "Ноябрь",
+                "Декабрь"
+            )
+            binding.date.text = monthNames[newDate.get(Calendar.MONTH)]
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

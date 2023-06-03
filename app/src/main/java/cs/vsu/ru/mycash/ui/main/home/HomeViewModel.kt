@@ -1,18 +1,40 @@
 package cs.vsu.ru.mycash.ui.main.home
 
+import android.util.Log
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import cs.vsu.ru.mycash.api.ApiService
 import cs.vsu.ru.mycash.data.Account
-import cs.vsu.ru.mycash.data.CategoryType
 import cs.vsu.ru.mycash.data.Operation
 import java.util.Calendar
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import androidx.fragment.app.activityViewModels
 
 class HomeViewModel : ViewModel() {
+
+
+//    private val _map: MutableLiveData<Map<Account, List<Operation>>> by lazy {
+//        MutableLiveData<Map<Account, List<Operation>>>()
+//    }
+//    val map: LiveData<Map<Account, List<Operation>>> = _map
+//
+//    fun setMap(map: Map<Account, List<Operation>>) {
+//        _map.value = map
+//    }
+
+    private val _accountIndex: MutableLiveData<Int> by lazy {
+        MutableLiveData<Int>(0)
+    }
+    val accountIndex: LiveData<Int> = _accountIndex
 
     private val _accountName: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
+
     val accountName: LiveData<String> = _accountName
 
     private val _accountList: MutableLiveData<List<Account>> by lazy {
@@ -60,4 +82,5 @@ class HomeViewModel : ViewModel() {
         DAY,
         MONTH
     }
+
 }

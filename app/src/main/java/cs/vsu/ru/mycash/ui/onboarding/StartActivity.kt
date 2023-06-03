@@ -45,7 +45,7 @@ class StartActivity : AppCompatActivity() {
             }
             if (valid)
             {
-                val apiService = ApiClient.initClient().create(ApiService::class.java)
+                val apiService = ApiClient.getClient(appPrefs.token.toString())
                 val call = apiService.init(AccountInit(
                     accountName.text.toString(),
                     balance.text.toString().toDouble()))
@@ -57,6 +57,7 @@ class StartActivity : AppCompatActivity() {
                         Log.e("token start activity", token)
                         Log.e("token start  prefs", appPrefs.token.toString())
 //                        preferences.edit().putString("TOKEN", token).apply()
+                        ApiClient.updateClient(token)
                         val intent = Intent(this@StartActivity, MainScreenActivity::class.java)
                         startActivity(intent)
                     }

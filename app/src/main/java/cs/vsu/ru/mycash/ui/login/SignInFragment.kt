@@ -47,8 +47,8 @@ class SignInFragment : Fragment() {
             }
 
             if (valid) {
-                val apiService = ApiClient.initClient().create(ApiService::class.java)
-                val call = apiService.register(
+                val apiService = ApiClient.getClient(appPrefs.token.toString())
+                val call = apiService.signIn(
                     RegisterRequest(
                         username.text.toString(),
                         password.text.toString()
@@ -60,10 +60,9 @@ class SignInFragment : Fragment() {
                         call: Call<TokenResponse>,
                         response: Response<TokenResponse>
                     ) {
-                        val preferences =
-                            activity?.getSharedPreferences("MY_APP", Context.MODE_PRIVATE)
-                        val token = response.body()?.token ?: "-1"
-                        preferences?.edit()?.putString("TOKEN", token)?.apply()
+                        val tokenResponse = response.body()?.token.toString()
+                        appPrefs.token = tokenResponse
+                        ApiClient.updateClient(tokenResponse)
                         appPrefs.isAuth = true
                     }
 

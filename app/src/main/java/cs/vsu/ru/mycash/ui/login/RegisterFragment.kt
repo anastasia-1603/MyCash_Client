@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import cs.vsu.ru.mycash.R
 import cs.vsu.ru.mycash.api.ApiAuthClient
+import cs.vsu.ru.mycash.api.ApiClient
 import cs.vsu.ru.mycash.api.ApiService
 import cs.vsu.ru.mycash.data.RegisterRequest
 import cs.vsu.ru.mycash.data.TokenResponse
@@ -40,12 +41,9 @@ class RegisterFragment : Fragment() {
         return binding.root
     }
     private fun register() {
-        val token = appPrefs.token.toString()
-        Log.e("token home prefs", appPrefs.token.toString())
-        val apiService = ApiAuthClient.getClient(token).create(ApiService::class.java)
+
+        val apiService = ApiClient.getClient(appPrefs.token.toString())
         if (checkValid()) {
-//            appPrefs = AppPreferences(requireActivity())
-//            val apiService = ApiAuthClient.getClient(requireActivity()).create(ApiService::class.java)
             apiService.register(RegisterRequest(
                 binding.username.text.toString(),
                 binding.password.text.toString())
@@ -56,6 +54,7 @@ class RegisterFragment : Fragment() {
                 ) {
                     val tokenResponse = response.body()?.token.toString()
                     appPrefs.token = tokenResponse
+                    ApiClient.updateClient(tokenResponse)
                     val navController = findNavController()
                     val alertDialogBuilder = AlertDialog.Builder(requireContext())
                     alertDialogBuilder.setMessage("Вы успешно зарегистрированы")
@@ -68,6 +67,7 @@ class RegisterFragment : Fragment() {
 
                     val alertDialog = alertDialogBuilder.create()
                     alertDialog.show()
+
                 }
 
                 override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
