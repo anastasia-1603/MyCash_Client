@@ -17,7 +17,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import cs.vsu.ru.mycash.R
-import cs.vsu.ru.mycash.api.ApiAuthClient
 import cs.vsu.ru.mycash.api.ApiClient
 import cs.vsu.ru.mycash.api.ApiService
 import cs.vsu.ru.mycash.data.*
@@ -29,6 +28,7 @@ import retrofit2.Response
 
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class HomeFragment : Fragment() {
 
@@ -66,7 +66,7 @@ class HomeFragment : Fragment() {
         }
 
         homeViewModel.accountIndex.observe(viewLifecycleOwner) {
-            val accounts = operationViewModel.map.value?.keys?.toList()
+            val accounts = operationViewModel.map.value?.let { it1 -> getAccounts(it1) }
             val index = it
             if (index != null) {
                 val account = accounts?.get(index)
@@ -261,7 +261,7 @@ class HomeFragment : Fragment() {
 
     private fun loadOperations() {
         apiService = ApiClient.getClient(appPrefs.token.toString())
-        val call: Call<Map<Account, List<Operation>>>
+        val call: Call<Map<String, List<Operation>>>
         if (homeViewModel.mode.value == HomeViewModel.Mode.DAY)
         {
             call = apiService.getDataByDay(
@@ -276,10 +276,10 @@ class HomeFragment : Fragment() {
                 cal.get(Calendar.YEAR),
                 cal.get(Calendar.MONTH) + 1)
         }
-        call.enqueue(object : Callback<Map<Account, List<Operation>>> {
+        call.enqueue(object : Callback<Map<String, List<Operation>>> {
             override fun onResponse(
-                call: Call<Map<Account, List<Operation>>>,
-                response: Response<Map<Account, List<Operation>>>
+                call: Call<Map<String, List<Operation>>>,
+                response: Response<Map<String, List<Operation>>>
             ) {
                 val map = response.body()
                 Log.e("map", map.toString())
@@ -288,7 +288,7 @@ class HomeFragment : Fragment() {
                     updateMap(map)
                 }
             }
-            override fun onFailure(call: Call<Map<Account, List<Operation>>>, t: Throwable) {
+            override fun onFailure(call: Call<Map<String, List<Operation>>>, t: Throwable) {
                 t.message?.let { Log.e("t", t.message.toString()) }
             }
 
@@ -312,32 +312,30 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun updateAccount(account: Account, operationList: List<Operation>)
+    private fun updateAccount(account: AccountDto, operationList: List<Operation>)
     {
-        homeViewModel.setAccountName(account.name.toString())
+        homeViewModel.setAccountName(account.name)
         homeViewModel.setBalance(account.balance.toString())
         updateOperations(operationList)
     }
 
-    private fun updateAccount(account: Account)
+    private fun updateAccount(account: AccountDto)
     {
-        homeViewModel.setAccountName(account.name.toString())
+        homeViewModel.setAccountName(account.name)
         homeViewModel.setBalance(account.balance.toString())
-        val operationList = operationViewModel.map.value?.get(account)
+        val operationList = operationViewModel.map.value?.get(account.name)
         if (operationList != null) {
             updateOperations(operationList)
         }
     }
-    private fun updateMap(map: Map<Account, List<Operation>>)
+    private fun updateMap(map: Map<String, List<Operation>>)
     {
         operationViewModel.setMap(map)
-        val accounts = operationViewModel.map.value?.keys?.toList()
+        val accounts : List<AccountDto> = getAccounts(map)
         val index = homeViewModel.accountIndex.value
         if (index != null) {
-            val account = accounts?.get(index)
-            if (account != null) {
-                map[account]?.let { updateAccount(account, it) }
-            }
+            val account = accounts[index]
+            map[account.name]?.let { updateAccount(account, it) }
         }
     }
 
@@ -373,6 +371,17 @@ class HomeFragment : Fragment() {
             )
             binding.date.text = monthNames[newDate.get(Calendar.MONTH)]
         }
+    }
+
+    private fun getAccounts(map: Map<String, List<Operation>>) : List<AccountDto>
+    {
+        val accounts : ArrayList<AccountDto> = ArrayList()
+        map.keys.forEach {
+            val tmp = it.split(":")
+            val accountDto : AccountDto = AccountDto(tmp[0], tmp[1].toDouble())
+            accounts.add(accountDto)
+        }
+        return accounts
     }
 
     override fun onDestroyView() {
