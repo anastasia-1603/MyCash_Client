@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
-import cs.vsu.ru.mycash.api.ApiAuthClient
+import cs.vsu.ru.mycash.api.ApiClient
 import cs.vsu.ru.mycash.api.ApiService
 import cs.vsu.ru.mycash.data.Category
 import cs.vsu.ru.mycash.data.CategoryType
@@ -31,11 +31,7 @@ class CategoriesFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-//        val categoriesViewModel =
-//            ViewModelProvider(this).get(CategoriesViewModel::class.java)
-
         appPrefs = activity?.let { AppPreferences(it) }!!
-
         _binding = FragmentCategoriesBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
@@ -54,18 +50,20 @@ class CategoriesFragment : Fragment() {
         return root
     }
 
-    fun loadCategories()
-    {
+    private fun loadCategories() {
         val token = appPrefs.token.toString()
         Log.e("token home prefs", appPrefs.token.toString())
-        val apiService = ApiAuthClient.getClient(token).create(ApiService::class.java)
-//        apiService = ApiAuthClient.getClient(requireActivity()).create(ApiService::class.java)
+
+        val apiService = ApiClient.getClient(token)
         apiService.getCategories().enqueue(object : Callback<List<Category>> {
             override fun onResponse(
                 call: Call<List<Category>>,
                 response: Response<List<Category>>
             ) {
                 response.body()?.let { categoriesViewModel.setCategoryList(it) }
+                Log.e("categories", response.body().toString())
+
+
                 categoriesViewModel.categoryList.value?.let { categories ->
                     categoriesViewModel.setExpenseList(
                         categories.filter { it.type == CategoryType.EXPENSE })
