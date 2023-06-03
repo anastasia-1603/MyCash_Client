@@ -24,16 +24,16 @@ class CategoriesViewModel : ViewModel() {
     val expenseCategories: LiveData<List<Category>> = _expenseCategories
 
 
-    fun setCategoryList(categorys: List<Category>) {
-        _categoryList.value = categorys
+    fun setCategoryList(categories: List<Category>) {
+        _categoryList.value = categories
     }
 
-    fun setIncomeList(categorys: List<Category>) {
-        _incomeCategories.value = categorys
+    fun setIncomeList(categories: List<Category>) {
+        _incomeCategories.value = categories
     }
 
-    fun setExpenseList(categorys: List<Category>) {
-        _expenseCategories.value = categorys
+    fun setExpenseList(categories: List<Category>) {
+        _expenseCategories.value = categories
     }
 
 }
