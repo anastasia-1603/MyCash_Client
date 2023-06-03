@@ -15,12 +15,12 @@ import java.util.*
 class OperationViewModel : ViewModel() {
 
 
-    private val _map: MutableLiveData<Map<Account, List<Operation>>> by lazy {
-        MutableLiveData<Map<Account, List<Operation>>>()
+    private val _map: MutableLiveData<Map<String, List<Operation>>> by lazy {
+        MutableLiveData<Map<String, List<Operation>>>()
     }
-    val map: LiveData<Map<Account, List<Operation>>> = _map
+    val map: LiveData<Map<String, List<Operation>>> = _map
 
-    fun setMap(map: Map<Account, List<Operation>>) {
+    fun setMap(map: Map<String, List<Operation>>) {
         _map.value = map
     }
 
