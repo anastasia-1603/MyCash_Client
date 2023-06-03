@@ -1,16 +1,12 @@
 package cs.vsu.ru.mycash.ui.main.categories
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import cs.vsu.ru.mycash.R
 import cs.vsu.ru.mycash.databinding.FragmentCategoriesIncomeBinding
 
 class CategoriesIncomeFragment : Fragment() {
@@ -33,8 +29,8 @@ class CategoriesIncomeFragment : Fragment() {
         val incomeCategoriesList = categoriesViewModel.incomeCategories.value
         adapter.data = incomeCategoriesList ?: emptyList()
 
-        binding.recyclerView2.layoutManager = manager
-        binding.recyclerView2.adapter = adapter
+        binding.recyclerViewIncome.layoutManager = manager
+        binding.recyclerViewIncome.adapter = adapter
 
 
         categoriesViewModel.incomeCategories.observe(viewLifecycleOwner) {
