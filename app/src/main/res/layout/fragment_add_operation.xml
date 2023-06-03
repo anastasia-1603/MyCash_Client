@@ -133,14 +133,12 @@
                     android:id="@+id/textViewDay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="35dp"
                     android:layout_marginTop="20dp"
                     android:text="Сегодня"
-                    android:textSize="24sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.11"
+                    android:textSize="16sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/spinnerCategories" />
-
 
                 <TextView
                     android:id="@+id/textPhoto"
@@ -185,7 +183,8 @@
                     app:layout_constraintBottom_toBottomOf="@+id/textViewDay"
                     app:layout_constraintStart_toEndOf="@+id/textViewDay"
                     app:layout_constraintTop_toTopOf="@+id/textViewDay"
-                    app:srcCompat="@drawable/calendar" />
+                    app:srcCompat="@drawable/calendar"
+                    app:tint="@color/textview_colors"/>
 
                 <ImageButton
                     android:id="@+id/photoBtn"
@@ -196,7 +195,8 @@
                     app:layout_constraintBottom_toBottomOf="@+id/textPhoto"
                     app:layout_constraintStart_toEndOf="@+id/textPhoto"
                     app:layout_constraintTop_toTopOf="@+id/textPhoto"
-                    app:srcCompat="@drawable/add_photo" />
+                    app:srcCompat="@drawable/add_photo"
+                    app:tint="@color/textview_colors"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
