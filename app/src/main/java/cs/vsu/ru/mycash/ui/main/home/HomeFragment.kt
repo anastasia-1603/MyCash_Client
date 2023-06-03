@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -289,7 +290,7 @@ class HomeFragment : Fragment() {
                 }
             }
             override fun onFailure(call: Call<Map<String, List<Operation>>>, t: Throwable) {
-                t.message?.let { Log.e("t", t.message.toString()) }
+                Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
             }
 
         })
