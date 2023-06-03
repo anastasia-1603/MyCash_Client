@@ -1,10 +1,12 @@
 package cs.vsu.ru.mycash.data
 
-data class Operation (
-    val id: Long,
+import java.time.LocalDateTime
+
+data class Operation(
+    val id: Long?,
     val category: Category,
     val accountName: String,
     val value: Double,
-    val dateTime: String,
+    val dateTime: LocalDateTime,
     val comment: String
 )
