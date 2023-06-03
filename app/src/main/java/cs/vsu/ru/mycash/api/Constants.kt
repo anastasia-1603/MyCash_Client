@@ -10,5 +10,6 @@ object Constants {
     const val DATA_DAY = "main/get/{year}/{month}/{day}"
     const val ACCOUNT_URL = "account/get_all"
     const val DATA_MONTH = "main/get/{year}/{month}"
+    const val OPERATION_ADD = "operation/add"
 
 }
