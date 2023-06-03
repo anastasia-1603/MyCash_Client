@@ -39,157 +39,338 @@
             app:layout_constraintTop_toTopOf="@+id/addButton"
             app:layout_constraintVertical_bias="0.0" />
 
-        <EditText
-            android:id="@+id/editTextSum"
-            android:layout_width="350dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:autofillHints="Введите сумму"
-            android:ems="10"
-            android:hint="Введите сумму"
-            android:inputType="text"
-            android:maxLength="@integer/material_motion_duration_short_1"
-            android:textColor="@color/black"
-            android:textColorHint="@color/gray"
-            android:textSize="24sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addButton" />
-
-        <TextView
-            android:id="@+id/textViewAccountName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:maxLength="@integer/material_motion_duration_short_1"
-            android:text="Добавление"
-            android:textColor="@color/black"
-            android:textSize="28sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <EditText
-            android:id="@+id/editTextAccountName"
-            android:layout_width="350dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:autofillHints="Введите сумму"
-            android:ems="10"
-            android:hint="Комментарий"
-            android:inputType="text"
-            android:maxLength="@integer/material_motion_duration_short_1"
-            android:textColor="@color/black"
-
-            android:textColorHint="@color/gray"
-            android:textSize="24sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewDay" />
-
-        <Spinner
-            android:id="@+id/spinnerAccounts"
-            android:layout_width="0dp"
-            android:layout_height="35dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginEnd="30dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.444"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextSum" />
-
-        <Spinner
-            android:id="@+id/spinnerCategories"
-            android:layout_width="0dp"
-            android:layout_height="35dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="30dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinnerAccounts" />
-
-        <TextView
-            android:id="@+id/textViewDay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="35dp"
-            android:layout_marginTop="32dp"
-            android:text="Сегодня"
-            android:textSize="24sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinnerCategories" />
-
-
-        <Button
-            android:id="@+id/addButtonPhoto"
-            android:layout_width="46dp"
-            android:layout_height="52dp"
-            android:layout_marginStart="20dp"
-            android:backgroundTint="#EEEFF1"
-            android:text="+"
-            app:cornerRadius="150dp"
-            app:layout_constraintBottom_toBottomOf="@+id/textPhoto"
-            app:layout_constraintStart_toEndOf="@+id/textPhoto"
-            app:layout_constraintTop_toTopOf="@+id/textPhoto" />
-
-        <TextView
-            android:id="@+id/textPhoto"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="35dp"
-            android:layout_marginTop="30dp"
-            android:text="Фото"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextAccountName" />
-
-
         <Button
             android:id="@+id/addButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="10dp"
             android:text="Доходы"
             app:layout_constraintEnd_toStartOf="@+id/spendingButton"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewAccountName" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewAddOperation" />
 
-
-        <Button
-            android:id="@+id/cancelButton"
-            android:layout_width="135dp"
-            android:layout_height="51dp"
-            android:layout_marginTop="50dp"
-            android:text="Отменить"
-            app:layout_constraintEnd_toStartOf="@+id/saveButton"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textPhoto" />
-
-        <Button
-            android:id="@+id/saveButton"
-            android:layout_width="135dp"
-            android:layout_height="51dp"
-            android:text="Сохранить"
-            app:layout_constraintBottom_toBottomOf="@+id/cancelButton"
+        <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/cancelButton"
-            app:layout_constraintTop_toTopOf="@+id/cancelButton" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addButton">
 
-        <ImageButton
-            android:id="@+id/imageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:background="@color/background"
-            app:layout_constraintBottom_toBottomOf="@+id/textViewDay"
-            app:layout_constraintStart_toEndOf="@+id/textViewDay"
-            app:layout_constraintTop_toTopOf="@+id/textViewDay"
-            app:srcCompat="@drawable/calendar" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/editTextSum"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="35dp"
+                    android:layout_marginEnd="25dp"
+                    android:autofillHints="Введите сумму"
+                    android:ems="10"
+                    android:hint="Введите сумму"
+                    android:inputType="text"
+                    android:maxLength="@integer/material_motion_duration_short_1"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/gray"
+                    android:textSize="24sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+
+                <!--        <EditText-->
+                <!--            android:id="@+id/editTextAccountName"-->
+                <!--            android:layout_width="350dp"-->
+                <!--            android:layout_height="wrap_content"-->
+                <!--            android:layout_marginTop="30dp"-->
+                <!--            android:autofillHints="Введите сумму"-->
+                <!--            android:ems="10"-->
+                <!--            android:hint="Комментарий"-->
+                <!--            android:inputType="textMultiLine"-->
+                <!--            android:lines="2"-->
+                <!--            android:maxLength="@integer/material_motion_duration_short_1"-->
+                <!--            android:textColor="@color/black"-->
+
+                <!--            android:textColorHint="@color/gray"-->
+                <!--            android:textSize="24sp"-->
+                <!--            app:layout_constraintEnd_toEndOf="parent"-->
+                <!--            app:layout_constraintStart_toStartOf="parent"-->
+                <!--            app:layout_constraintTop_toBottomOf="@+id/textViewDay" />-->
+
+                <EditText
+                    android:id="@+id/comment"
+                    android:layout_width="343dp"
+                    android:layout_height="102dp"
+                    android:layout_marginStart="35dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="35dp"
+                    android:background="@color/background"
+                    android:gravity="top"
+                    android:hint="Комментарий"
+                    android:inputType="textMultiLine"
+                    android:overScrollMode="always"
+                    android:padding="15dp"
+                    android:scrollbarStyle="insideInset"
+                    android:scrollbars="vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewDay" />
+
+                <Spinner
+                    android:id="@+id/spinnerAccounts"
+                    android:layout_width="0dp"
+                    android:layout_height="35dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginEnd="30dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.444"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/editTextSum" />
+
+                <Spinner
+                    android:id="@+id/spinnerCategories"
+                    android:layout_width="0dp"
+                    android:layout_height="35dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="30dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/spinnerAccounts" />
+
+
+                <TextView
+                    android:id="@+id/textViewDay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="Сегодня"
+                    android:textSize="24sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.11"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/spinnerCategories" />
+
+
+                <TextView
+                    android:id="@+id/textPhoto"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="35dp"
+                    android:layout_marginTop="20dp"
+                    android:text="Фото"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/comment" />
+
+
+                <Button
+                    android:id="@+id/cancelButton"
+                    android:layout_width="135dp"
+                    android:layout_height="51dp"
+                    android:layout_marginTop="50dp"
+                    android:text="Отменить"
+                    app:layout_constraintEnd_toStartOf="@+id/saveButton"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textPhoto" />
+
+                <Button
+                    android:id="@+id/saveButton"
+                    android:layout_width="135dp"
+                    android:layout_height="51dp"
+                    android:text="Сохранить"
+                    app:layout_constraintBottom_toBottomOf="@+id/cancelButton"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/cancelButton"
+                    app:layout_constraintTop_toTopOf="@+id/cancelButton" />
+
+                <ImageButton
+                    android:id="@+id/imageButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:background="@color/background"
+                    app:layout_constraintBottom_toBottomOf="@+id/textViewDay"
+                    app:layout_constraintStart_toEndOf="@+id/textViewDay"
+                    app:layout_constraintTop_toTopOf="@+id/textViewDay"
+                    app:srcCompat="@drawable/calendar" />
+
+                <ImageButton
+                    android:id="@+id/imageButton4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:background="@color/background"
+                    app:layout_constraintBottom_toBottomOf="@+id/textPhoto"
+                    app:layout_constraintStart_toEndOf="@+id/textPhoto"
+                    app:layout_constraintTop_toTopOf="@+id/textPhoto"
+                    app:srcCompat="@drawable/add_photo" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+        <!--        <ScrollView-->
+
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="100dp"-->
+        <!--            app:layout_constraintBottom_toTopOf="@+id/spendingButton"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent">-->
+
+        <!--            <EditText-->
+        <!--                android:id="@+id/editTextSum"-->
+        <!--                android:layout_width="0dp"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_marginTop="30dp"-->
+        <!--                android:autofillHints="Введите сумму"-->
+        <!--                android:ems="10"-->
+        <!--                android:hint="Введите сумму"-->
+        <!--                android:inputType="text"-->
+        <!--                android:maxLength="@integer/material_motion_duration_short_1"-->
+        <!--                android:textColor="@color/black"-->
+        <!--                android:textColorHint="@color/gray"-->
+        <!--                android:textSize="24sp"-->
+        <!--                app:layout_constraintEnd_toEndOf="parent"-->
+        <!--                app:layout_constraintStart_toStartOf="parent"-->
+        <!--                app:layout_constraintTop_toBottomOf="@+id/addButton" />-->
+
+        <!--            <TextView-->
+        <!--                android:id="@+id/textViewAccountName"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_marginTop="40dp"-->
+        <!--                android:maxLength="@integer/material_motion_duration_short_1"-->
+        <!--                android:text="Добавление"-->
+        <!--                android:textColor="@color/black"-->
+        <!--                android:textSize="28sp"-->
+        <!--                app:layout_constraintEnd_toEndOf="parent"-->
+        <!--                app:layout_constraintStart_toStartOf="parent"-->
+        <!--                app:layout_constraintTop_toTopOf="parent" />-->
+
+
+        <!--            <EditText-->
+        <!--                android:id="@+id/shipper_field"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="150dp"-->
+        <!--                android:background="@drawable/text_layout_stroke_normal"-->
+        <!--                android:gravity="top"-->
+        <!--                android:hint="Комментарий"-->
+        <!--                android:inputType="textMultiLine"-->
+        <!--                android:overScrollMode="always"-->
+        <!--                android:padding="15dp"-->
+        <!--                android:scrollbarStyle="insideInset"-->
+        <!--                android:scrollbars="vertical" />-->
+
+        <!--        <EditText-->
+        <!--            android:id="@+id/editTextAccountName"-->
+        <!--            android:layout_width="350dp"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginTop="30dp"-->
+        <!--            android:autofillHints="Введите сумму"-->
+        <!--            android:ems="10"-->
+        <!--            android:hint="Комментарий"-->
+        <!--            android:inputType="textMultiLine"-->
+        <!--            android:lines="2"-->
+        <!--            android:maxLength="@integer/material_motion_duration_short_1"-->
+        <!--            android:textColor="@color/black"-->
+
+        <!--            android:textColorHint="@color/gray"-->
+        <!--            android:textSize="24sp"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/textViewDay" />-->
+
+        <!--            <Spinner-->
+        <!--                android:id="@+id/spinnerAccounts"-->
+        <!--                android:layout_width="0dp"-->
+        <!--                android:layout_height="35dp"-->
+        <!--                android:layout_marginStart="30dp"-->
+        <!--                android:layout_marginTop="30dp"-->
+        <!--                android:layout_marginEnd="30dp"-->
+        <!--                app:layout_constraintEnd_toEndOf="parent"-->
+        <!--                app:layout_constraintHorizontal_bias="0.444"-->
+        <!--                app:layout_constraintStart_toStartOf="parent"-->
+        <!--                app:layout_constraintTop_toBottomOf="@+id/editTextSum" />-->
+
+        <!--            <Spinner-->
+        <!--                android:id="@+id/spinnerCategories"-->
+        <!--                android:layout_width="0dp"-->
+        <!--                android:layout_height="35dp"-->
+        <!--                android:layout_marginStart="30dp"-->
+        <!--                android:layout_marginTop="20dp"-->
+        <!--                android:layout_marginEnd="30dp"-->
+        <!--                app:layout_constraintEnd_toEndOf="parent"-->
+        <!--                app:layout_constraintStart_toStartOf="parent"-->
+        <!--                app:layout_constraintTop_toBottomOf="@+id/spinnerAccounts" />-->
+
+
+        <!--            <TextView-->
+        <!--                android:id="@+id/textViewDay"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_marginTop="32dp"-->
+        <!--                android:text="Сегодня"-->
+        <!--                android:textSize="24sp"-->
+        <!--                app:layout_constraintEnd_toEndOf="parent"-->
+        <!--                app:layout_constraintHorizontal_bias="0.11"-->
+        <!--                app:layout_constraintStart_toStartOf="parent"-->
+        <!--                app:layout_constraintTop_toBottomOf="@+id/spinnerCategories" />-->
+
+
+        <!--            <TextView-->
+        <!--                android:id="@+id/textPhoto"-->
+        <!--                android:layout_width="0dp"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_marginStart="35dp"-->
+        <!--                android:layout_marginTop="30dp"-->
+        <!--                android:text="Фото"-->
+        <!--                android:textSize="20sp"-->
+        <!--                app:layout_constraintStart_toStartOf="parent"-->
+        <!--                app:layout_constraintTop_toBottomOf="@+id/editTextAccountName" />-->
+
+
+        <!--            <Button-->
+        <!--                android:id="@+id/cancelButton"-->
+        <!--                android:layout_width="135dp"-->
+        <!--                android:layout_height="51dp"-->
+        <!--                android:layout_marginTop="50dp"-->
+        <!--                android:text="Отменить"-->
+        <!--                app:layout_constraintEnd_toStartOf="@+id/saveButton"-->
+        <!--                app:layout_constraintHorizontal_bias="0.5"-->
+        <!--                app:layout_constraintStart_toStartOf="parent"-->
+        <!--                app:layout_constraintTop_toBottomOf="@+id/textPhoto" />-->
+
+        <!--            <Button-->
+        <!--                android:id="@+id/saveButton"-->
+        <!--                android:layout_width="135dp"-->
+        <!--                android:layout_height="51dp"-->
+        <!--                android:text="Сохранить"-->
+        <!--                app:layout_constraintBottom_toBottomOf="@+id/cancelButton"-->
+        <!--                app:layout_constraintEnd_toEndOf="parent"-->
+        <!--                app:layout_constraintHorizontal_bias="0.5"-->
+        <!--                app:layout_constraintStart_toEndOf="@+id/cancelButton"-->
+        <!--                app:layout_constraintTop_toTopOf="@+id/cancelButton" />-->
+
+        <!--            <ImageButton-->
+        <!--                android:id="@+id/imageButton"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_marginStart="30dp"-->
+        <!--                android:background="@color/background"-->
+        <!--                app:layout_constraintBottom_toBottomOf="@+id/textViewDay"-->
+        <!--                app:layout_constraintStart_toEndOf="@+id/textViewDay"-->
+        <!--                app:layout_constraintTop_toTopOf="@+id/textViewDay"-->
+        <!--                app:srcCompat="@drawable/calendar" />-->
+
+        <!--        </ScrollView>-->
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
