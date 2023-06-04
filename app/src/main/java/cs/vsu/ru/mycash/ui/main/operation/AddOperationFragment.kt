@@ -2,20 +2,24 @@ package cs.vsu.ru.mycash.ui.main.operation
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import cs.vsu.ru.mycash.api.ApiClient
 import cs.vsu.ru.mycash.api.ApiService
-import cs.vsu.ru.mycash.data.Account
-import cs.vsu.ru.mycash.data.Category
-import cs.vsu.ru.mycash.data.Operation
+import cs.vsu.ru.mycash.data.*
 import cs.vsu.ru.mycash.databinding.FragmentAddOperationBinding
 import cs.vsu.ru.mycash.utils.AppPreferences
 import retrofit2.Call
@@ -37,6 +41,7 @@ class AddOperationFragment : Fragment(),
     private lateinit var appPrefs: AppPreferences
     private lateinit var addOperationViewModel: AddOperationViewModel
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -44,8 +49,14 @@ class AddOperationFragment : Fragment(),
     ): View {
 
         addOperationViewModel = ViewModelProvider(this)[AddOperationViewModel::class.java]
-        _binding = FragmentAddOperationBinding.inflate(inflater, container, false)
         appPrefs = activity?.let { AppPreferences(it) }!!
+        _binding = FragmentAddOperationBinding.inflate(inflater, container, false)
+        getAccounts()
+        Log.e("acc onc", addOperationViewModel.accounts.value.toString())
+        getCategories()
+        Log.e("cat onc", addOperationViewModel.categories.value.toString())
+//        configureSpinnerAccounts()
+//        configureSpinnerCategories()
 
         binding.incomeBtn.isEnabled = false
         binding.spendingButton.isEnabled = true
@@ -62,12 +73,31 @@ class AddOperationFragment : Fragment(),
 
         pickDate()
 
-        addOperationViewModel.date.observe(viewLifecycleOwner) {
-            val dateFormat = "dd.MM.yyyy hh:mm"
-            val current = Calendar.getInstance()
-            val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
+        binding.saveButton.setOnClickListener {
+            if (postOperation())
+            {
+                findNavController().navigateUp()
+            }
+        }
 
-            if (sdf.format(it.time).equals(sdf.format(current.time))) {
+        binding.cancelButton.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
+
+//        binding.photoBtn.setOnClickListener {
+//            val selectImageIntent = registerForActivityResult(ActivityResultContracts.GetContent())
+//            { uri ->
+//                binding.imageView.setImageURI(uri)
+//            }
+//            selectImageIntent.launch("image/*")
+//        }
+
+        addOperationViewModel.date.observe(viewLifecycleOwner) {
+            val current = Calendar.getInstance()
+            val sdf = SimpleDateFormat("dd.MM.yyyy hh:mm", Locale.getDefault())
+            val sdf1 = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+            if (sdf1.format(it.time).equals(sdf1.format(current.time))) {
 
                 val text = "Сегодня, " + sdf.format(it.time)
                 binding.textViewDay.text = text
@@ -85,15 +115,10 @@ class AddOperationFragment : Fragment(),
                 binding.spendingButton.isEnabled = false
             }
         }
-
-        getAccounts()
-        getCategories()
-        configureSpinnerAccounts()
-        configureSpinnerCategories()
-
-
         return binding.root
     }
+
+
 
     private fun configureSpinnerCategories() {
         if (addOperationViewModel.categories.value != null) {
@@ -152,7 +177,7 @@ class AddOperationFragment : Fragment(),
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun postOperation() {
+    private fun postOperation() : Boolean{
         val categoryName = addOperationViewModel.categoryName.value
         val category = addOperationViewModel.categories.value?.find { it.name == categoryName }
         val accountName = addOperationViewModel.accountName.value
@@ -160,26 +185,72 @@ class AddOperationFragment : Fragment(),
         val value = binding.editTextSum.text
         val cal = addOperationViewModel.date.value
         val comment = binding.comment.text.toString()
+        var check : Boolean = false
         if (category != null
             && accountName != null
             && value != null
-            && cal != null) {
+            && cal != null
+        ) {
             val datetime: LocalDateTime = LocalDateTime.ofInstant(
                 cal.toInstant(), cal.timeZone.toZoneId()
             )
-            val operation: Operation =
-                Operation(
-                    null,
-                    category,
-                    accountName,
-                    value.toString().toDouble(),
-                    datetime,
-                    comment
-                )
+            val operation = Operation(
+                null,
+                category,
+                accountName,
+                value.toString().toDouble(),
+                datetime.toString(),
+                comment
+            )
             apiService = ApiClient.getClient(appPrefs.token.toString())
-            apiService.addOperation(operation)
+
+            apiService.addOperation(operation).enqueue(object: Callback<OperationResponse> {
+                override fun onResponse(
+                    call: Call<OperationResponse>,
+                    response: Response<OperationResponse>
+                ) {
+                    Log.d("oper response", response.body().toString())
+                    if (response.body() != null) {
+                        if (response.body()!!.type == LimitType.CATEGORY)
+                        {
+                            Toast.makeText(context, "Вы превысили лимит по категории!", Toast.LENGTH_SHORT).show()
+
+                        }
+                        else if (response.body()!!.type == LimitType.CATEGORY)
+                        {
+                            Toast.makeText(context, "Вы превысили лимит по счету!", Toast.LENGTH_SHORT).show()
+
+                        }
+                        check = true
+                    }
+                    else {
+
+                        check = false
+                    }
+
+                }
+
+                override fun onFailure(call: Call<OperationResponse>, t: Throwable) {
+                    Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
+                }
+
+            })
+
+        } else if (value.trim().isEmpty()) {
+            binding.editTextSum.setError("Введите сумму")
         }
 
+        return check
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        addOperationViewModel = ViewModelProvider(this)[AddOperationViewModel::class.java]
+        appPrefs = activity?.let { AppPreferences(it) }!!
+
+        Log.e("acc att", addOperationViewModel.accounts.value.toString())
+        getCategories()
+        Log.e("cat att", addOperationViewModel.categories.value.toString())
     }
 
     private fun getAccounts() {
@@ -187,9 +258,13 @@ class AddOperationFragment : Fragment(),
         apiService.getAccounts().enqueue(object : Callback<List<Account>> {
             override fun onResponse(call: Call<List<Account>>, response: Response<List<Account>>) {
                 val accounts = response.body()
+                Log.d("accounts response", response.body().toString())
                 if (accounts != null) {
                     addOperationViewModel.setAccounts(accounts)
+                    Log.d("accounts", accounts.toString())
+                    configureSpinnerAccounts()
                 }
+
             }
 
             override fun onFailure(call: Call<List<Account>>, t: Throwable) {
@@ -207,8 +282,10 @@ class AddOperationFragment : Fragment(),
                 response: Response<List<Category>>
             ) {
                 val categories = response.body()
+                Log.d("categories response", response.body().toString())
                 if (categories != null) {
                     addOperationViewModel.setCategories(categories)
+                    configureSpinnerCategories()
                 }
             }
 
