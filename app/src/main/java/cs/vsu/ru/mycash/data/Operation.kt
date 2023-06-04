@@ -7,6 +7,6 @@ data class Operation(
     val category: Category,
     val accountName: String,
     val value: Double,
-    val dateTime: LocalDateTime,
+    val dateTime: String,
     val comment: String
 )
