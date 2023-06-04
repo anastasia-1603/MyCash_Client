@@ -246,13 +246,6 @@ class HomeFragment : Fragment() {
         loadOperations()
     }
 
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        loadOperations()
-//    }
-
-
-
     class HomePagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
 
         override fun getItemCount(): Int {
@@ -400,7 +393,6 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 
-    // Function for Showing Date Picker
     @SuppressLint("SetTextI18n")
     fun datePickerDialog(): DatePickerDialog? {
         val c = homeViewModel.date.value ?: Calendar.getInstance()
@@ -409,20 +401,16 @@ class HomeFragment : Fragment() {
         val month = c.get(Calendar.MONTH)
         val day = c.get(Calendar.DAY_OF_MONTH)
 
-        // Date Picker Dialog
         val datePickerDialog =
             context?.let {
-                DatePickerDialog(it, android.R.style.Theme_Holo_Light_Dialog, DatePickerDialog.OnDateSetListener {
+                DatePickerDialog(it, android.R.style.Theme_Holo_Light_Dialog, {
                         _, year, monthOfYear, dayOfMonth ->
-                    // Display Selected date in textbox
                     cal.set(Calendar.YEAR, year)
                     cal.set(Calendar.MONTH, monthOfYear)
                     cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
                     homeViewModel.setDate(cal)
                 }, year, month, day)
             }
-        // Show Date Picker
-
         return datePickerDialog
 
 
