@@ -11,7 +11,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import cs.vsu.ru.mycash.utils.OperationAdapter
 import cs.vsu.ru.mycash.databinding.FragmentTabAllBinding
-//import cs.vsu.ru.mycash.service.OperationService
 
 
 class TabAllFragment : Fragment() {
@@ -31,13 +30,8 @@ class TabAllFragment : Fragment() {
             Toast.makeText(activity, operation.category.name, Toast.LENGTH_SHORT).show()
         })
 
-//        val operationViewModel = ViewModelProvider(requireActivity())[OperationViewModel::class.java]
-
-
         val operationList = operationViewModel.operationList.value
-        Log.e("taball", operationViewModel.operationList.value.toString())
 
-//        val operationList =  OperationService().operations
         adapter.data = operationList ?: emptyList()
         binding.recyclerView.layoutManager = manager
         binding.recyclerView.adapter = adapter
@@ -48,5 +42,7 @@ class TabAllFragment : Fragment() {
 
         return root
     }
+
+
 
 }
