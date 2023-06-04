@@ -43,7 +43,6 @@ android {
 
 dependencies {
 
-    implementation 'com.github.javafaker:javafaker:1.0.2'
     implementation 'com.github.bumptech.glide:glide:4.14.2'
     implementation "androidx.datastore:datastore-preferences:1.0.0"
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.1'
@@ -73,6 +72,4 @@ dependencies {
     implementation 'androidx.fragment:fragment-ktx:1.5.7'
     implementation "androidx.activity:activity-ktx:1.7.1"
     implementation 'android.arch.navigation:navigation-ui:1.0.0'
-    implementation 'io.github.dzmitry-lakisau:month-year-picker-dialog:1.0.0'
-
 }
