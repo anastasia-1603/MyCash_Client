@@ -7,26 +7,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import cs.vsu.ru.mycash.R
+import cs.vsu.ru.mycash.databinding.FragmentDiagramsAllBinding
 
 class DiagramsAllFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = DiagramsAllFragment()
-    }
-
-    private lateinit var viewModel: DiagramsAllViewModel
+    private lateinit var binding: FragmentDiagramsAllBinding
+    private lateinit var diagramsAllViewModel: DiagramsAllViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_diagrams_all, container, false)
+    ): View {
+
+        binding = FragmentDiagramsAllBinding.inflate(inflater, container, false)
+
+        return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(DiagramsAllViewModel::class.java)
-        // TODO: Use the ViewModel
+    private fun setLineChartData()
+    {
+//        val xvalue = ArrayList<String>()
+//        xvalue.add()
     }
-
 }
