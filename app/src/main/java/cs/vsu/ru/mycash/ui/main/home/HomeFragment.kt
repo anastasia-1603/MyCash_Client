@@ -199,6 +199,7 @@ class HomeFragment : Fragment() {
             } else {
                 cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 1)
             }
+            loadOperations()
             homeViewModel.setDate(cal)
         }
 
@@ -209,6 +210,7 @@ class HomeFragment : Fragment() {
             } else {
                 cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) + 1)
             }
+            loadOperations()
             homeViewModel.setDate(cal)
         }
 
@@ -227,6 +229,7 @@ class HomeFragment : Fragment() {
                 }
             }
         tabLayoutMediator.attach()
+
 
         return root
     }
@@ -389,6 +392,8 @@ class HomeFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+
 
 }
 
