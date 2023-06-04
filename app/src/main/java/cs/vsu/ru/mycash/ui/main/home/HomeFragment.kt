@@ -1,6 +1,8 @@
 package cs.vsu.ru.mycash.ui.main.home
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.DatePicker
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -16,6 +19,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import by.dzmitry_lakisau.month_year_picker_dialog.MonthYearPickerDialog
 import com.google.android.material.tabs.TabLayoutMediator
 import cs.vsu.ru.mycash.R
 import cs.vsu.ru.mycash.api.ApiClient
@@ -164,9 +168,7 @@ class HomeFragment : Fragment() {
 
                 dateBtn.text = monthNames[cal.get(Calendar.MONTH)]
             }
-
         }
-
 
         val dateSetListener =
             DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
@@ -188,7 +190,12 @@ class HomeFragment : Fragment() {
                     ).show()
                 }
             } else {
-                Log.e("month", "month")
+                val dialog = datePickerDialog()
+                dialog?.show()
+                val day = dialog?.findViewById<View>(Resources.getSystem().getIdentifier("android:id/day", null, null))
+                if (day != null) {
+                    day.visibility = View.GONE
+                }
             }
 
         }
@@ -393,7 +400,33 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 
+    // Function for Showing Date Picker
+    @SuppressLint("SetTextI18n")
+    fun datePickerDialog(): DatePickerDialog? {
+        val c = homeViewModel.date.value ?: Calendar.getInstance()
 
+        val year = c.get(Calendar.YEAR)
+        val month = c.get(Calendar.MONTH)
+        val day = c.get(Calendar.DAY_OF_MONTH)
+
+        // Date Picker Dialog
+        val datePickerDialog =
+            context?.let {
+                DatePickerDialog(it, android.R.style.Theme_Holo_Light_Dialog, DatePickerDialog.OnDateSetListener {
+                        _, year, monthOfYear, dayOfMonth ->
+                    // Display Selected date in textbox
+                    cal.set(Calendar.YEAR, year)
+                    cal.set(Calendar.MONTH, monthOfYear)
+                    cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                    homeViewModel.setDate(cal)
+                }, year, month, day)
+            }
+        // Show Date Picker
+
+        return datePickerDialog
+
+
+    }
 
 }
 
