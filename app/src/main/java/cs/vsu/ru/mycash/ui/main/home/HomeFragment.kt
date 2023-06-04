@@ -10,16 +10,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.DatePicker
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import by.dzmitry_lakisau.month_year_picker_dialog.MonthYearPickerDialog
 import com.google.android.material.tabs.TabLayoutMediator
 import cs.vsu.ru.mycash.R
 import cs.vsu.ru.mycash.api.ApiClient
@@ -30,10 +29,8 @@ import cs.vsu.ru.mycash.utils.AppPreferences
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 class HomeFragment : Fragment() {
 
@@ -81,7 +78,7 @@ class HomeFragment : Fragment() {
             }
         }
 
-        val dateBtn : Button = binding.date
+        val dateBtn: Button = binding.date
         val dayBtn: Button = binding.day
         val monthBtn: Button = binding.month
 
@@ -192,7 +189,9 @@ class HomeFragment : Fragment() {
             } else {
                 val dialog = datePickerDialog()
                 dialog?.show()
-                val day = dialog?.findViewById<View>(Resources.getSystem().getIdentifier("android:id/day", null, null))
+                val day = dialog?.findViewById<View>(
+                    Resources.getSystem().getIdentifier("android:id/day", null, null)
+                )
                 if (day != null) {
                     day.visibility = View.GONE
                 }
@@ -237,7 +236,23 @@ class HomeFragment : Fragment() {
             }
         tabLayoutMediator.attach()
 
+        if (homeViewModel.accountList.value != null
+            && homeViewModel.accountList.value!!.size > 1
+        ) {
+            binding.leftAccount.isVisible = true
+            binding.rightAccount.isVisible = true
+        } else {
+            binding.leftAccount.isVisible = false
+            binding.rightAccount.isVisible = false
+        }
 
+        binding.leftAccount.setOnClickListener {
+            homeViewModel.decrementAccountIndex()
+        }
+
+        binding.rightAccount.setOnClickListener {
+            homeViewModel.incrementAccountIndex()
+        }
         return root
     }
 
@@ -266,19 +281,17 @@ class HomeFragment : Fragment() {
     private fun loadOperations() {
         apiService = ApiClient.getClient(appPrefs.token.toString())
         val call: Call<Map<String, List<Operation>>>
-        if (homeViewModel.mode.value == HomeViewModel.Mode.DAY)
-        {
+        if (homeViewModel.mode.value == HomeViewModel.Mode.DAY) {
             call = apiService.getDataByDay(
                 cal.get(Calendar.YEAR), //todo поменять на date
                 cal.get(Calendar.MONTH) + 1,
                 cal.get(Calendar.DAY_OF_MONTH)
             )
-        }
-        else
-        {
+        } else {
             call = apiService.getDataByMonth(
                 cal.get(Calendar.YEAR),
-                cal.get(Calendar.MONTH) + 1)
+                cal.get(Calendar.MONTH) + 1
+            )
         }
         call.enqueue(object : Callback<Map<String, List<Operation>>> {
             override fun onResponse(
@@ -287,11 +300,11 @@ class HomeFragment : Fragment() {
             ) {
                 val map = response.body()
                 Log.e("map", map.toString())
-                if (map != null)
-                {
+                if (map != null) {
                     updateMap(map)
                 }
             }
+
             override fun onFailure(call: Call<Map<String, List<Operation>>>, t: Throwable) {
                 Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
             }
@@ -300,8 +313,7 @@ class HomeFragment : Fragment() {
     }
 
 
-    private fun updateOperations(operationList: List<Operation>)
-    {
+    private fun updateOperations(operationList: List<Operation>) {
         operationViewModel.setOperationList(operationList)
         operationViewModel.operationList.value?.let { operations ->
             operationViewModel.setExpenseList(operations.filter {
@@ -316,15 +328,13 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun updateAccount(account: AccountDto, operationList: List<Operation>)
-    {
+    private fun updateAccount(account: AccountDto, operationList: List<Operation>) {
         homeViewModel.setAccountName(account.name)
         homeViewModel.setBalance(account.balance.toString())
         updateOperations(operationList)
     }
 
-    private fun updateAccount(account: AccountDto)
-    {
+    private fun updateAccount(account: AccountDto) {
         homeViewModel.setAccountName(account.name)
         homeViewModel.setBalance(account.balance.toString())
         val operationList = operationViewModel.map.value?.get(account.name)
@@ -332,10 +342,10 @@ class HomeFragment : Fragment() {
             updateOperations(operationList)
         }
     }
-    private fun updateMap(map: Map<String, List<Operation>>)
-    {
+
+    private fun updateMap(map: Map<String, List<Operation>>) {
         operationViewModel.setMap(map)
-        val accounts : List<AccountDto> = getAccounts(map)
+        val accounts: List<AccountDto> = getAccounts(map)
         val index = homeViewModel.accountIndex.value
         if (index != null) {
             val account = accounts[index]
@@ -344,7 +354,7 @@ class HomeFragment : Fragment() {
     }
 
 
-    private fun updateDate(newDate : Calendar) {
+    private fun updateDate(newDate: Calendar) {
 
         homeViewModel.setDate(newDate)
         if (homeViewModel.mode.value == HomeViewModel.Mode.DAY) {
@@ -377,12 +387,11 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun getAccounts(map: Map<String, List<Operation>>) : List<AccountDto>
-    {
-        val accounts : ArrayList<AccountDto> = ArrayList()
+    private fun getAccounts(map: Map<String, List<Operation>>): List<AccountDto> {
+        val accounts: ArrayList<AccountDto> = ArrayList()
         map.keys.forEach {
             val tmp = it.split(":")
-            val accountDto : AccountDto = AccountDto(tmp[0], tmp[1].toDouble())
+            val accountDto: AccountDto = AccountDto(tmp[0], tmp[1].toDouble())
             accounts.add(accountDto)
         }
         return accounts
@@ -403,13 +412,19 @@ class HomeFragment : Fragment() {
 
         val datePickerDialog =
             context?.let {
-                DatePickerDialog(it, android.R.style.Theme_Holo_Light_Dialog, {
-                        _, year, monthOfYear, dayOfMonth ->
-                    cal.set(Calendar.YEAR, year)
-                    cal.set(Calendar.MONTH, monthOfYear)
-                    cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                    homeViewModel.setDate(cal)
-                }, year, month, day)
+                DatePickerDialog(
+                    it,
+                    android.R.style.Theme_Holo_Light_Dialog,
+                    { _, year, monthOfYear, dayOfMonth ->
+                        cal.set(Calendar.YEAR, year)
+                        cal.set(Calendar.MONTH, monthOfYear)
+                        cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                        homeViewModel.setDate(cal)
+                    },
+                    year,
+                    month,
+                    day
+                )
             }
         return datePickerDialog
 
