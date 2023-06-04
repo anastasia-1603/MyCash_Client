@@ -79,6 +79,20 @@ class HomeFragment : Fragment() {
         val dayBtn: Button = binding.day
         val monthBtn: Button = binding.month
 
+        if (dayBtn.isEnabled == monthBtn.isEnabled)
+        {
+            if (homeViewModel.mode.value == HomeViewModel.Mode.DAY)
+            {
+                dayBtn.isEnabled = false
+                monthBtn.isEnabled = true
+            }
+            else {
+                dayBtn.isEnabled = true
+                monthBtn.isEnabled = false
+            }
+        }
+
+
         dayBtn.setOnClickListener {
             homeViewModel.setMode(HomeViewModel.Mode.DAY)
             dayBtn.isEnabled = false
@@ -94,10 +108,10 @@ class HomeFragment : Fragment() {
 
         homeViewModel.mode.observe(viewLifecycleOwner) {
             if (homeViewModel.mode.value == HomeViewModel.Mode.DAY) {
-                if (!dayBtn.isEnabled) {
-                    dayBtn.isEnabled = true
-                    monthBtn.isEnabled = false
-                }
+//                if (!dayBtn.isEnabled) {
+//                    dayBtn.isEnabled = false
+//                    monthBtn.isEnabled = true
+//                }
                 val current = Calendar.getInstance()
                 val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
                 val sdf1 = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
@@ -109,10 +123,10 @@ class HomeFragment : Fragment() {
                 }
 
             } else {
-                if (!monthBtn.isEnabled) {
-                    monthBtn.isEnabled = true
-                    dayBtn.isEnabled = false
-                }
+//                if (!monthBtn.isEnabled) {
+//                    monthBtn.isEnabled = false
+//                    dayBtn.isEnabled = false
+//                }
                 val monthNames = arrayOf(
                     "Январь",
                     "Февраль",
