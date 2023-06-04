@@ -16,20 +16,22 @@ import androidx.fragment.app.activityViewModels
 
 class HomeViewModel : ViewModel() {
 
-
-//    private val _map: MutableLiveData<Map<Account, List<Operation>>> by lazy {
-//        MutableLiveData<Map<Account, List<Operation>>>()
-//    }
-//    val map: LiveData<Map<Account, List<Operation>>> = _map
-//
-//    fun setMap(map: Map<Account, List<Operation>>) {
-//        _map.value = map
-//    }
-
     private val _accountIndex: MutableLiveData<Int> by lazy {
         MutableLiveData<Int>(0)
     }
     val accountIndex: LiveData<Int> = _accountIndex
+
+    fun setAccountIndex(index: Int) {
+        _accountIndex.value = index
+    }
+
+    fun decrementAccountIndex() {
+        _accountIndex.value = _accountIndex.value!! - 1
+    }
+
+    fun incrementAccountIndex() {
+        _accountIndex.value = _accountIndex.value!! + 1
+    }
 
     private val _accountName: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
