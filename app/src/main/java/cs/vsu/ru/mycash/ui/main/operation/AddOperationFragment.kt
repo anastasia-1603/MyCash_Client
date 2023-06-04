@@ -183,12 +183,13 @@ class AddOperationFragment : Fragment(),
         val accountName = addOperationViewModel.accountName.value
         val account = addOperationViewModel.accounts.value?.filter { it.name == accountName }
         val value = binding.editTextSum.text
+
         val cal = addOperationViewModel.date.value
         val comment = binding.comment.text.toString()
-        var check : Boolean = false
-        if (category != null
-            && accountName != null
-            && value != null
+        var check = false
+        if (category != null && categoryName != null && categoryName.trim().isNotEmpty()
+            && accountName != null && accountName.trim().isNotEmpty()
+            && value!= null && value.trim().isNotEmpty()
             && cal != null
         ) {
             val datetime: LocalDateTime = LocalDateTime.ofInstant(
