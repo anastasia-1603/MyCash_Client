@@ -7,6 +7,8 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import cs.vsu.ru.mycash.data.Operation
 import cs.vsu.ru.mycash.databinding.ItemOperationBinding
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 class OperationAdapter(private val onClickListener: OnClickListener) :
@@ -40,7 +42,10 @@ class OperationAdapter(private val onClickListener: OnClickListener) :
         with(holder.binding) {
             categoryName.text = operation.category.name
             value.text = operation.value.toString()
-            time.text = operation.dateTime
+
+            val f = DateTimeFormatter.ofPattern("HH:mm")
+            val date = LocalDateTime.parse(operation.dateTime, f)
+            time.text = date.toString()
 
             imageView.setColorFilter(operation.category.color)
 
