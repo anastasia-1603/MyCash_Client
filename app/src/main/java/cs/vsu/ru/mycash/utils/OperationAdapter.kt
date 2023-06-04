@@ -7,17 +7,19 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import cs.vsu.ru.mycash.data.Operation
 import cs.vsu.ru.mycash.databinding.ItemOperationBinding
+import java.util.*
 
-class OperationAdapter(private val onClickListener: OnClickListener)
-    : RecyclerView.Adapter<OperationAdapter.OperationViewHolder>() {
+class OperationAdapter(private val onClickListener: OnClickListener) :
+    RecyclerView.Adapter<OperationAdapter.OperationViewHolder>() {
 
     var data: List<Operation> = emptyList()
-    set(newValue) {
-        field = newValue
-        notifyDataSetChanged()
-    }
+        set(newValue) {
+            field = newValue
+            notifyDataSetChanged()
+        }
 
-    class OperationViewHolder(val binding: ItemOperationBinding) : RecyclerView.ViewHolder(binding.root)
+    class OperationViewHolder(val binding: ItemOperationBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
 
     override fun onCreateViewHolder(
@@ -35,8 +37,7 @@ class OperationAdapter(private val onClickListener: OnClickListener)
         val operation = data[position]
 
 
-        with (holder.binding) {
-
+        with(holder.binding) {
             categoryName.text = operation.category.name
             value.text = operation.value.toString()
             time.text = operation.dateTime
