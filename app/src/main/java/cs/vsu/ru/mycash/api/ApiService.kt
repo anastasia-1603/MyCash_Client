@@ -27,7 +27,7 @@ interface ApiService {
 
     @GET(DATA_MONTH)
     fun getDataByMonth(@Path("year") year: Int,
-                       @Path("month") month: Int,) :
+                       @Path("month") month: Int) :
             Call<Map<String, List<Operation>>>
 
     @POST(REGISTER)

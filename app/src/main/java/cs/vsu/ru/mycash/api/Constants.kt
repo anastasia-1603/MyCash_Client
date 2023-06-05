@@ -1,7 +1,7 @@
 package cs.vsu.ru.mycash.api
 
 object Constants {
-    const val BASE_URL = "https://ce3a-104-28-198-246.ngrok-free.app/api/"
+    const val BASE_URL = "https://44f9-95-32-198-80.ngrok-free.app/api/"
     const val INIT_URL = "auth/new"
     const val LOGIN = "auth/login"
     const val REGISTER = "auth/register"

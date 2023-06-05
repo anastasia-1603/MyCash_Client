@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import cs.vsu.ru.mycash.data.Account
+import cs.vsu.ru.mycash.data.AccountDto
 import cs.vsu.ru.mycash.data.Category
 import java.util.*
 
@@ -32,12 +33,12 @@ class PredictViewModel : ViewModel() {
 
     val accountName: LiveData<String> = _accountName
 
-    private val _accountList: MutableLiveData<List<Account>> by lazy {
-        MutableLiveData<List<Account>>()
+    private val _accountList: MutableLiveData<List<AccountDto>> by lazy {
+        MutableLiveData<List<AccountDto>>()
     }
-    val accountList : LiveData<List<Account>> = _accountList
+    val accountList : LiveData<List<AccountDto>> = _accountList
 
-    fun setAccountsList(accounts: List<Account>)
+    fun setAccountsList(accounts: List<AccountDto>)
     {
         _accountList.value = accounts
     }

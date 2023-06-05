@@ -21,9 +21,7 @@ import androidx.navigation.fragment.findNavController
 import cs.vsu.ru.mycash.R
 import cs.vsu.ru.mycash.api.ApiClient
 import cs.vsu.ru.mycash.api.ApiService
-import cs.vsu.ru.mycash.data.AccountDto
-import cs.vsu.ru.mycash.data.Operation
-import cs.vsu.ru.mycash.data.PredictionResponse
+import cs.vsu.ru.mycash.data.*
 import cs.vsu.ru.mycash.databinding.FragmentPredictBinding
 import cs.vsu.ru.mycash.utils.AppPreferences
 import retrofit2.Call
@@ -37,7 +35,8 @@ class PredictFragment : Fragment() {
     private var cal = Calendar.getInstance()
     private val dateFormat = "d MMMM"
     private lateinit var predictViewModel: PredictViewModel
-    private val homeViewModel :HomeViewModel by activityViewModels()
+//    private val homeViewModel :HomeViewModel by activityViewModels()
+    private val accountSendViewModel :AccountSendViewModel by activityViewModels()
     private val binding get() = _binding!!
 
     private lateinit var apiService: ApiService
@@ -52,12 +51,13 @@ class PredictFragment : Fragment() {
         appPrefs = activity?.let { AppPreferences(it) }!!
         _binding = FragmentPredictBinding.inflate(inflater, container, false)
         predictViewModel = ViewModelProvider(this)[PredictViewModel::class.java]
-        homeViewModel.accountList.value?.let { predictViewModel.setAccountsList(it) }
+
+//        homeViewModel.accountList.value?.let { predictViewModel.setAccountsList(it) }
         val cal = Calendar.getInstance()
         val month = Calendar.getInstance().get(Calendar.MONTH)
         cal.set(Calendar.MONTH, month+1)
         predictViewModel.setDate(cal)
-        homeViewModel.accountName.value?.let { predictViewModel.setAccountName(it) }
+//        homeViewModel.accountName.value?.let { predictViewModel.setAccountName(it) }
         val root: View = binding.root
 
         val accountName: TextView = binding.accountName
@@ -112,7 +112,11 @@ class PredictFragment : Fragment() {
         }
 
 
-
+        accountSendViewModel.accountList.value?.let { predictViewModel.setAccountsList(it) }
+        accountSendViewModel.accountIndex.value?.let { predictViewModel.setAccountIndex(it) }
+        val ind = accountSendViewModel.accountIndex.value
+        ind?.let { accountSendViewModel.accountList.value?.get(it)?.name ?: "name" }
+            ?.let { predictViewModel.setAccountName(it) }
         binding.date.setOnClickListener {
             val dialog = datePickerDialog()
             dialog?.show()
@@ -204,9 +208,10 @@ class PredictFragment : Fragment() {
         apiService = ApiClient.getClient(appPrefs.token.toString())
         val date = predictViewModel.date.value
         if (date != null) {
+            Log.e("acc name predict", accountSendViewModel.accountName.value.toString())
             val call: Call<PredictionResponse> =
                 apiService.getPredict(
-                    homeViewModel.accountName.value.toString(),
+                    accountSendViewModel.accountName.value.toString(),
                     date.get(Calendar.YEAR),
                     date.get(Calendar.MONTH) + 1)
             call.enqueue(object : Callback<PredictionResponse> {
@@ -218,11 +223,19 @@ class PredictFragment : Fragment() {
                     Log.e("resp", resp.toString())
                     if (resp != null)
                     {
-                        predictViewModel.setCategory(resp.topCategory)
+                        if (resp.topCategory != null)
+                        {
+                            predictViewModel.setCategory(resp.topCategory)
+                        }
+                        else
+                        {
+                            val cat = Category("default", 0, CategoryType.EXPENSE, false, 0.0)
+                        }
+
                         predictViewModel.setPredictExp(resp.expensePrediction)
                         predictViewModel.setPredictInc(resp.incomePrediction)
                         predictViewModel.setPredictSum(resp.topCategoryPrediction)
-                        val balance = homeViewModel.balance.value?.toDouble()
+                        val balance = accountSendViewModel.balance.value?.toDouble()
 
                         if (balance != null) {
                             predictViewModel.setBalance(

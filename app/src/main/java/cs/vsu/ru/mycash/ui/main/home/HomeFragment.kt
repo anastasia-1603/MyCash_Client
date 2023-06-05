@@ -38,6 +38,7 @@ class HomeFragment : Fragment() {
     private var cal = Calendar.getInstance()
     private val dateFormat = "d MMMM"
     private val operationViewModel: OperationViewModel by activityViewModels()
+    private val accountSendViewModel: AccountSendViewModel by activityViewModels()
     private lateinit var homeViewModel: HomeViewModel
     private val binding get() = _binding!!
     private val sdf1 = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
@@ -45,6 +46,7 @@ class HomeFragment : Fragment() {
     private lateinit var apiService: ApiService
     private lateinit var appPrefs: AppPreferences
 
+    @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,7 +67,7 @@ class HomeFragment : Fragment() {
 
         val balance: TextView = binding.balance
         homeViewModel.balance.observe(viewLifecycleOwner) {
-            balance.text = it
+            balance.text = "$it Р"
         }
 
         homeViewModel.accountIndex.observe(viewLifecycleOwner) {
@@ -233,10 +235,10 @@ class HomeFragment : Fragment() {
                 val sdf1 = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
 
                 if (sdf1.format(cal.time).equals(sdf1.format(cur.time))) {
+
                 } else {
                     cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) + 1)
                 }
-
 
             } else {
                 val date = homeViewModel.date.value
@@ -244,6 +246,17 @@ class HomeFragment : Fragment() {
                     if (date.get(Calendar.MONTH) == cur.get(Calendar.MONTH) + 1 &&
                         date.get(Calendar.YEAR) == cur.get(Calendar.YEAR)
                     ) {
+                        val ind = homeViewModel.accountIndex.value
+                        val accounts = homeViewModel.accountList.value
+                        Log.e("hvm ind", ind.toString())
+                        Log.e("hvm acc", accounts.toString())
+                        if (ind != null) {
+                            accountSendViewModel.setAccountIndex(ind)
+                        }
+                        if (accounts != null) {
+                            accountSendViewModel.setAccountsList(accounts)
+                        }
+                        accountSendViewModel.setBalance(homeViewModel.balance.value.toString().toDouble())
                         findNavController().navigate(R.id.predictFragment)
                     } else {
                         cal.set(Calendar.MONTH, date.get(Calendar.MONTH) + 1)
@@ -364,6 +377,7 @@ class HomeFragment : Fragment() {
                         Log.e("map", map.toString())
                         if (map != null) {
                             updateMap(map)
+
                         }
                         Log.e("acc list in hvm", homeViewModel.accountList.value.toString())
                         Log.e("oper list in vm", operationViewModel.operationList.value.toString())
@@ -420,10 +434,19 @@ class HomeFragment : Fragment() {
 
     private fun updateMap(map: Map<String, List<Operation>>) {
         operationViewModel.setMap(map)
+
         val accounts: List<AccountDto> = getAccounts(map)
+        homeViewModel.setAccountsList(accounts)
+        Log.e("accounts", accounts.toString())
+        accountSendViewModel.setAccountsList(accounts)
+        Log.e("accounts", accountSendViewModel.toString())
+
         val index = homeViewModel.accountIndex.value
+        Log.e("account index", index.toString())
         if (index != null) {
             val account = accounts[index]
+            Log.e("account by ind", account.toString())
+
             map["${account.name}:${account.balance}"]?.let {
                 updateAccount(account, it)
             }
@@ -468,7 +491,9 @@ class HomeFragment : Fragment() {
         val accounts: ArrayList<AccountDto> = ArrayList()
         map.keys.forEach {
             val tmp = it.split(":")
+            Log.e("account getAcc", tmp.toString())
             val accountDto: AccountDto = AccountDto(tmp[0], tmp[1].toDouble())
+            Log.e("account getAcc", accountDto.toString())
             accounts.add(accountDto)
         }
         return accounts
