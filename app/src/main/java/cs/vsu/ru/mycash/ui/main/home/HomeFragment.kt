@@ -136,8 +136,8 @@ class HomeFragment : Fragment() {
         }
 
         homeViewModel.date.observe(viewLifecycleOwner) {
+            val current = Calendar.getInstance()
             if (homeViewModel.mode.value == HomeViewModel.Mode.DAY) {
-                val current = Calendar.getInstance()
                 val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
                 val sdf1 = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
 
@@ -148,22 +148,31 @@ class HomeFragment : Fragment() {
                 }
 
             } else {
-                val monthNames = arrayOf(
-                    "Январь",
-                    "Февраль",
-                    "Март",
-                    "Апрель",
-                    "Май",
-                    "Июнь",
-                    "Июль",
-                    "Август",
-                    "Сентябрь",
-                    "Октябрь",
-                    "Ноябрь",
-                    "Декабрь"
-                )
+                if (it.get(Calendar.MONTH) == current.get(Calendar.MONTH) + 1 &&
+                    it.get(Calendar.YEAR) == it.get(Calendar.YEAR))
+                {
+                    findNavController().navigate(R.id.predictFragment)
+                }
+                else
+                {
+                    val monthNames = arrayOf(
+                        "Январь",
+                        "Февраль",
+                        "Март",
+                        "Апрель",
+                        "Май",
+                        "Июнь",
+                        "Июль",
+                        "Август",
+                        "Сентябрь",
+                        "Октябрь",
+                        "Ноябрь",
+                        "Декабрь"
+                    )
 
-                dateBtn.text = monthNames[cal.get(Calendar.MONTH)]
+                    dateBtn.text = monthNames[cal.get(Calendar.MONTH)]
+                }
+
             }
         }
 
@@ -214,7 +223,17 @@ class HomeFragment : Fragment() {
                 cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) + 1)
 
             } else {
-                cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) + 1)
+                val cur = Calendar.getInstance()
+                val date = homeViewModel.date.value
+                if (date != null) {
+                    if (date.get(Calendar.MONTH) == cur.get(Calendar.MONTH)+1 &&
+                        date.get(Calendar.YEAR) == cur.get(Calendar.YEAR)) {
+                        findNavController().navigate(R.id.predictFragment)
+                    } else
+                    {
+                        cal.set(Calendar.MONTH, date.get(Calendar.MONTH) + 1)
+                    }
+                }
             }
             loadOperations()
             homeViewModel.setDate(cal)
