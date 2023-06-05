@@ -11,6 +11,6 @@ object Constants {
     const val ACCOUNT_URL = "account/get_all"
     const val DATA_MONTH = "main/get/{year}/{month}"
     const val OPERATION_ADD = "operation/add"
-    const val PREDICT = "predict/{accountName}/{year}/month"
+    const val PREDICT = "predict/{accountName}/{year}/{month}"
 
 }
