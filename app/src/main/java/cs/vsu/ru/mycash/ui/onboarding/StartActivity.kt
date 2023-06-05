@@ -63,6 +63,7 @@ class StartActivity : AppCompatActivity() {
                     }
 
                     override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
+                        Log.e("Error", t.message.toString())
                         Toast.makeText(applicationContext, t.message, Toast.LENGTH_SHORT).show()
                     }
 
