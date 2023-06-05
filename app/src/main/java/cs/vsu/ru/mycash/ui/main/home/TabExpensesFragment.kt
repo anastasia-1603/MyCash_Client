@@ -27,7 +27,7 @@ class TabExpensesFragment : Fragment() {
         val root: View = binding.root
         val manager = LinearLayoutManager(context)
         adapter = OperationAdapter(OperationAdapter.OnClickListener { operation ->
-            Toast.makeText(activity, operation.category.name, Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, operation.comment, Toast.LENGTH_SHORT).show()
         })
 
         val expenseOperationsList = operationViewModel.expenseOperations.value

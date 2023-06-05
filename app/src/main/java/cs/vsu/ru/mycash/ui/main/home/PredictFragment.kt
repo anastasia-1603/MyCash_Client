@@ -62,6 +62,8 @@ class PredictFragment : Fragment() {
         predictViewModel.setDate(cal)
         val root: View = binding.root
 
+        getPredict()
+
         val accountName: TextView = binding.accountName
         predictViewModel.accountName.observe(viewLifecycleOwner) {
             accountName.text = it
@@ -79,16 +81,20 @@ class PredictFragment : Fragment() {
 
         val predictInc = binding.predictInc
         predictViewModel.predictInc.observe(viewLifecycleOwner) {
-            predictExp.text = it.toString()
+            predictInc.text = it.toString()
         }
 
         val categ = binding.predictCategName
         val color = binding.colorCateg
-        val sum = binding.balancePredict
+        val sum = binding.predictCateg
         predictViewModel.category.observe(viewLifecycleOwner) {
             categ.text = it.name.toString()
             color.setColorFilter(-it.color)
-            sum.text = predictViewModel.predictSum.toString()
+
+        }
+
+        predictViewModel.predictSum.observe(viewLifecycleOwner){
+            sum.text = predictViewModel.predictSum.value.toString()
         }
 
         val dateBtn: Button = binding.date
@@ -178,10 +184,10 @@ class PredictFragment : Fragment() {
         return root
     }
 
-    override fun onResume() {
-        super.onResume()
-        getPredict()
-    }
+//    override fun onResume() {
+//        super.onResume()
+//        getPredict()
+//    }
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -255,6 +261,7 @@ class PredictFragment : Fragment() {
                         predictViewModel.setPredictExp(resp.expensePrediction)
                         predictViewModel.setPredictInc(resp.incomePrediction)
                         predictViewModel.setPredictSum(resp.topCategoryPrediction)
+
                         val balance = accountSendViewModel.balance.value?.toDouble()
 
                         if (balance != null) {

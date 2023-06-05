@@ -31,41 +31,4 @@ class AppPreferences(context: Context) {
         get() = prefs.getString(NEW_TOKEN, "newToken")
         set(value) = prefs.edit().putString(NEW_TOKEN, value).apply()
 
-//    inline fun SharedPreferences.editMe(operation: (SharedPreferences.Editor) -> Unit) {
-//        val editMe = edit()
-//        operation(editMe)
-//        editMe.apply()
-//    }
-//
-//    var SharedPreferences.token
-//        get() = getString(TOKEN, "token")
-//        set(value) {
-//            editMe {
-//                it.putString(TOKEN, value)
-//            }
-//        }
-//
-//    var SharedPreferences.isAuth
-//        get() = getBoolean(IS_AUTH, false)
-//        set(value) {
-//            editMe {
-//                it.putBoolean(IS_AUTH, value)
-//            }
-//        }
-//
-//    var SharedPreferences.isFirstTimeLaunch
-//        get() = getBoolean(IS_FIRST_TIME_LAUNCH, true)
-//        set(value) {
-//            editMe {
-//                it.putBoolean(IS_FIRST_TIME_LAUNCH, value)
-//            }
-//        }
-//
-//    var SharedPreferences.clearValues
-//        get() = { }
-//        set(value) {
-//            editMe {
-//                it.clear()
-//            }
-//        }
 }

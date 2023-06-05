@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">MyCash</string>
-    <string name="welcome_to_mycash">Добро пожаловать!</string>
+    <string name="welcome_to_mycash">Добро пожаловать в приложение MyCash!
+        Это приложение поможет вам вести свой бюджет и контролировать траты.</string>
     <string name="start_button_text">Начать</string>
     <string name="enter_account_name">Введите название счета:</string>
     <string name="enter_account_balance">Введите остаток на счете:</string>

@@ -79,10 +79,11 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="100dp"
             android:backgroundTint="#51000000"
             android:backgroundTintMode="add"
             android:clickable="false"
-            app:layout_constraintBottom_toTopOf="@+id/floatingActionButton"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tab_layout" />
@@ -139,7 +140,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_marginStart="15dp"
-            android:background="@color/textview_colors"
+            android:background="@color/yellow_main"
 
             android:contentDescription="left"
             android:src="@drawable/arrow_left_disabled"
@@ -155,7 +156,7 @@
             android:layout_margin="10dp"
 
             android:layout_marginEnd="10dp"
-            android:background="@color/textview_colors"
+            android:background="@color/yellow_main"
             android:contentDescription="right"
             android:src="@drawable/arrow_right_disabled"
             app:layout_constraintBottom_toBottomOf="@+id/accountName"

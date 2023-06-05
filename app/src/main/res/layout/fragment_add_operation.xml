@@ -148,6 +148,7 @@
                     android:layout_marginTop="20dp"
                     android:text="Фото"
                     android:textSize="20sp"
+                    android:visibility="invisible"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/comment" />
 
@@ -194,6 +195,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:background="@color/background"
+                    android:visibility="invisible"
                     app:layout_constraintBottom_toBottomOf="@+id/textPhoto"
                     app:layout_constraintStart_toEndOf="@+id/textPhoto"
                     app:layout_constraintTop_toTopOf="@+id/textPhoto"

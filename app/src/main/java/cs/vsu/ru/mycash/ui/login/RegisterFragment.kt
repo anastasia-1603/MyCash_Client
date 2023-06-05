@@ -63,16 +63,6 @@ class RegisterFragment : Fragment() {
                     }
 
 
-                    val alertDialogBuilder = AlertDialog.Builder(requireContext())
-                    alertDialogBuilder.setMessage("Вы успешно зарегистрированы")
-
-                    alertDialogBuilder.setPositiveButton("OK") { dialog, _ ->
-
-                    }
-
-                    val alertDialog = alertDialogBuilder.create()
-                    alertDialog.show()
-
                 }
 
                 override fun onFailure(call: Call<TokenResponse>, t: Throwable) {

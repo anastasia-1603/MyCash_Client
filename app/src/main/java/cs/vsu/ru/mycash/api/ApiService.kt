@@ -1,9 +1,10 @@
 package cs.vsu.ru.mycash.api
 
 
-import cs.vsu.ru.mycash.api.Constants.ACCOUNT_URL
+import cs.vsu.ru.mycash.api.Constants.ACCOUNT
+import cs.vsu.ru.mycash.api.Constants.ACCOUNTS
+import cs.vsu.ru.mycash.api.Constants.ACCOUNT_UPDATE
 import cs.vsu.ru.mycash.api.Constants.CATEGORY_URL
-import cs.vsu.ru.mycash.api.Constants.INFO
 import cs.vsu.ru.mycash.api.Constants.DATA_DAY
 import cs.vsu.ru.mycash.api.Constants.DATA_MONTH
 import cs.vsu.ru.mycash.api.Constants.INIT_URL
@@ -39,7 +40,7 @@ interface ApiService {
     @GET(CATEGORY_URL)
     fun getCategories() : Call<List<Category>>
 
-    @GET(ACCOUNT_URL)
+    @GET(ACCOUNTS)
     fun getAccounts(): Call<List<Account>>
     @POST(OPERATION_ADD)
     fun addOperation(@Body operation: Operation) : Call<OperationResponse>
@@ -47,4 +48,11 @@ interface ApiService {
     @GET(PREDICT)
     fun getPredict(@Path("accountName") accountName: String,
                    @Path("year") year: Int, @Path("month") month: Int) : Call<PredictionResponse>
+
+    @POST(ACCOUNT)
+    fun addAccount(@Body account: Account) : Call<Void>
+
+    @POST(ACCOUNT_UPDATE)
+    fun updateAccount(@Body account: Account) : Call<Void>
+
 }

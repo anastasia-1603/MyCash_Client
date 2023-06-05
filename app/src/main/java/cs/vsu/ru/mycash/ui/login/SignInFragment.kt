@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import cs.vsu.ru.mycash.api.ApiClient
 import cs.vsu.ru.mycash.api.ApiService
@@ -67,7 +68,7 @@ class SignInFragment : Fragment() {
                     }
 
                     override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
-                        t.message?.let { Log.e("failure register", it) }
+                        Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
                     }
 
                 })

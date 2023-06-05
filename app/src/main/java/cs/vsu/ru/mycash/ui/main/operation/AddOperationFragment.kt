@@ -3,6 +3,7 @@ package cs.vsu.ru.mycash.ui.main.operation
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -10,10 +11,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import cs.vsu.ru.mycash.R
 import cs.vsu.ru.mycash.api.ApiClient
 import cs.vsu.ru.mycash.api.ApiService
 import cs.vsu.ru.mycash.data.*
@@ -45,10 +48,10 @@ class AddOperationFragment : Fragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         addOperationViewModel = ViewModelProvider(this)[AddOperationViewModel::class.java]
         appPrefs = activity?.let { AppPreferences(it) }!!
         _binding = FragmentAddOperationBinding.inflate(inflater, container, false)
+
         getAccounts()
         Log.e("acc onc", addOperationViewModel.accounts.value.toString())
         getCategories()
@@ -62,9 +65,6 @@ class AddOperationFragment : Fragment(),
         }
         binding.incomeBtn.setOnClickListener {
             addOperationViewModel.setMode(AddOperationViewModel.Mode.INCOME)
-        }
-        binding.dateButton.setOnClickListener {
-
         }
 
         pickDate()
@@ -80,6 +80,18 @@ class AddOperationFragment : Fragment(),
         }
 
 
+//        val imageView: ImageView = binding.imageView
+//
+//        val button: Button = findViewById(R.id.button)
+//        button.setOnClickListener {
+//            val uri: Uri = Uri.parse("android.resource://$packageName/${R.drawable.cat}")
+//            // remove previous image uri cache
+//            imageView.setImageURI(null)
+//            // set image view image from uri
+//            imageView.setImageURI(uri)
+//            // show the uri in text view
+//            textView.text = uri.toString()
+//        }
 //        binding.photoBtn.setOnClickListener {
 //            val selectImageIntent = registerForActivityResult(ActivityResultContracts.GetContent())
 //            { uri ->
@@ -234,7 +246,7 @@ class AddOperationFragment : Fragment(),
                         check = true
                     } else {
 
-//                        check = false
+                        check = false
                     }
 
                 }

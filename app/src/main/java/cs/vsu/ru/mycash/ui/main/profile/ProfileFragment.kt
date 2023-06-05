@@ -27,7 +27,7 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val profileViewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
-
+        appPrefs = activity?.let { AppPreferences(it) }!!
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
@@ -72,17 +72,6 @@ class ProfileFragment : Fragment() {
         return root
     }
 
-
-//    override fun onAttach(context: Context) {
-//        super.onAttach(context)
-//        appPrefs = AppPreferences(requireActivity())
-//        val navController = findNavController()
-//        navController.addOnDestinationChangedListener { _, _, _ ->
-//            if (!appPrefs.isAuth) {
-//                navController.navigate(R.id.profileUnauthFragment)
-//            }
-//        }
-//    }
 
     override fun onDestroyView() {
         super.onDestroyView()
