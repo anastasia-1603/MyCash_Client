@@ -53,7 +53,10 @@ class PredictFragment : Fragment() {
         _binding = FragmentPredictBinding.inflate(inflater, container, false)
         predictViewModel = ViewModelProvider(this)[PredictViewModel::class.java]
         homeViewModel.accountList.value?.let { predictViewModel.setAccountsList(it) }
-        homeViewModel.date.value?.let { predictViewModel.setDate(it) }
+        val cal = Calendar.getInstance()
+        val month = Calendar.getInstance().get(Calendar.MONTH)
+        cal.set(Calendar.MONTH, month+1)
+        predictViewModel.setDate(cal)
         homeViewModel.accountName.value?.let { predictViewModel.setAccountName(it) }
         val root: View = binding.root
 
@@ -203,15 +206,16 @@ class PredictFragment : Fragment() {
         if (date != null) {
             val call: Call<PredictionResponse> =
                 apiService.getPredict(
-                    binding.accountName.text.toString(),
+                    homeViewModel.accountName.value.toString(),
                     date.get(Calendar.YEAR),
-                    date.get(Calendar.MONTH))
+                    date.get(Calendar.MONTH) + 1)
             call.enqueue(object : Callback<PredictionResponse> {
                 override fun onResponse(
                     call: Call<PredictionResponse>,
                     response: Response<PredictionResponse>
                 ) {
                     val resp = response.body()
+                    Log.e("resp", resp.toString())
                     if (resp != null)
                     {
                         predictViewModel.setCategory(resp.topCategory)

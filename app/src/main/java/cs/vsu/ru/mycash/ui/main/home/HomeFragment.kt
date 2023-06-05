@@ -302,8 +302,7 @@ class HomeFragment : Fragment() {
                     binding.right.isEnabled = true
                 }
             }
-        }
-        else {
+        } else {
             binding.right.isEnabled = true
 
         }
@@ -330,50 +329,61 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun checkDateAfterNow(cal: Calendar): Boolean {
+        val cur = Calendar.getInstance()
+        return !cal.time.after(cur.time)
+    }
+
 
     private fun loadOperations() {
         apiService = ApiClient.getClient(appPrefs.token.toString())
         val call: Call<Map<String, List<Operation>>>
         val calVm = homeViewModel.date.value
         Log.e("cal hvm", cal.toString())
+
         if (calVm != null) {
-            if (homeViewModel.mode.value == HomeViewModel.Mode.DAY) {
-                call = apiService.getDataByDay(
-                    calVm.get(Calendar.YEAR),
-                    calVm.get(Calendar.MONTH) + 1,
-                    calVm.get(Calendar.DAY_OF_MONTH)
-                )
-
-            } else {
-                call = apiService.getDataByMonth(
-                    calVm.get(Calendar.YEAR),
-                    calVm.get(Calendar.MONTH) + 1
-                )
-            }
-            call.enqueue(object : Callback<Map<String, List<Operation>>> {
-                override fun onResponse(
-                    call: Call<Map<String, List<Operation>>>,
-                    response: Response<Map<String, List<Operation>>>
-                ) {
-                    val map = response.body()
-                    Log.e("map", map.toString())
-                    if (map != null) {
-                        updateMap(map)
-                    }
-                    Log.e("acc list in hvm", homeViewModel.accountList.value.toString())
-                    Log.e("oper list in vm", operationViewModel.operationList.value.toString())
-                    Log.e(
-                        "oper e list in vm",
-                        operationViewModel.expenseOperations.value.toString()
+            if (!calVm.time.after(Calendar.getInstance().time)) {
+                if (homeViewModel.mode.value == HomeViewModel.Mode.DAY) {
+                    call = apiService.getDataByDay(
+                        calVm.get(Calendar.YEAR),
+                        calVm.get(Calendar.MONTH) + 1,
+                        calVm.get(Calendar.DAY_OF_MONTH)
                     )
-                    Log.e("oper i list in vm", operationViewModel.incomeOperations.value.toString())
+                } else {
+                    call = apiService.getDataByMonth(
+                        calVm.get(Calendar.YEAR),
+                        calVm.get(Calendar.MONTH) + 1
+                    )
                 }
+                call.enqueue(object : Callback<Map<String, List<Operation>>> {
+                    override fun onResponse(
+                        call: Call<Map<String, List<Operation>>>,
+                        response: Response<Map<String, List<Operation>>>
+                    ) {
+                        val map = response.body()
+                        Log.e("map", map.toString())
+                        if (map != null) {
+                            updateMap(map)
+                        }
+                        Log.e("acc list in hvm", homeViewModel.accountList.value.toString())
+                        Log.e("oper list in vm", operationViewModel.operationList.value.toString())
+                        Log.e(
+                            "oper e list in vm",
+                            operationViewModel.expenseOperations.value.toString()
+                        )
+                        Log.e(
+                            "oper i list in vm",
+                            operationViewModel.incomeOperations.value.toString()
+                        )
+                    }
 
-                override fun onFailure(call: Call<Map<String, List<Operation>>>, t: Throwable) {
-                    Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
-                }
+                    override fun onFailure(call: Call<Map<String, List<Operation>>>, t: Throwable) {
+                        Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
+                    }
 
-            })
+                })
+            }
+
         }
     }
 
@@ -414,7 +424,6 @@ class HomeFragment : Fragment() {
         val index = homeViewModel.accountIndex.value
         if (index != null) {
             val account = accounts[index]
-
             map["${account.name}:${account.balance}"]?.let {
                 updateAccount(account, it)
             }
