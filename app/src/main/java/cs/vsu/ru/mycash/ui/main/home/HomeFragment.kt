@@ -5,7 +5,6 @@ import android.app.DatePickerDialog
 import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,9 +48,7 @@ class HomeFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
 
         appPrefs = activity?.let { AppPreferences(it) }!!
@@ -143,7 +140,6 @@ class HomeFragment : Fragment() {
         }
 
         homeViewModel.date.observe(viewLifecycleOwner) {
-            Log.e("date observe", sdf1.format(it.time))
             val current = Calendar.getInstance()
             if (homeViewModel.mode.value == HomeViewModel.Mode.DAY) {
                 val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
@@ -156,8 +152,9 @@ class HomeFragment : Fragment() {
                 }
 
             } else {
-                if (it.get(Calendar.MONTH) == current.get(Calendar.MONTH) + 1 &&
-                    it.get(Calendar.YEAR) == it.get(Calendar.YEAR)
+                if (it.get(Calendar.MONTH) == current.get(Calendar.MONTH) + 1 && it.get(Calendar.YEAR) == it.get(
+                        Calendar.YEAR
+                    )
                 ) {
                     findNavController().navigate(R.id.predictFragment)
                 } else {
@@ -243,20 +240,21 @@ class HomeFragment : Fragment() {
             } else {
                 val date = homeViewModel.date.value
                 if (date != null) {
-                    if (date.get(Calendar.MONTH) == cur.get(Calendar.MONTH) + 1 &&
-                        date.get(Calendar.YEAR) == cur.get(Calendar.YEAR)
+                    if (date.get(Calendar.MONTH) == cur.get(Calendar.MONTH) + 1 && date.get(Calendar.YEAR) == cur.get(
+                            Calendar.YEAR
+                        )
                     ) {
                         val ind = homeViewModel.accountIndex.value
                         val accounts = homeViewModel.accountList.value
-                        Log.e("hvm ind", ind.toString())
-                        Log.e("hvm acc", accounts.toString())
                         if (ind != null) {
                             accountSendViewModel.setAccountIndex(ind)
                         }
                         if (accounts != null) {
                             accountSendViewModel.setAccountsList(accounts)
                         }
-                        accountSendViewModel.setBalance(homeViewModel.balance.value.toString().toDouble())
+                        accountSendViewModel.setBalance(
+                            homeViewModel.balance.value.toString().toDouble()
+                        )
                         findNavController().navigate(R.id.predictFragment)
                     } else {
                         cal.set(Calendar.MONTH, date.get(Calendar.MONTH) + 1)
@@ -283,9 +281,7 @@ class HomeFragment : Fragment() {
             }
         tabLayoutMediator.attach()
 
-        if (homeViewModel.accountList.value != null
-            && homeViewModel.accountList.value!!.size > 1
-        ) {
+        if (homeViewModel.accountList.value != null && homeViewModel.accountList.value!!.size > 1) {
             binding.leftAccount.isVisible = true
             binding.rightAccount.isVisible = true
         } else {
@@ -309,11 +305,7 @@ class HomeFragment : Fragment() {
             val date = homeViewModel.date.value
             val sdf1 = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
             if (date != null) {
-                if (sdf1.format(date.time).equals(sdf1.format(Calendar.getInstance().time))) {
-                    binding.right.isEnabled = false
-                } else {
-                    binding.right.isEnabled = true
-                }
+                binding.right.isEnabled = !sdf1.format(date.time).equals(sdf1.format(Calendar.getInstance().time))
             }
         } else {
             binding.right.isEnabled = true
@@ -324,6 +316,7 @@ class HomeFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         loadOperations()
+        homeViewModel.accountList.value?.let { accountSendViewModel.setAccountsList(it) }
     }
 
     class HomePagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
@@ -352,7 +345,6 @@ class HomeFragment : Fragment() {
         apiService = ApiClient.getClient(appPrefs.token.toString())
         val call: Call<Map<String, List<Operation>>>
         val calVm = homeViewModel.date.value
-        Log.e("cal hvm", cal.toString())
 
         if (calVm != null) {
             if (!calVm.time.after(Calendar.getInstance().time)) {
@@ -364,8 +356,7 @@ class HomeFragment : Fragment() {
                     )
                 } else {
                     call = apiService.getDataByMonth(
-                        calVm.get(Calendar.YEAR),
-                        calVm.get(Calendar.MONTH) + 1
+                        calVm.get(Calendar.YEAR), calVm.get(Calendar.MONTH) + 1
                     )
                 }
                 call.enqueue(object : Callback<Map<String, List<Operation>>> {
@@ -374,21 +365,10 @@ class HomeFragment : Fragment() {
                         response: Response<Map<String, List<Operation>>>
                     ) {
                         val map = response.body()
-                        Log.e("map", map.toString())
-                        if (map != null) {
-                            updateMap(map)
-
+                        if (map != null) { updateMap(map) }
+                        homeViewModel.accountList.value?.let {
+                            accountSendViewModel.setAccountsList(it)
                         }
-                        Log.e("acc list in hvm", homeViewModel.accountList.value.toString())
-                        Log.e("oper list in vm", operationViewModel.operationList.value.toString())
-                        Log.e(
-                            "oper e list in vm",
-                            operationViewModel.expenseOperations.value.toString()
-                        )
-                        Log.e(
-                            "oper i list in vm",
-                            operationViewModel.incomeOperations.value.toString()
-                        )
                     }
 
                     override fun onFailure(call: Call<Map<String, List<Operation>>>, t: Throwable) {
@@ -401,7 +381,6 @@ class HomeFragment : Fragment() {
         }
     }
 
-
     private fun updateOperations(operationList: List<Operation>) {
         operationViewModel.setOperationList(operationList)
         operationViewModel.operationList.value?.let { operations ->
@@ -410,10 +389,9 @@ class HomeFragment : Fragment() {
             })
         }
         operationViewModel.operationList.value?.let { operations ->
-            operationViewModel.setIncomeList(
-                operations.filter {
-                    it.category.type == CategoryType.INCOME
-                })
+            operationViewModel.setIncomeList(operations.filter {
+                it.category.type == CategoryType.INCOME
+            })
         }
     }
 
@@ -437,15 +415,10 @@ class HomeFragment : Fragment() {
 
         val accounts: List<AccountDto> = getAccounts(map)
         homeViewModel.setAccountsList(accounts)
-        Log.e("accounts", accounts.toString())
-        accountSendViewModel.setAccountsList(accounts)
-        Log.e("accounts", accountSendViewModel.toString())
 
         val index = homeViewModel.accountIndex.value
-        Log.e("account index", index.toString())
         if (index != null) {
             val account = accounts[index]
-            Log.e("account by ind", account.toString())
 
             map["${account.name}:${account.balance}"]?.let {
                 updateAccount(account, it)
@@ -453,47 +426,11 @@ class HomeFragment : Fragment() {
         }
     }
 
-
-    private fun updateDate(newDate: Calendar) {
-
-        homeViewModel.setDate(newDate)
-        if (homeViewModel.mode.value == HomeViewModel.Mode.DAY) {
-            val current = Calendar.getInstance()
-            val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
-            val sdf1 = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
-
-            if (sdf1.format(newDate.time).equals(sdf1.format(current.time))) {
-                binding.date.text = "Сегодня"
-            } else {
-                binding.date.text = sdf.format(newDate.time)
-            }
-
-        } else {
-            val monthNames = arrayOf(
-                "Январь",
-                "Февраль",
-                "Март",
-                "Апрель",
-                "Май",
-                "Июнь",
-                "Июль",
-                "Август",
-                "Сентябрь",
-                "Октябрь",
-                "Ноябрь",
-                "Декабрь"
-            )
-            binding.date.text = monthNames[newDate.get(Calendar.MONTH)]
-        }
-    }
-
     private fun getAccounts(map: Map<String, List<Operation>>): List<AccountDto> {
         val accounts: ArrayList<AccountDto> = ArrayList()
         map.keys.forEach {
             val tmp = it.split(":")
-            Log.e("account getAcc", tmp.toString())
             val accountDto: AccountDto = AccountDto(tmp[0], tmp[1].toDouble())
-            Log.e("account getAcc", accountDto.toString())
             accounts.add(accountDto)
         }
         return accounts
@@ -512,22 +449,16 @@ class HomeFragment : Fragment() {
         val month = c.get(Calendar.MONTH)
         val day = c.get(Calendar.DAY_OF_MONTH)
 
-        val datePickerDialog =
-            context?.let {
-                DatePickerDialog(
-                    it,
-                    android.R.style.Theme_Holo_Light_Dialog,
-                    { _, year, monthOfYear, dayOfMonth ->
-                        cal.set(Calendar.YEAR, year)
-                        cal.set(Calendar.MONTH, monthOfYear)
-                        cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                        homeViewModel.setDate(cal)
-                    },
-                    year,
-                    month,
-                    day
-                )
-            }
+        val datePickerDialog = context?.let {
+            DatePickerDialog(
+                it, android.R.style.Theme_Holo_Light_Dialog, { _, year, monthOfYear, dayOfMonth ->
+                    cal.set(Calendar.YEAR, year)
+                    cal.set(Calendar.MONTH, monthOfYear)
+                    cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                    homeViewModel.setDate(cal)
+                }, year, month, day
+            )
+        }
         if (datePickerDialog != null) {
             val maxC = Calendar.getInstance()
             val cur = Calendar.getInstance()
@@ -537,9 +468,6 @@ class HomeFragment : Fragment() {
             datePickerDialog.datePicker.maxDate = maxC.time.time
         }
         return datePickerDialog
-
-
     }
-
 }
 
