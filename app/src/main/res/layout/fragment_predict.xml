@@ -67,7 +67,7 @@
         <Button
             android:id="@+id/date"
             style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
-            android:layout_width="234dp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_margin="0dp"
             android:layout_marginStart="10dp"
@@ -115,7 +115,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:layout_marginTop="30dp"
             android:background="@color/background"
             android:contentDescription="left"
             android:src="@drawable/arrow_left_disabled"
@@ -123,7 +122,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/balance"
+            app:layout_constraintTop_toBottomOf="@+id/balancePredict"
             app:tint="@color/textview_colors" />
 
         <ImageButton
@@ -163,7 +162,6 @@
             android:text="0"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textPredictExp" />
 
@@ -171,12 +169,12 @@
             android:id="@+id/textPredictInc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="20dp"
             android:text="Прогноз пополнений"
             android:textColor="#454343"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/left" />
 
@@ -204,7 +202,7 @@
             android:textColor="@color/gray_text"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/predictExp" />
 
@@ -225,7 +223,7 @@
             android:id="@+id/colorCateg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="10dp"
             android:contentDescription="@string/circle"
             android:src="@drawable/baseline_circle_24"
             app:layout_constraintBottom_toTopOf="@+id/floatingActionButton"

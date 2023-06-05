@@ -40,6 +40,7 @@ class HomeFragment : Fragment() {
     private val operationViewModel: OperationViewModel by activityViewModels()
     private lateinit var homeViewModel: HomeViewModel
     private val binding get() = _binding!!
+    private val sdf1 = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
 
     private lateinit var apiService: ApiService
     private lateinit var appPrefs: AppPreferences
@@ -82,14 +83,11 @@ class HomeFragment : Fragment() {
         val dayBtn: Button = binding.day
         val monthBtn: Button = binding.month
 
-        if (dayBtn.isEnabled == monthBtn.isEnabled)
-        {
-            if (homeViewModel.mode.value == HomeViewModel.Mode.DAY)
-            {
+        if (dayBtn.isEnabled == monthBtn.isEnabled) {
+            if (homeViewModel.mode.value == HomeViewModel.Mode.DAY) {
                 dayBtn.isEnabled = false
                 monthBtn.isEnabled = true
-            }
-            else {
+            } else {
                 dayBtn.isEnabled = true
                 monthBtn.isEnabled = false
             }
@@ -111,10 +109,6 @@ class HomeFragment : Fragment() {
 
         homeViewModel.mode.observe(viewLifecycleOwner) {
             if (homeViewModel.mode.value == HomeViewModel.Mode.DAY) {
-//                if (!dayBtn.isEnabled) {
-//                    dayBtn.isEnabled = false
-//                    monthBtn.isEnabled = true
-//                }
                 val current = Calendar.getInstance()
                 val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
                 val sdf1 = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
@@ -126,10 +120,6 @@ class HomeFragment : Fragment() {
                 }
 
             } else {
-//                if (!monthBtn.isEnabled) {
-//                    monthBtn.isEnabled = false
-//                    dayBtn.isEnabled = false
-//                }
                 val monthNames = arrayOf(
                     "Январь",
                     "Февраль",
@@ -147,9 +137,11 @@ class HomeFragment : Fragment() {
 
                 dateBtn.text = monthNames[cal.get(Calendar.MONTH)]
             }
+            configureBtnRight()
         }
 
         homeViewModel.date.observe(viewLifecycleOwner) {
+            Log.e("date observe", sdf1.format(it.time))
             val current = Calendar.getInstance()
             if (homeViewModel.mode.value == HomeViewModel.Mode.DAY) {
                 val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
@@ -163,12 +155,10 @@ class HomeFragment : Fragment() {
 
             } else {
                 if (it.get(Calendar.MONTH) == current.get(Calendar.MONTH) + 1 &&
-                    it.get(Calendar.YEAR) == it.get(Calendar.YEAR))
-                {
+                    it.get(Calendar.YEAR) == it.get(Calendar.YEAR)
+                ) {
                     findNavController().navigate(R.id.predictFragment)
-                }
-                else
-                {
+                } else {
                     val monthNames = arrayOf(
                         "Январь",
                         "Февраль",
@@ -186,8 +176,8 @@ class HomeFragment : Fragment() {
 
                     dateBtn.text = monthNames[cal.get(Calendar.MONTH)]
                 }
-
             }
+            configureBtnRight()
         }
 
         val dateSetListener =
@@ -199,15 +189,21 @@ class HomeFragment : Fragment() {
             }
 
         binding.date.setOnClickListener {
+            val maxC = Calendar.getInstance()
+            val cur = Calendar.getInstance()
+            maxC.set(Calendar.YEAR, cur.get(Calendar.YEAR))
+            maxC.set(Calendar.MONTH, cur.get(Calendar.MONTH))
             if (homeViewModel.mode.value == HomeViewModel.Mode.DAY) {
                 context?.let { it1 ->
-                    DatePickerDialog(
+                    val datePickerDialog = DatePickerDialog(
                         it1,
                         dateSetListener,
                         cal.get(Calendar.YEAR),
                         cal.get(Calendar.MONTH),
                         cal.get(Calendar.DAY_OF_MONTH)
-                    ).show()
+                    )
+                    datePickerDialog.datePicker.maxDate = maxC.time.time
+                    datePickerDialog.show()
                 }
             } else {
                 val dialog = datePickerDialog()
@@ -219,7 +215,6 @@ class HomeFragment : Fragment() {
                     day.visibility = View.GONE
                 }
             }
-
         }
 
         binding.left.setOnClickListener {
@@ -233,18 +228,24 @@ class HomeFragment : Fragment() {
         }
 
         binding.right.setOnClickListener {
+            val cur = Calendar.getInstance()
             if (homeViewModel.mode.value == HomeViewModel.Mode.DAY) {
-                cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) + 1)
+                val sdf1 = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+
+                if (sdf1.format(cal.time).equals(sdf1.format(cur.time))) {
+                } else {
+                    cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) + 1)
+                }
+
 
             } else {
-                val cur = Calendar.getInstance()
                 val date = homeViewModel.date.value
                 if (date != null) {
-                    if (date.get(Calendar.MONTH) == cur.get(Calendar.MONTH)+1 &&
-                        date.get(Calendar.YEAR) == cur.get(Calendar.YEAR)) {
+                    if (date.get(Calendar.MONTH) == cur.get(Calendar.MONTH) + 1 &&
+                        date.get(Calendar.YEAR) == cur.get(Calendar.YEAR)
+                    ) {
                         findNavController().navigate(R.id.predictFragment)
-                    } else
-                    {
+                    } else {
                         cal.set(Calendar.MONTH, date.get(Calendar.MONTH) + 1)
                     }
                 }
@@ -287,6 +288,25 @@ class HomeFragment : Fragment() {
             homeViewModel.incrementAccountIndex()
         }
         return root
+    }
+
+
+    private fun configureBtnRight() {
+        if (homeViewModel.mode.value == HomeViewModel.Mode.DAY) {
+            val date = homeViewModel.date.value
+            val sdf1 = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+            if (date != null) {
+                if (sdf1.format(date.time).equals(sdf1.format(Calendar.getInstance().time))) {
+                    binding.right.isEnabled = false
+                } else {
+                    binding.right.isEnabled = true
+                }
+            }
+        }
+        else {
+            binding.right.isEnabled = true
+
+        }
     }
 
     override fun onResume() {
@@ -342,7 +362,10 @@ class HomeFragment : Fragment() {
                     }
                     Log.e("acc list in hvm", homeViewModel.accountList.value.toString())
                     Log.e("oper list in vm", operationViewModel.operationList.value.toString())
-                    Log.e("oper e list in vm", operationViewModel.expenseOperations.value.toString())
+                    Log.e(
+                        "oper e list in vm",
+                        operationViewModel.expenseOperations.value.toString()
+                    )
                     Log.e("oper i list in vm", operationViewModel.incomeOperations.value.toString())
                 }
 
@@ -471,6 +494,14 @@ class HomeFragment : Fragment() {
                     day
                 )
             }
+        if (datePickerDialog != null) {
+            val maxC = Calendar.getInstance()
+            val cur = Calendar.getInstance()
+            maxC.set(Calendar.YEAR, cur.get(Calendar.YEAR))
+            maxC.set(Calendar.MONTH, cur.get(Calendar.MONTH) + 1)
+            maxC.set(Calendar.DAY_OF_MONTH, 1)
+            datePickerDialog.datePicker.maxDate = maxC.time.time
+        }
         return datePickerDialog
 
 

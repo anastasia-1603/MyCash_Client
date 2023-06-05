@@ -190,7 +190,7 @@ class PredictFragment : Fragment() {
             val maxC = Calendar.getInstance()
             val cur = Calendar.getInstance()
             maxC.set(Calendar.YEAR, cur.get(Calendar.YEAR))
-            maxC.set(Calendar.MONTH, cur.get(Calendar.MONTH) + 1)
+            maxC.set(Calendar.MONTH, cur.get(Calendar.MONTH))
             datePickerDialog.datePicker.maxDate =  maxC.time.time
         }
         return datePickerDialog
