@@ -42,6 +42,7 @@ class PredictFragment : Fragment() {
     private lateinit var apiService: ApiService
     private lateinit var appPrefs: AppPreferences
 
+    @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,8 +52,10 @@ class PredictFragment : Fragment() {
         appPrefs = activity?.let { AppPreferences(it) }!!
         _binding = FragmentPredictBinding.inflate(inflater, container, false)
         predictViewModel = ViewModelProvider(this)[PredictViewModel::class.java]
-
-//        homeViewModel.accountList.value?.let { predictViewModel.setAccountsList(it) }
+        Log.e("acc list in predict", accountSendViewModel.accountList.value.toString())
+        Log.e("acc name in predict", accountSendViewModel.accountName.value.toString())
+        Log.e("acc balance in predict", accountSendViewModel.balance.value.toString())
+        accountSendViewModel.accountList.value?.let { predictViewModel.setAccountsList(it) }
         val cal = Calendar.getInstance()
         val month = Calendar.getInstance().get(Calendar.MONTH)
         cal.set(Calendar.MONTH, month+1)
@@ -67,7 +70,7 @@ class PredictFragment : Fragment() {
 
         val balance: TextView = binding.balancePredict
         predictViewModel.balance.observe(viewLifecycleOwner) {
-            balance.text = it
+            balance.text = "$it  Р"
         }
         val dateBtn: Button = binding.date
 
@@ -111,12 +114,11 @@ class PredictFragment : Fragment() {
 
         }
 
-
-        accountSendViewModel.accountList.value?.let { predictViewModel.setAccountsList(it) }
-        accountSendViewModel.accountIndex.value?.let { predictViewModel.setAccountIndex(it) }
-        val ind = accountSendViewModel.accountIndex.value
-        ind?.let { accountSendViewModel.accountList.value?.get(it)?.name ?: "name" }
-            ?.let { predictViewModel.setAccountName(it) }
+//        accountSendViewModel.accountList.value?.let { predictViewModel.setAccountsList(it) }
+//        accountSendViewModel.accountIndex.value?.let { predictViewModel.setAccountIndex(it) }
+//        val ind = accountSendViewModel.accountIndex.value
+//        ind?.let { accountSendViewModel.accountList.value?.get(it)?.name ?: "name" }
+//            ?.let { predictViewModel.setAccountName(it) }
         binding.date.setOnClickListener {
             val dialog = datePickerDialog()
             dialog?.show()
@@ -208,7 +210,7 @@ class PredictFragment : Fragment() {
         apiService = ApiClient.getClient(appPrefs.token.toString())
         val date = predictViewModel.date.value
         if (date != null) {
-            Log.e("acc name predict", accountSendViewModel.accountName.value.toString())
+            Log.e("acc name predict in req", accountSendViewModel.accountName.value.toString())
             val call: Call<PredictionResponse> =
                 apiService.getPredict(
                     accountSendViewModel.accountName.value.toString(),
@@ -230,6 +232,7 @@ class PredictFragment : Fragment() {
                         else
                         {
                             val cat = Category("default", 0, CategoryType.EXPENSE, false, 0.0)
+                            predictViewModel.setCategory(cat)
                         }
 
                         predictViewModel.setPredictExp(resp.expensePrediction)

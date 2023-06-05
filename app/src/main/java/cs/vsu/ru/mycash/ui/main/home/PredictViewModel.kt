@@ -41,12 +41,14 @@ class PredictViewModel : ViewModel() {
     fun setAccountsList(accounts: List<AccountDto>)
     {
         _accountList.value = accounts
+        _balance.value = accountIndex.value?.let { accounts[it].balance }
+        _accountName.value = accountIndex.value?.let { accounts[it].name }
     }
 
-    private val _balance: MutableLiveData<String> by lazy {
-        MutableLiveData<String>()
+    private val _balance: MutableLiveData<Double> by lazy {
+        MutableLiveData<Double>()
     }
-    val balance: LiveData<String> = _balance
+    val balance: LiveData<Double> = _balance
 
     private val _date: MutableLiveData<Calendar> by lazy {
         MutableLiveData<Calendar>(Calendar.getInstance())
@@ -63,7 +65,7 @@ class PredictViewModel : ViewModel() {
     }
 
     fun setBalance(balance: Double) {
-        _balance.value = balance.toString() + "₽"
+        _balance.value = balance
     }
 
     private val _predictInc: MutableLiveData<String> by lazy {
