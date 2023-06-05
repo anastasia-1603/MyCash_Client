@@ -43,6 +43,8 @@ class AccountSendViewModel : ViewModel() {
     fun setAccountsList(accounts: List<AccountDto>)
     {
         _accountList.value = accounts
+        _balance.value = accountIndex.value?.let { accounts[it].balance }
+        _accountName.value = accountIndex.value?.let { accounts[it].name }
     }
 
     private val _balance: MutableLiveData<Double> by lazy {
