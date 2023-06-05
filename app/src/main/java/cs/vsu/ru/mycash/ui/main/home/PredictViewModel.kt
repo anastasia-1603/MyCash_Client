@@ -59,7 +59,6 @@ class PredictViewModel : ViewModel() {
     fun setDate(date: Calendar) {
         _date.value = date
     }
-
     fun setAccountName(accountName: String) {
         _accountName.value = accountName
     }

@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background"
-        tools:context=".ui.main.accounts.EditAccountsFragment">
+        tools:context=".ui.main.categories.EditCategoryFragment">
 
         <EditText
             android:id="@+id/accountName"

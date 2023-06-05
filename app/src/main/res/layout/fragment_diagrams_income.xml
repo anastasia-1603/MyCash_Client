@@ -8,13 +8,14 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/frameLayout4"
+        android:id="@+id/inc"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/background"
         tools:context=".ui.main.diagrams.DiagramsIncomeFragment">
 
         <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/BarChartIncome"
+            android:id="@+id/stackedBarChart"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="20dp"
@@ -34,14 +35,15 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_margin="0dp"
-            android:text="Сегодня"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="Июнь"
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="@+id/left"
             app:layout_constraintEnd_toStartOf="@+id/right"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/left"
-            app:layout_constraintTop_toTopOf="@+id/left"
-            app:tint="@color/textview_colors" />
+            app:layout_constraintTop_toTopOf="@+id/left" />
 
         <ImageButton
             android:id="@+id/left"
@@ -54,10 +56,10 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/date"
             app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
-            app:tint="@color/textview_colors" />
+            app:layout_constraintVertical_bias="0.0" />
 
         <ImageButton
             android:id="@+id/right"

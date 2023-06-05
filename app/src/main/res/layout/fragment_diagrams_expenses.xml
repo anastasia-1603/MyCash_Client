@@ -37,7 +37,7 @@
             android:layout_margin="0dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:text="Сегодня"
+            android:text="Июнь"
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="@+id/left"
             app:layout_constraintEnd_toStartOf="@+id/right"

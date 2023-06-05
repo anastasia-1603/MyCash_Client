@@ -13,7 +13,6 @@
         android:background="@color/background"
         tools:context=".ui.main.home.HomeFragment">
 
-
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/floatingActionButton"
             android:layout_width="wrap_content"
@@ -210,7 +209,7 @@
             android:id="@+id/predictCategName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Категория"
+            android:text=""
             android:textColor="@color/gray_text"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="@+id/colorCateg"

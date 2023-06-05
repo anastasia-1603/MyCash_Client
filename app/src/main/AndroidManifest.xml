@@ -20,6 +20,8 @@
         <activity
             android:name=".ui.main.MainScreenActivity"
             android:screenOrientation="portrait"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyCash.NoActionBar.Launcher"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,6 +34,8 @@
             android:name=".ui.onboarding.StartActivity"
             android:exported="false" />
         <activity
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyCash.NoActionBar.Launcher"
             android:screenOrientation="portrait"
             android:name=".ui.onboarding.WelcomeActivity"
             android:exported="false">

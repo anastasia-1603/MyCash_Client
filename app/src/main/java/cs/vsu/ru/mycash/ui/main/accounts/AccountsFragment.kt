@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,9 +30,9 @@ class AccountsFragment : Fragment() {
     private var _binding: FragmentAccountsBinding? = null
     private val binding get() = _binding!!
     private val accountsViewModel: AccountsViewModel by activityViewModels()
+    private val editAccountViewModel : EditAccountViewModel by activityViewModels()
     private lateinit var apiService: ApiService
     private lateinit var adapter: AccountsAdapter
-
     private lateinit var appPrefs: AppPreferences
 
     override fun onCreateView(
@@ -44,10 +45,11 @@ class AccountsFragment : Fragment() {
         val root: View = binding.root
 
         loadAccounts()
+
         val manager = LinearLayoutManager(context)
-        adapter = AccountsAdapter(AccountsAdapter.OnClickListener{ category ->
+        adapter = AccountsAdapter(AccountsAdapter.OnClickListener{ account ->
+            editAccountViewModel.setAccount(account)
             findNavController().navigate(R.id.editAccountFragment)
-            //todo передать категорию
         })
 
         adapter.data = accountsViewModel.accountList.value ?: emptyList()
@@ -55,9 +57,20 @@ class AccountsFragment : Fragment() {
         binding.recyclerViewAccounts.layoutManager = manager
         binding.recyclerViewAccounts.adapter = adapter
 
-
         accountsViewModel.accountList.observe(viewLifecycleOwner) {
             adapter.data = it
+        }
+
+        binding.floatingActionButton.setOnClickListener{
+            if (appPrefs.isAuth)
+            {
+                findNavController().navigate(R.id.accountAddFragment)
+            }
+            else
+            {
+                findNavController().navigate(R.id.profileUnauthFragment)
+            }
+
         }
 
         return root
@@ -77,7 +90,7 @@ class AccountsFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<List<Account>>, t: Throwable) {
-                t.message?.let { Log.e("t", it) }
+                Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
             }
         })
     }

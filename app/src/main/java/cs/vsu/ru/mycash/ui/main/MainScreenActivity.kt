@@ -22,11 +22,11 @@ class MainScreenActivity : AppCompatActivity() {
     private lateinit var appPrefs: AppPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.Theme_MyCash_NoActionBar)
         super.onCreate(savedInstanceState)
         appPrefs = AppPreferences(this)
         if (appPrefs.isFirstTimeLaunch) {
             startActivity(Intent(this, WelcomeActivity::class.java))
-            appPrefs.isFirstTimeLaunch = false
             finish()
         }
 

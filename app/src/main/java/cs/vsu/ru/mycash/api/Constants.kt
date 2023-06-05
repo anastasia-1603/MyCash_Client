@@ -8,9 +8,12 @@ object Constants {
     const val CATEGORY_URL = "category/get_all"
     const val INFO = "main/get/{account}/{year}/{month}/{day}"
     const val DATA_DAY = "main/get/{year}/{month}/{day}"
-    const val ACCOUNT_URL = "account/get_all"
+    const val ACCOUNTS = "account/get_all"
     const val DATA_MONTH = "main/get/{year}/{month}"
     const val OPERATION_ADD = "operation/add"
     const val PREDICT = "predict/{accountName}/{year}/{month}"
-
+    const val ACCOUNT = "account/add"
+    const val ACCOUNT_UPDATE = "account/update"
+    const val OPERATION_UPDATE = "operation/update"
+    const val DIAGRAMS = "category/update"
 }

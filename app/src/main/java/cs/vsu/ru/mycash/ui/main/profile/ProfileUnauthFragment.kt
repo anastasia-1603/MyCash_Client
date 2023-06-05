@@ -26,8 +26,8 @@ class ProfileUnauthFragment : Fragment() {
         _binding = FragmentProfileUnauthBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val menu = requireActivity().findViewById<BottomNavigationView>(R.id.nav_view).menu
-        menu.findItem(R.id.profileFragment).isChecked = true
+//        val menu = requireActivity().findViewById<BottomNavigationView>(R.id.nav_view).menu
+//        menu.findItem(R.id.profileFragment).isChecked = true
 
         val registerBtn = binding.registerBtn
         registerBtn.setOnClickListener{

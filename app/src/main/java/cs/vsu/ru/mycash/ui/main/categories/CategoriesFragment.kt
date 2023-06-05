@@ -32,6 +32,7 @@ class CategoriesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         appPrefs = activity?.let { AppPreferences(it) }!!
+
         _binding = FragmentCategoriesBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
@@ -54,7 +55,7 @@ class CategoriesFragment : Fragment() {
         val token = appPrefs.token.toString()
         Log.e("token home prefs", appPrefs.token.toString())
 
-        val apiService = ApiClient.getClient(token)
+        apiService = ApiClient.getClient(token)
         apiService.getCategories().enqueue(object : Callback<List<Category>> {
             override fun onResponse(
                 call: Call<List<Category>>,

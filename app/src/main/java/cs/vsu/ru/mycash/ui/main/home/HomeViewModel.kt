@@ -18,11 +18,25 @@ class HomeViewModel : ViewModel() {
     }
 
     fun decrementAccountIndex() {
-        _accountIndex.value = _accountIndex.value!! - 1
-    }
+        if (_accountIndex.value == 0)
+        {
+            _accountIndex.value = (_accountList.value?.size ?: 1) -1
+        }
+        else
+        {
+            _accountIndex.value = _accountIndex.value!! - 1
+        }
 
+    }
     fun incrementAccountIndex() {
-        _accountIndex.value = _accountIndex.value!! + 1
+        if (_accountIndex.value == _accountList.value?.size?.minus(1))
+        {
+            _accountIndex.value = 0
+        }
+        else
+        {
+            _accountIndex.value = _accountIndex.value!! + 1
+        }
     }
 
     private val _accountName: MutableLiveData<String> by lazy {

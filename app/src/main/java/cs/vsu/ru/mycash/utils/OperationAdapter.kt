@@ -48,7 +48,7 @@ class OperationAdapter(private val onClickListener: OnClickListener) :
             val formattedDate = DateTimeFormatter.ofPattern("HH:mm").format(date)
             time.text = formattedDate
 
-            imageView.setColorFilter(operation.category.color)
+            imageView.setColorFilter(-operation.category.color)
 
             holder.itemView.setOnClickListener {
                 onClickListener.onClick(operation)

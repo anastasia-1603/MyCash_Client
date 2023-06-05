@@ -60,8 +60,9 @@ class PredictFragment : Fragment() {
         val month = Calendar.getInstance().get(Calendar.MONTH)
         cal.set(Calendar.MONTH, month+1)
         predictViewModel.setDate(cal)
-//        homeViewModel.accountName.value?.let { predictViewModel.setAccountName(it) }
         val root: View = binding.root
+
+        getPredict()
 
         val accountName: TextView = binding.accountName
         predictViewModel.accountName.observe(viewLifecycleOwner) {
@@ -72,6 +73,30 @@ class PredictFragment : Fragment() {
         predictViewModel.balance.observe(viewLifecycleOwner) {
             balance.text = "$it  Р"
         }
+
+        val predictExp = binding.predictExp
+        predictViewModel.predictExp.observe(viewLifecycleOwner) {
+            predictExp.text = it.toString()
+        }
+
+        val predictInc = binding.predictInc
+        predictViewModel.predictInc.observe(viewLifecycleOwner) {
+            predictInc.text = it.toString()
+        }
+
+        val categ = binding.predictCategName
+        val color = binding.colorCateg
+        val sum = binding.predictCateg
+        predictViewModel.category.observe(viewLifecycleOwner) {
+            categ.text = it.name.toString()
+            color.setColorFilter(-it.color)
+
+        }
+
+        predictViewModel.predictSum.observe(viewLifecycleOwner){
+            sum.text = predictViewModel.predictSum.value.toString()
+        }
+
         val dateBtn: Button = binding.date
 
         predictViewModel.accountIndex.observe(viewLifecycleOwner) {
@@ -114,11 +139,12 @@ class PredictFragment : Fragment() {
 
         }
 
-//        accountSendViewModel.accountList.value?.let { predictViewModel.setAccountsList(it) }
-//        accountSendViewModel.accountIndex.value?.let { predictViewModel.setAccountIndex(it) }
-//        val ind = accountSendViewModel.accountIndex.value
-//        ind?.let { accountSendViewModel.accountList.value?.get(it)?.name ?: "name" }
-//            ?.let { predictViewModel.setAccountName(it) }
+
+        accountSendViewModel.accountList.value?.let { predictViewModel.setAccountsList(it) }
+        accountSendViewModel.accountIndex.value?.let { predictViewModel.setAccountIndex(it) }
+        val ind = accountSendViewModel.accountIndex.value
+        ind?.let { accountSendViewModel.accountList.value?.get(it)?.name ?: "name" }
+            ?.let { predictViewModel.setAccountName(it) }
         binding.date.setOnClickListener {
             val dialog = datePickerDialog()
             dialog?.show()
@@ -158,13 +184,16 @@ class PredictFragment : Fragment() {
         binding.rightAccount.setOnClickListener {
             predictViewModel.incrementAccountIndex()
         }
+
+
+
         return root
     }
 
-    override fun onResume() {
-        super.onResume()
-        getPredict()
-    }
+//    override fun onResume() {
+//        super.onResume()
+//        getPredict()
+//    }
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -232,12 +261,12 @@ class PredictFragment : Fragment() {
                         else
                         {
                             val cat = Category("default", 0, CategoryType.EXPENSE, false, 0.0)
-                            predictViewModel.setCategory(cat)
                         }
 
                         predictViewModel.setPredictExp(resp.expensePrediction)
                         predictViewModel.setPredictInc(resp.incomePrediction)
                         predictViewModel.setPredictSum(resp.topCategoryPrediction)
+
                         val balance = accountSendViewModel.balance.value?.toDouble()
 
                         if (balance != null) {

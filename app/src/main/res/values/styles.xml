@@ -11,4 +11,9 @@
         <item name="android:focusable">true</item>
         <item name="android:clickable">true</item>
     </style>
+    <style name="Theme.MyCash.NoActionBar.Launcher">
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+        <!-- для Android 5+ вы можете поменять цвет colorPrimaryDark, чтобы соответствовать цвету windowBackground -->
+        <!-- <item name="colorPrimaryDark">@android:color/white</item> -->
+    </style>
 </resources>

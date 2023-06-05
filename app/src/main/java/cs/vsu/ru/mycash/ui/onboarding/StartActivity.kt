@@ -58,6 +58,7 @@ class StartActivity : AppCompatActivity() {
                         Log.e("token start  prefs", appPrefs.token.toString())
 //                        preferences.edit().putString("TOKEN", token).apply()
                         ApiClient.updateClient(token)
+                        appPrefs.isFirstTimeLaunch = false
                         val intent = Intent(this@StartActivity, MainScreenActivity::class.java)
                         startActivity(intent)
                     }
