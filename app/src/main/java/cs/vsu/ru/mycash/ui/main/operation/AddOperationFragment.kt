@@ -3,16 +3,13 @@ package cs.vsu.ru.mycash.ui.main.operation
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -21,6 +18,7 @@ import cs.vsu.ru.mycash.api.ApiClient
 import cs.vsu.ru.mycash.api.ApiService
 import cs.vsu.ru.mycash.data.*
 import cs.vsu.ru.mycash.databinding.FragmentAddOperationBinding
+import cs.vsu.ru.mycash.ui.main.home.OperationViewModel
 import cs.vsu.ru.mycash.utils.AppPreferences
 import retrofit2.Call
 import retrofit2.Callback
@@ -55,8 +53,6 @@ class AddOperationFragment : Fragment(),
         Log.e("acc onc", addOperationViewModel.accounts.value.toString())
         getCategories()
         Log.e("cat onc", addOperationViewModel.categories.value.toString())
-//        configureSpinnerAccounts()
-//        configureSpinnerCategories()
 
         binding.incomeBtn.isEnabled = false
         binding.spendingButton.isEnabled = true
@@ -74,8 +70,7 @@ class AddOperationFragment : Fragment(),
         pickDate()
 
         binding.saveButton.setOnClickListener {
-            if (postOperation())
-            {
+            if (postOperation()) {
                 findNavController().navigateUp()
             }
         }
@@ -95,7 +90,7 @@ class AddOperationFragment : Fragment(),
 
         addOperationViewModel.date.observe(viewLifecycleOwner) {
             val current = Calendar.getInstance()
-            val sdf = SimpleDateFormat("dd.MM.yyyy hh:mm", Locale.getDefault())
+            val sdf = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
             val sdf1 = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
             if (sdf1.format(it.time).equals(sdf1.format(current.time))) {
 
@@ -119,13 +114,25 @@ class AddOperationFragment : Fragment(),
     }
 
 
-
     private fun configureSpinnerCategories() {
         if (addOperationViewModel.categories.value != null) {
+            var categoriesNames: ArrayList<String> = ArrayList()
+            val all = addOperationViewModel.categories.value
+            if (addOperationViewModel.mode.value == AddOperationViewModel.Mode.INCOME) {
+                val income = all?.filter { it.type == CategoryType.INCOME }
+                if (income != null) {
+                    categoriesNames = income.stream()
+                        .map { it.name }.toList() as ArrayList<String>
+                }
+            } else if (addOperationViewModel.mode.value == AddOperationViewModel.Mode.EXPENSES) {
 
-            val categoriesNames = addOperationViewModel.categories.value!!
-                .stream()
-                .map { it.name }.toList() as ArrayList<String>
+                val expenses = all?.filter { it.type == CategoryType.EXPENSE }
+                if (expenses != null) {
+                    categoriesNames = expenses.stream()
+                        .map { it.name }.toList() as ArrayList<String>
+                }
+            }
+
             val spinnerCategories = binding.spinnerCategories
             val adapterCategory = ArrayAdapter(
                 requireContext(), android.R.layout.simple_spinner_item, categoriesNames
@@ -177,18 +184,19 @@ class AddOperationFragment : Fragment(),
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun postOperation() : Boolean{
+    private fun postOperation(): Boolean {
         val categoryName = addOperationViewModel.categoryName.value
         val category = addOperationViewModel.categories.value?.find { it.name == categoryName }
         val accountName = addOperationViewModel.accountName.value
         val account = addOperationViewModel.accounts.value?.filter { it.name == accountName }
         val value = binding.editTextSum.text
+
         val cal = addOperationViewModel.date.value
         val comment = binding.comment.text.toString()
-        var check : Boolean = false
-        if (category != null
-            && accountName != null
-            && value != null
+        var check = false
+        if (category != null && categoryName != null && categoryName.trim().isNotEmpty()
+            && accountName != null && accountName.trim().isNotEmpty()
+            && value != null && value.trim().isNotEmpty()
             && cal != null
         ) {
             val datetime: LocalDateTime = LocalDateTime.ofInstant(
@@ -204,26 +212,30 @@ class AddOperationFragment : Fragment(),
             )
             apiService = ApiClient.getClient(appPrefs.token.toString())
 
-            apiService.addOperation(operation).enqueue(object: Callback<OperationResponse> {
+            apiService.addOperation(operation).enqueue(object : Callback<OperationResponse> {
                 override fun onResponse(
                     call: Call<OperationResponse>,
                     response: Response<OperationResponse>
                 ) {
                     Log.d("oper response", response.body().toString())
                     if (response.body() != null) {
-                        if (response.body()!!.type == LimitType.CATEGORY)
-                        {
-                            Toast.makeText(context, "Вы превысили лимит по категории!", Toast.LENGTH_SHORT).show()
+                        if (response.body()!!.type == LimitType.CATEGORY) {
+                            Toast.makeText(
+                                context,
+                                "Вы превысили лимит по категории!",
+                                Toast.LENGTH_SHORT
+                            ).show()
 
-                        }
-                        else if (response.body()!!.type == LimitType.CATEGORY)
-                        {
-                            Toast.makeText(context, "Вы превысили лимит по счету!", Toast.LENGTH_SHORT).show()
+                        } else if (response.body()!!.type == LimitType.CATEGORY) {
+                            Toast.makeText(
+                                context,
+                                "Вы превысили лимит по счету!",
+                                Toast.LENGTH_SHORT
+                            ).show()
 
                         }
                         check = true
-                    }
-                    else {
+                    } else {
 
                         check = false
                     }
@@ -243,15 +255,16 @@ class AddOperationFragment : Fragment(),
         return check
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        addOperationViewModel = ViewModelProvider(this)[AddOperationViewModel::class.java]
-        appPrefs = activity?.let { AppPreferences(it) }!!
-
-        Log.e("acc att", addOperationViewModel.accounts.value.toString())
-        getCategories()
-        Log.e("cat att", addOperationViewModel.categories.value.toString())
-    }
+//    override fun onAttach(context: Context) {
+//        super.onAttach(context)
+//        addOperationViewModel = ViewModelProvider(this)[AddOperationViewModel::class.java]
+//        appPrefs = activity?.let { AppPreferences(it) }!!
+//
+//        Log.e("acc att", addOperationViewModel.accounts.value.toString())
+//        getCategories()
+//        getAccounts()
+//        Log.e("cat att", addOperationViewModel.categories.value.toString())
+//    }
 
     private fun getAccounts() {
         apiService = ApiClient.getClient(appPrefs.token.toString())

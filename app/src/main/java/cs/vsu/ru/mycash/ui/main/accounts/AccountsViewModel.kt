@@ -3,10 +3,16 @@ package cs.vsu.ru.mycash.ui.main.accounts
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import cs.vsu.ru.mycash.data.Account
 
 class AccountsViewModel : ViewModel() {
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is accounts Fragment"
+    private val _accountList: MutableLiveData<List<Account>> by lazy {
+        MutableLiveData<List<Account>>()
     }
-    val text: LiveData<String> = _text
+    val accountList : LiveData<List<Account>> = _accountList
+
+    fun setAccountsList(accounts: List<Account>)
+    {
+        _accountList.value = accounts
+    }
 }

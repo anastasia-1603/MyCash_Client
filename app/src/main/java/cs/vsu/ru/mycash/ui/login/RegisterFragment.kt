@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import cs.vsu.ru.mycash.R
@@ -50,17 +51,23 @@ class RegisterFragment : Fragment() {
                     call: Call<TokenResponse>,
                     response: Response<TokenResponse>
                 ) {
-                    val tokenResponse = response.body()?.token.toString()
-                    appPrefs.token = tokenResponse
-                    ApiClient.updateClient(tokenResponse)
-                    val navController = findNavController()
+                    if (response.body() != null)
+                    {
+                        val tokenResponse = response.body()?.token.toString()
+                        appPrefs.token = tokenResponse
+                        ApiClient.updateClient(tokenResponse)
+                        val navController = findNavController()
+                        appPrefs.isAuth = true
+
+                        navController.navigate(R.id.profileFragment)
+                    }
+
+
                     val alertDialogBuilder = AlertDialog.Builder(requireContext())
                     alertDialogBuilder.setMessage("Вы успешно зарегистрированы")
 
                     alertDialogBuilder.setPositiveButton("OK") { dialog, _ ->
-                        appPrefs.isAuth = true
-                        dialog.dismiss()
-                        navController.navigate(R.id.profileFragment)
+
                     }
 
                     val alertDialog = alertDialogBuilder.create()
@@ -69,7 +76,7 @@ class RegisterFragment : Fragment() {
                 }
 
                 override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
-                    t.message?.let { Log.e("failure register", it) }
+                    Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
                 }
 
             })

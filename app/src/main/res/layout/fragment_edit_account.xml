@@ -11,13 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background"
-        tools:context=".ui.main.MainScreenActivity"
-        tools:layout_editor_absoluteX="-53dp"
-        tools:layout_editor_absoluteY="-32dp">
+        tools:context=".ui.main.accounts.EditAccountsFragment">
 
 
         <EditText
-            android:id="@+id/editTextNumber2"
+            android:id="@+id/editTextLimit"
             android:layout_width="384dp"
             android:layout_height="44dp"
             android:layout_marginStart="20dp"
@@ -38,10 +36,10 @@
             android:text="Лимит"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextNumber" />
+            app:layout_constraintTop_toBottomOf="@+id/editTextGoal" />
 
         <EditText
-            android:id="@+id/masterAccounts"
+            android:id="@+id/editAccountName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -63,10 +61,10 @@
             android:text="Финансовая цель"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/masterAccounts" />
+            app:layout_constraintTop_toBottomOf="@+id/editAccountName" />
 
         <EditText
-            android:id="@+id/editTextNumber"
+            android:id="@+id/editTextGoal"
             android:layout_width="378dp"
             android:layout_height="44dp"
             android:layout_marginStart="20dp"
@@ -85,10 +83,10 @@
             android:layout_height="51dp"
             android:layout_marginTop="85dp"
             android:text="Удалить"
-            android:textColor="#E60C0C"
+            android:textColor="@color/redText"
             app:layout_constraintEnd_toStartOf="@+id/saveButton"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextNumber2" />
+            app:layout_constraintTop_toBottomOf="@+id/editTextLimit" />
 
         <Button
             android:id="@+id/saveButton"

@@ -82,6 +82,20 @@ class HomeFragment : Fragment() {
         val dayBtn: Button = binding.day
         val monthBtn: Button = binding.month
 
+        if (dayBtn.isEnabled == monthBtn.isEnabled)
+        {
+            if (homeViewModel.mode.value == HomeViewModel.Mode.DAY)
+            {
+                dayBtn.isEnabled = false
+                monthBtn.isEnabled = true
+            }
+            else {
+                dayBtn.isEnabled = true
+                monthBtn.isEnabled = false
+            }
+        }
+
+
         dayBtn.setOnClickListener {
             homeViewModel.setMode(HomeViewModel.Mode.DAY)
             dayBtn.isEnabled = false
@@ -97,10 +111,10 @@ class HomeFragment : Fragment() {
 
         homeViewModel.mode.observe(viewLifecycleOwner) {
             if (homeViewModel.mode.value == HomeViewModel.Mode.DAY) {
-                if (!dayBtn.isEnabled) {
-                    dayBtn.isEnabled = true
-                    monthBtn.isEnabled = false
-                }
+//                if (!dayBtn.isEnabled) {
+//                    dayBtn.isEnabled = false
+//                    monthBtn.isEnabled = true
+//                }
                 val current = Calendar.getInstance()
                 val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
                 val sdf1 = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
@@ -112,10 +126,10 @@ class HomeFragment : Fragment() {
                 }
 
             } else {
-                if (!monthBtn.isEnabled) {
-                    monthBtn.isEnabled = true
-                    dayBtn.isEnabled = false
-                }
+//                if (!monthBtn.isEnabled) {
+//                    monthBtn.isEnabled = false
+//                    dayBtn.isEnabled = false
+//                }
                 val monthNames = arrayOf(
                     "Январь",
                     "Февраль",
@@ -214,8 +228,8 @@ class HomeFragment : Fragment() {
             } else {
                 cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 1)
             }
-            loadOperations()
             homeViewModel.setDate(cal)
+            loadOperations()
         }
 
         binding.right.setOnClickListener {
@@ -235,8 +249,8 @@ class HomeFragment : Fragment() {
                     }
                 }
             }
-            loadOperations()
             homeViewModel.setDate(cal)
+            loadOperations()
         }
 
         binding.floatingActionButton.setOnClickListener {
@@ -300,35 +314,44 @@ class HomeFragment : Fragment() {
     private fun loadOperations() {
         apiService = ApiClient.getClient(appPrefs.token.toString())
         val call: Call<Map<String, List<Operation>>>
-        if (homeViewModel.mode.value == HomeViewModel.Mode.DAY) {
-            call = apiService.getDataByDay(
-                cal.get(Calendar.YEAR), //todo поменять на date
-                cal.get(Calendar.MONTH) + 1,
-                cal.get(Calendar.DAY_OF_MONTH)
-            )
-        } else {
-            call = apiService.getDataByMonth(
-                cal.get(Calendar.YEAR),
-                cal.get(Calendar.MONTH) + 1
-            )
-        }
-        call.enqueue(object : Callback<Map<String, List<Operation>>> {
-            override fun onResponse(
-                call: Call<Map<String, List<Operation>>>,
-                response: Response<Map<String, List<Operation>>>
-            ) {
-                val map = response.body()
-                Log.e("map", map.toString())
-                if (map != null) {
-                    updateMap(map)
+        val calVm = homeViewModel.date.value
+        Log.e("cal hvm", cal.toString())
+        if (calVm != null) {
+            if (homeViewModel.mode.value == HomeViewModel.Mode.DAY) {
+                call = apiService.getDataByDay(
+                    calVm.get(Calendar.YEAR),
+                    calVm.get(Calendar.MONTH) + 1,
+                    calVm.get(Calendar.DAY_OF_MONTH)
+                )
+
+            } else {
+                call = apiService.getDataByMonth(
+                    calVm.get(Calendar.YEAR),
+                    calVm.get(Calendar.MONTH) + 1
+                )
+            }
+            call.enqueue(object : Callback<Map<String, List<Operation>>> {
+                override fun onResponse(
+                    call: Call<Map<String, List<Operation>>>,
+                    response: Response<Map<String, List<Operation>>>
+                ) {
+                    val map = response.body()
+                    Log.e("map", map.toString())
+                    if (map != null) {
+                        updateMap(map)
+                    }
+                    Log.e("acc list in hvm", homeViewModel.accountList.value.toString())
+                    Log.e("oper list in vm", operationViewModel.operationList.value.toString())
+                    Log.e("oper e list in vm", operationViewModel.expenseOperations.value.toString())
+                    Log.e("oper i list in vm", operationViewModel.incomeOperations.value.toString())
                 }
-            }
 
-            override fun onFailure(call: Call<Map<String, List<Operation>>>, t: Throwable) {
-                Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
-            }
+                override fun onFailure(call: Call<Map<String, List<Operation>>>, t: Throwable) {
+                    Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
+                }
 
-        })
+            })
+        }
     }
 
 
@@ -368,7 +391,10 @@ class HomeFragment : Fragment() {
         val index = homeViewModel.accountIndex.value
         if (index != null) {
             val account = accounts[index]
-            map[account.name]?.let { updateAccount(account, it) }
+
+            map["${account.name}:${account.balance}"]?.let {
+                updateAccount(account, it)
+            }
         }
     }
 

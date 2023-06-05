@@ -1,4 +1,4 @@
-package cs.vsu.ru.mycash.ui.main.diagrams
+package cs.vsu.ru.mycash.ui.main.accounts
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -8,24 +8,24 @@ import android.view.View
 import android.view.ViewGroup
 import cs.vsu.ru.mycash.R
 
-class DiagramsIncomeFragment : Fragment() {
+class AccountAddFragment : Fragment() {
 
     companion object {
-        fun newInstance() = DiagramsIncomeFragment()
+        fun newInstance() = AccountAddFragment()
     }
 
-    private lateinit var viewModel: DiagramsIncomeViewModel
+    private lateinit var viewModel: AccountAddViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_diagrams_income, container, false)
+        return inflater.inflate(R.layout.fragment_account_add, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(DiagramsIncomeViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(AccountAddViewModel::class.java)
         // TODO: Use the ViewModel
     }
 
