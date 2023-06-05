@@ -13,7 +13,6 @@
         android:background="@color/background"
         tools:context=".ui.main.home.HomeFragment">
 
-
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/floatingActionButton"
             android:layout_width="wrap_content"

@@ -60,7 +60,6 @@ class PredictFragment : Fragment() {
         val month = Calendar.getInstance().get(Calendar.MONTH)
         cal.set(Calendar.MONTH, month+1)
         predictViewModel.setDate(cal)
-//        homeViewModel.accountName.value?.let { predictViewModel.setAccountName(it) }
         val root: View = binding.root
 
         val accountName: TextView = binding.accountName
@@ -249,7 +248,7 @@ class PredictFragment : Fragment() {
                         }
                         else
                         {
-                            val cat = Category("default", 0, CategoryType.EXPENSE, false, 0.0)
+                            val cat = Category("", 0, CategoryType.EXPENSE, false, 0.0)
                             predictViewModel.setCategory(cat)
                         }
 
