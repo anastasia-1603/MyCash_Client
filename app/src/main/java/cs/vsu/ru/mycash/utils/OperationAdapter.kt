@@ -43,8 +43,8 @@ class OperationAdapter(private val onClickListener: OnClickListener) :
             categoryName.text = operation.category.name
             value.text = operation.value.toString()
 
-            val f = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
-            val date = LocalDateTime.parse(operation.dateTime, f)
+//            val f = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
+            val date = LocalDateTime.parse(operation.dateTime)
             val formattedDate = DateTimeFormatter.ofPattern("HH:mm").format(date)
             time.text = formattedDate
 
