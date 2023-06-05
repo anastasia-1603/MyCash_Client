@@ -9,6 +9,7 @@ import cs.vsu.ru.mycash.api.Constants.DATA_MONTH
 import cs.vsu.ru.mycash.api.Constants.INIT_URL
 import cs.vsu.ru.mycash.api.Constants.LOGIN
 import cs.vsu.ru.mycash.api.Constants.OPERATION_ADD
+import cs.vsu.ru.mycash.api.Constants.PREDICT
 import cs.vsu.ru.mycash.api.Constants.REGISTER
 import cs.vsu.ru.mycash.data.*
 import retrofit2.Call
@@ -42,4 +43,8 @@ interface ApiService {
     fun getAccounts(): Call<List<Account>>
     @POST(OPERATION_ADD)
     fun addOperation(@Body operation: Operation) : Call<OperationResponse>
+
+    @GET(PREDICT)
+    fun getPredict(@Path("accountName") accountName: String,
+                   @Path("year") year: Int, @Path("month") month: Int) : Call<PredictionResponse>
 }

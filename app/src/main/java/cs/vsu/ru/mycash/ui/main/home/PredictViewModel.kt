@@ -1,20 +1,13 @@
 package cs.vsu.ru.mycash.ui.main.home
 
-import android.util.Log
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import cs.vsu.ru.mycash.api.ApiService
 import cs.vsu.ru.mycash.data.Account
-import cs.vsu.ru.mycash.data.Operation
-import java.util.Calendar
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import androidx.fragment.app.activityViewModels
+import cs.vsu.ru.mycash.data.Category
+import java.util.*
 
-class HomeViewModel : ViewModel() {
+class PredictViewModel : ViewModel() {
 
     private val _accountIndex: MutableLiveData<Int> by lazy {
         MutableLiveData<Int>(0)
@@ -59,10 +52,6 @@ class HomeViewModel : ViewModel() {
     }
     val date: LiveData<Calendar> = _date
 
-    private val _mode: MutableLiveData<Mode> by lazy {
-        MutableLiveData<Mode>(Mode.DAY)
-    }
-    val mode: LiveData<Mode> = _mode
 
     fun setDate(date: Calendar) {
         _date.value = date
@@ -72,17 +61,46 @@ class HomeViewModel : ViewModel() {
         _accountName.value = accountName
     }
 
-    fun setBalance(balance: String) {
-        _balance.value = balance + "₽"
+    fun setBalance(balance: Double) {
+        _balance.value = balance.toString() + "₽"
     }
 
-    fun setMode(mode: Mode) {
-        _mode.value = mode
+    private val _predictInc: MutableLiveData<String> by lazy {
+        MutableLiveData<String>()
+    }
+    val predictInc: LiveData<String> = _predictInc
+
+
+    fun setPredictInc(predictInc: Double) {
+        _predictInc.value = predictInc.toString()
     }
 
-    enum class Mode {
-        DAY,
-        MONTH
+    private val _predictExp: MutableLiveData<String> by lazy {
+        MutableLiveData<String>()
+    }
+    val predictExp: LiveData<String> = _predictExp
+
+    fun setPredictExp(predictExp: Double) {
+        _predictExp.value = predictExp.toString()
+    }
+
+    private val _category: MutableLiveData<Category> by lazy {
+        MutableLiveData<Category>()
+    }
+    val category: LiveData<Category> = _category
+
+
+    fun setCategory(category: Category) {
+        _category.value = category
+    }
+
+    private val _predictSum: MutableLiveData<String> by lazy {
+        MutableLiveData<String>()
+    }
+    val predictSum: LiveData<String> = _predictSum
+
+    fun setPredictSum(predictSum: Double) {
+        _predictSum.value = predictSum.toString()
     }
 
 }

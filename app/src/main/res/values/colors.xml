@@ -13,4 +13,5 @@
     <color name="red">#B60000</color>
     <color name="light_gray">#EAEAEA</color>
     <color name="redText">#E60C0C</color>
+    <color name="gray_text">#454343</color>
 </resources>
