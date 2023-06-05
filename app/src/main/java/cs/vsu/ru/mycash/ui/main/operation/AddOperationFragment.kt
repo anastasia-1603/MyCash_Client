@@ -193,7 +193,7 @@ class AddOperationFragment : Fragment(),
 
         val cal = addOperationViewModel.date.value
         val comment = binding.comment.text.toString()
-        var check = false
+        var check = true
         if (category != null && categoryName != null && categoryName.trim().isNotEmpty()
             && accountName != null && accountName.trim().isNotEmpty()
             && value != null && value.trim().isNotEmpty()
@@ -225,19 +225,17 @@ class AddOperationFragment : Fragment(),
                                 "Вы превысили лимит по категории!",
                                 Toast.LENGTH_SHORT
                             ).show()
-
-                        } else if (response.body()!!.type == LimitType.CATEGORY) {
+                        } else if (response.body()!!.type == LimitType.ACCOUNT) {
                             Toast.makeText(
                                 context,
                                 "Вы превысили лимит по счету!",
                                 Toast.LENGTH_SHORT
                             ).show()
-
                         }
                         check = true
                     } else {
 
-                        check = false
+//                        check = false
                     }
 
                 }
