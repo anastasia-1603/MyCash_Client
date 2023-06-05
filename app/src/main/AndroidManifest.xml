@@ -17,6 +17,7 @@
 
         <activity
             android:name=".ui.main.MainScreenActivity"
+            android:screenOrientation="portrait"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,9 +26,11 @@
             </intent-filter>
         </activity>
         <activity
+            android:screenOrientation="portrait"
             android:name=".ui.onboarding.StartActivity"
             android:exported="false" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".ui.onboarding.WelcomeActivity"
             android:exported="false">
 
