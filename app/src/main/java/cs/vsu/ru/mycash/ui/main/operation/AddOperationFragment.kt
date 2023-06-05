@@ -109,11 +109,10 @@ class AddOperationFragment : Fragment(),
                 binding.incomeBtn.isEnabled = true
                 binding.spendingButton.isEnabled = false
             }
+            configureSpinnerCategories()
         }
         return binding.root
     }
-
-
     private fun configureSpinnerCategories() {
         if (addOperationViewModel.categories.value != null) {
             var categoriesNames: ArrayList<String> = ArrayList()
