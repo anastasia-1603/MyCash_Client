@@ -1,7 +1,9 @@
 package cs.vsu.ru.mycash.ui.main
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
@@ -27,7 +29,6 @@ class MainScreenActivity : AppCompatActivity() {
             appPrefs.isFirstTimeLaunch = false
             finish()
         }
-
 
         binding = ActivityMainScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
