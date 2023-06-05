@@ -74,5 +74,9 @@
         android:name="cs.vsu.ru.mycash.ui.main.profile.ProfileEditFragment"
         android:label="ProfileEditFragment"
         tools:layout="@layout/fragment_profile_edit" />
+    <fragment
+        android:id="@+id/predictFragment"
+        android:name="cs.vsu.ru.mycash.ui.main.home.PredictFragment"
+        android:label="PredictFragment" />
 
 </navigation>
