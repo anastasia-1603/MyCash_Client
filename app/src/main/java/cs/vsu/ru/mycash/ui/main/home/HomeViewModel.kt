@@ -1,18 +1,10 @@
 package cs.vsu.ru.mycash.ui.main.home
 
-import android.util.Log
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import cs.vsu.ru.mycash.api.ApiService
-import cs.vsu.ru.mycash.data.Operation
-import java.util.Calendar
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import androidx.fragment.app.activityViewModels
 import cs.vsu.ru.mycash.data.AccountDto
+import java.util.*
 
 class HomeViewModel : ViewModel() {
 
@@ -42,10 +34,9 @@ class HomeViewModel : ViewModel() {
     private val _accountList: MutableLiveData<List<AccountDto>> by lazy {
         MutableLiveData<List<AccountDto>>()
     }
-    val accountList : LiveData<List<AccountDto>> = _accountList
+    val accountList: LiveData<List<AccountDto>> = _accountList
 
-    fun setAccountsList(accounts: List<AccountDto>)
-    {
+    fun setAccountsList(accounts: List<AccountDto>) {
         _accountList.value = accounts
     }
 
