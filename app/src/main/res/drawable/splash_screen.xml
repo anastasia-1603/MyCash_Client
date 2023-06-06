@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:opacity="opaque"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <item android:drawable="@color/background"/>
+
+    <item android:layout_width="50dp">
+
+        <bitmap
+            android:src="@drawable/ruble_spash"
+            android:gravity="center"/>
+
+    </item>
+
+</layer-list>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="cs.vsu.ru.mycash.ui.main.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/floatingActionButton"
+            app:destination="@id/addOperationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileUnauthFragment"
+        android:name="cs.vsu.ru.mycash.ui.main.profile.ProfileUnauthFragment"
+        android:label="ProfileUnauthFragment"
+        tools:layout="@layout/fragment_profile_unauth">
+        <action
+            android:id="@+id/registerBtn"
+            app:destination="@+id/registerFragment"
+            />
+        <action
+            android:id="@+id/sigInBtn"
+            app:destination="@+id/signInFragment"
+            />
+    </fragment>
+    <fragment
+        android:id="@+id/diagramsFragment"
+        android:name="cs.vsu.ru.mycash.ui.main.diagrams.DiagramsFragment"
+        android:label="fragment_diagrams"
+        tools:layout="@layout/fragment_diagrams" />
+    <fragment
+        android:id="@+id/categoriesFragment"
+        android:name="cs.vsu.ru.mycash.ui.main.categories.CategoriesFragment"
+        android:label="fragment_categories"
+        tools:layout="@layout/fragment_categories" />
+    <fragment
+        android:id="@+id/accountsFragment"
+        android:name="cs.vsu.ru.mycash.ui.main.accounts.AccountsFragment"
+        android:label="fragment_accounts"
+        tools:layout="@layout/fragment_accounts" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="cs.vsu.ru.mycash.ui.main.profile.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="cs.vsu.ru.mycash.ui.login.SignInFragment"
+        android:label="fragment_sign_in"
+        tools:layout="@layout/fragment_sign_in" />
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="cs.vsu.ru.mycash.ui.login.RegisterFragment"
+        android:label="fragment_register"
+        tools:layout="@layout/fragment_register" />
+    <fragment
+        android:id="@+id/addOperationFragment"
+        android:name="cs.vsu.ru.mycash.ui.main.operation.AddOperationFragment"
+        android:label="AddOperationFragment"
+        tools:layout="@layout/fragment_add_operation"/>
+    <fragment
+        android:id="@+id/editAccountFragment"
+        android:name="cs.vsu.ru.mycash.ui.main.accounts.EditAccountFragment"
+        android:label="EditAccountFragment"
+        tools:layout="@layout/fragment_edit_account"/>
+    <fragment
+        android:id="@+id/profileEditFragment"
+        android:name="cs.vsu.ru.mycash.ui.main.profile.ProfileEditFragment"
+        android:label="ProfileEditFragment"
+        tools:layout="@layout/fragment_profile_edit" />
+    <fragment
+        android:id="@+id/predictFragment"
+        android:name="cs.vsu.ru.mycash.ui.main.home.PredictFragment"
+        android:label="PredictFragment" />
+    <fragment
+        android:id="@+id/accountAddFragment"
+        android:name="cs.vsu.ru.mycash.ui.main.accounts.AccountAddFragment"
+        android:label="fragment_account_add"
+        tools:layout="@layout/fragment_account_add" />
+
+</navigation>
