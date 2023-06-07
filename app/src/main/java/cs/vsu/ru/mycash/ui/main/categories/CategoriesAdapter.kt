@@ -40,7 +40,13 @@ class CategoriesAdapter(private val onClickListener: CategoriesAdapter.OnClickLi
         with (holder.binding) {
 
             categoryName.text = category.name
-            imageView.setColorFilter(-category.color)
+            if (category.color > 0)
+            {
+                imageView.setColorFilter(-category.color)
+            }
+            else {
+                imageView.setColorFilter(category.color)
+            }
 
             holder.itemView.setOnClickListener {
                 onClickListener.onClick(category)

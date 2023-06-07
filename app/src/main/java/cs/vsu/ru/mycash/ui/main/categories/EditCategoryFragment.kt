@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -13,6 +14,7 @@ import cs.vsu.ru.mycash.R
 import cs.vsu.ru.mycash.api.ApiClient
 import cs.vsu.ru.mycash.api.ApiService
 import cs.vsu.ru.mycash.data.Category
+import cs.vsu.ru.mycash.data.CategoryType
 import cs.vsu.ru.mycash.databinding.FragmentEditCategoryBinding
 import cs.vsu.ru.mycash.utils.AppPreferences
 import retrofit2.Call
@@ -28,7 +30,6 @@ class EditCategoryFragment : Fragment() {
     private lateinit var appPrefs: AppPreferences
     private val editCategoryViewModel: EditCategoryViewModel by activityViewModels()
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -42,9 +43,22 @@ class EditCategoryFragment : Fragment() {
 
         val category = editCategoryViewModel.category.value
 
+
         if (category != null) {
-            binding.categName.setText(category.name)
-            binding.colorBtn.setColorFilter(category.color)
+            if (category.type == CategoryType.INCOME)
+            {
+                binding.limit.isVisible = false
+                binding.limitText.isVisible = false
+            }
+            binding.categName.text = category.name.toString()
+            if (category.color > 0)
+            {
+                binding.colorBtn.setColorFilter(-category.color)
+            }
+            else {
+                binding.colorBtn.setColorFilter(category.color)
+            }
+
             if (category.isLimited) {
                 binding.limit.setText(category.spendingLimit.toString())
             }
@@ -57,7 +71,6 @@ class EditCategoryFragment : Fragment() {
                 ColorPickerPopup
                     .Builder(context)
                     .initialColor(category.color)
-                    .enableAlpha(true)
                     .enableBrightness(true)
                     .okTitle("Выбрать")
                     .cancelTitle("Отменить")
@@ -82,7 +95,6 @@ class EditCategoryFragment : Fragment() {
                 categoryName.error = "Введите название счета"
             } else {
                 if (category != null) {
-                    category.name = categoryName.text.toString()
                     val limit = binding.limit.text.toString()
                     if (limit.trim().isNotEmpty()) {
                         category.spendingLimit = limit.toDouble()
@@ -96,7 +108,7 @@ class EditCategoryFragment : Fragment() {
         }
 
         binding.deleteButton.setOnClickListener {
-            // todo delete
+            findNavController().navigateUp()
         }
         return binding.root
     }
@@ -112,7 +124,6 @@ class EditCategoryFragment : Fragment() {
             }
         })
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -35,7 +35,7 @@ class DiagramsExpensesFragment : Fragment() {
         val listC: List<Int> = categoriesViewModel.expenseCategories.value!!
             .stream()
             .map {
-                -it.color
+                it.color
             }.toList()
 
 //        val listL: List<String> = categoriesViewModel.expenseCategories.value!!
