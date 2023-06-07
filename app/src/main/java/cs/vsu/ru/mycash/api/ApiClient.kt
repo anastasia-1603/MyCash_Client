@@ -2,6 +2,7 @@ package cs.vsu.ru.mycash.api
 
 import cs.vsu.ru.mycash.api.Constants.BASE_URL
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -18,6 +19,8 @@ object ApiClient {
     }
 
     fun updateClient(token: String) {
+        val loggingInterceptor = HttpLoggingInterceptor()
+        loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
         client = OkHttpClient.Builder()
             .addInterceptor { chain ->
                 val request = chain.request().newBuilder()
@@ -27,6 +30,7 @@ object ApiClient {
                     .build()
                 chain.proceed(request)
             }
+            .addInterceptor(loggingInterceptor)
             .build()
         retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
