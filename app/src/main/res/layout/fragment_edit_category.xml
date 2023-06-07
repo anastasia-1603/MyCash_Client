@@ -13,18 +13,15 @@
         android:background="@color/background"
         tools:context=".ui.main.categories.EditCategoryFragment">
 
-        <EditText
+        <TextView
             android:id="@+id/categName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
             android:layout_marginTop="40dp"
             android:layout_marginEnd="35dp"
-            android:hint="Название категории"
-            android:inputType="text"
-            android:maxLength="@integer/material_motion_duration_short_1"
+            android:text=""
             android:textColor="@color/black"
-            android:textColorHint="@color/gray"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
