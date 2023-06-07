@@ -4,6 +4,7 @@ package cs.vsu.ru.mycash.api
 import cs.vsu.ru.mycash.api.Constants.ACCOUNT
 import cs.vsu.ru.mycash.api.Constants.ACCOUNTS
 import cs.vsu.ru.mycash.api.Constants.ACCOUNT_UPDATE
+import cs.vsu.ru.mycash.api.Constants.CATEGORY_UPDATE
 import cs.vsu.ru.mycash.api.Constants.CATEGORY_URL
 import cs.vsu.ru.mycash.api.Constants.DATA_DAY
 import cs.vsu.ru.mycash.api.Constants.DATA_MONTH
@@ -54,5 +55,8 @@ interface ApiService {
 
     @POST(ACCOUNT_UPDATE)
     fun updateAccount(@Body account: Account) : Call<Void>
+
+    @POST(CATEGORY_UPDATE)
+    fun updateCategory(@Body category: Category) : Call<Void>
 
 }

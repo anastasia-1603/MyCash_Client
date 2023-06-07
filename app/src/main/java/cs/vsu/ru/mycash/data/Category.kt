@@ -5,8 +5,8 @@ import android.graphics.drawable.ColorDrawable
 
 data class Category (
     var name: String,
-    val color: Int,
+    var color: Int,
     val type: CategoryType,
-    val isLimited: Boolean,
-    val spendingLimit: Double
+    var isLimited: Boolean,
+    var spendingLimit: Double
 )

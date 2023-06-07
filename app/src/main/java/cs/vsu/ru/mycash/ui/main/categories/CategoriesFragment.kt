@@ -23,6 +23,7 @@ class CategoriesFragment : Fragment() {
     private var _binding: FragmentCategoriesBinding? = null
     private val binding get() = _binding!!
     private val categoriesViewModel: CategoriesViewModel by activityViewModels()
+    private val editCategoryViewModel: EditCategoryViewModel by activityViewModels()
     private lateinit var apiService: ApiService
     private lateinit var appPrefs: AppPreferences
 

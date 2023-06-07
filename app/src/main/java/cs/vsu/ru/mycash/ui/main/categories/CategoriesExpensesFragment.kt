@@ -6,13 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import cs.vsu.ru.mycash.R
 import cs.vsu.ru.mycash.databinding.FragmentCategoriesExpensesBinding
 
 class CategoriesExpensesFragment : Fragment() {
     private lateinit var binding: FragmentCategoriesExpensesBinding
     private lateinit var adapter: CategoriesAdapter
     private val categoriesViewModel : CategoriesViewModel by activityViewModels()
+    private val editCategoryViewModel: EditCategoryViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -23,7 +26,8 @@ class CategoriesExpensesFragment : Fragment() {
         val root: View = binding.root
         val manager = LinearLayoutManager(context)
         adapter = CategoriesAdapter(CategoriesAdapter.OnClickListener { category ->
-            // todo findNavController().navigate()
+            editCategoryViewModel.setCategory(category)
+            findNavController().navigate(R.id.editCategoryFragment)
         })
 
         val expenseCategoriesList = categoriesViewModel.expenseCategories.value
