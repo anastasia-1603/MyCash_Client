@@ -3,6 +3,7 @@ package cs.vsu.ru.mycash.api
 
 import cs.vsu.ru.mycash.api.Constants.ACCOUNT
 import cs.vsu.ru.mycash.api.Constants.ACCOUNTS
+import cs.vsu.ru.mycash.api.Constants.ACCOUNT_DELETE
 import cs.vsu.ru.mycash.api.Constants.ACCOUNT_UPDATE
 import cs.vsu.ru.mycash.api.Constants.CATEGORY_UPDATE
 import cs.vsu.ru.mycash.api.Constants.CATEGORY_URL
@@ -58,5 +59,8 @@ interface ApiService {
 
     @POST(CATEGORY_UPDATE)
     fun updateCategory(@Body category: Category) : Call<Void>
+
+    @POST(ACCOUNT_DELETE)
+    fun deleteAccount() : Call<Void>
 
 }
