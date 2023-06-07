@@ -83,5 +83,9 @@
         android:name="cs.vsu.ru.mycash.ui.main.accounts.AccountAddFragment"
         android:label="fragment_account_add"
         tools:layout="@layout/fragment_account_add" />
+    <fragment
+        android:id="@+id/editCategoryFragment"
+        android:name="cs.vsu.ru.mycash.ui.main.categories.EditCategoryFragment"
+        android:label="EditCategoryFragment" />
 
 </navigation>
