@@ -77,4 +77,5 @@ dependencies {
     implementation 'com.yandex.android:mobmetricalib:5.3.0'
     implementation 'com.github.duanhong169:colorpicker:1.1.6'
     implementation 'com.github.yukuku:ambilwarna:2.0.1'
+    implementation 'com.github.duanhong169:checkerboarddrawable:1.0.2'
 }
