@@ -54,7 +54,7 @@
             android:layout_width="135dp"
             android:layout_height="51dp"
             android:layout_marginTop="50dp"
-            android:text="Удалить"
+            android:text="Отменить"
             android:textColor="@color/redText"
             app:layout_constraintEnd_toStartOf="@+id/saveButton"
             app:layout_constraintHorizontal_bias="0.5"
