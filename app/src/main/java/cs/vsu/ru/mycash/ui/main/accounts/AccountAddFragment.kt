@@ -13,10 +13,7 @@ import cs.vsu.ru.mycash.R
 import cs.vsu.ru.mycash.api.ApiClient
 import cs.vsu.ru.mycash.api.ApiService
 import cs.vsu.ru.mycash.data.Account
-import cs.vsu.ru.mycash.data.RegisterRequest
 import cs.vsu.ru.mycash.databinding.FragmentAccountAddBinding
-import cs.vsu.ru.mycash.databinding.FragmentAddOperationBinding
-import cs.vsu.ru.mycash.ui.main.operation.AddOperationViewModel
 import cs.vsu.ru.mycash.utils.AppPreferences
 import retrofit2.Call
 import retrofit2.Callback
@@ -48,7 +45,6 @@ class AccountAddFragment : Fragment() {
 
         val accountName = binding.accountName
 
-
         binding.saveButton.setOnClickListener {
             if (accountName.text.trim().isEmpty())
             {
@@ -61,24 +57,20 @@ class AccountAddFragment : Fragment() {
         }
         return binding.root
     }
-
-//    val name: String,
-//    val balance: Double,
-//    val target: Double,
-//    val spendingLimit: Double,
-//    val isLimited: Boolean
     private fun postAccount(accountName: String)
     {
         apiService = ApiClient.getClient(appPrefs.token.toString())
         val goal = binding.goal
-        val target = if (goal.text.trim().isEmpty()) { 0.0 } else {
+        val target = if (goal.text.trim().isEmpty()) { null } else {
             goal.text.toString().toDouble()
         }
-        val limit = binding.limit
-        val isLimited = limit.text.trim().isNotEmpty()
+        val isLimited = binding.limit.text.trim().isNotEmpty()
+        val limit = if (isLimited) {
+            binding.limit.text.toString().toDouble()
+        } else { null }
         val account = Account(accountName,
             0.0,
-            target, 0.0, isLimited)
+            target, limit, isLimited)
         apiService.addAccount(account).enqueue(object: Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 findNavController().navigateUp()

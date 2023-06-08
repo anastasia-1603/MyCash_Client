@@ -1,9 +1,9 @@
 package cs.vsu.ru.mycash.data
 
 data class Account(
-    val name: String,
-    val balance: Double,
-    val target: Double,
-    val spendingLimit: Double,
-    val isLimited: Boolean
+    var name: String,
+    var balance: Double,
+    var target: Double?,
+    var spendingLimit: Double?,
+    var isLimited: Boolean
 )
