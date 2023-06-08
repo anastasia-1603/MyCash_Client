@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.yandex.metrica.impl.ob.ol
 import cs.vsu.ru.mycash.R
 import cs.vsu.ru.mycash.api.ApiClient
 import cs.vsu.ru.mycash.api.ApiService
@@ -39,28 +40,65 @@ class EditAccountFragment : Fragment() {
         val menu = requireActivity().findViewById<BottomNavigationView>(R.id.nav_view).menu
         menu.findItem(R.id.accountsFragment).isChecked = true
 
+        val account = editAccountViewModel.account.value
+
         binding.cancelButton.setOnClickListener {
             findNavController().navigateUp()
         }
 
-        val account = editAccountViewModel.account.value
         if (account != null)
         {
             binding.accountName.setText(account.name)
-            binding.goal.setText(account.target.toString())
-            binding.limit.setText(account.target.toString())
+            if (account.target != null)
+            {
+                binding.goal.setText(account.target.toString())
+            }
+            else
+            {
+                binding.goal.setText("")
+            }
+            if (account.isLimited)
+            {
+                if (account.spendingLimit != null)
+                {
+                    binding.limit.setText(account.spendingLimit.toString())
+                }
+                else
+                {
+                    binding.limit.setText("")
+                }
+            }
+            else
+            {
+                binding.limit.setText("")
+            }
         }
 
-        val accountName = binding.accountName
 
         binding.saveButton.setOnClickListener {
+            val accountName = binding.accountName
             if (accountName.text.trim().isEmpty())
             {
                 accountName.error = "Введите название счета"
             }
             else
             {
-                updateAccount(accountName.text.toString())
+                if (account != null)
+                {
+                    val oldAccountName = account.name
+                    account.name = accountName.text.toString()
+                    val limit = binding.limit.text.toString()
+                    if (limit.trim().isNotEmpty()) {
+                        account.spendingLimit = limit.toDouble()
+                        account.isLimited = true
+                    }
+                    val target = binding.goal.text.toString()
+                    if (target.trim().isNotEmpty()) {
+                        account.target = target.toDouble()
+                    }
+                    updateAccount(account, oldAccountName)
+                }
+
             }
         }
         return binding.root
@@ -71,19 +109,11 @@ class EditAccountFragment : Fragment() {
 //    val target: Double,
 //    val spendingLimit: Double,
 //    val isLimited: Boolean
-    private fun updateAccount(accountName: String)
+    private fun updateAccount(account: Account, oldAccountName: String)
     {
         apiService = ApiClient.getClient(appPrefs.token.toString())
-        val goal = binding.goal
-        val target = if (goal.text.trim().isEmpty()) { 0.0 } else {
-            goal.text.toString().toDouble()
-        }
-        val limit = binding.limit
-        val isLimited = limit.text.trim().isNotEmpty()
-        val account = Account(accountName,
-            0.0,
-            target, 0.0, isLimited)
-        apiService.updateAccount(account).enqueue(object: Callback<Void> {
+
+        apiService.updateAccount(oldAccountName, account).enqueue(object: Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 findNavController().navigateUp()
             }
@@ -93,7 +123,6 @@ class EditAccountFragment : Fragment() {
             }
         })
     }
-
 
 
     override fun onDestroyView() {

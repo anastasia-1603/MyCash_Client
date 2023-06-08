@@ -55,7 +55,7 @@ interface ApiService {
     fun addAccount(@Body account: Account) : Call<Void>
 
     @POST(ACCOUNT_UPDATE)
-    fun updateAccount(@Body account: Account) : Call<Void>
+    fun updateAccount(@Path("accountName") accountName: String, @Body account: Account) : Call<Void>
 
     @POST(CATEGORY_UPDATE)
     fun updateCategory(@Body category: Category) : Call<Void>

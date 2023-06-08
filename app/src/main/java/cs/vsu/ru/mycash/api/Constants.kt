@@ -13,7 +13,7 @@ object Constants {
     const val OPERATION_ADD = "operation/add"
     const val PREDICT = "predict/{accountName}/{year}/{month}"
     const val ACCOUNT = "account/add"
-    const val ACCOUNT_UPDATE = "account/update"
+    const val ACCOUNT_UPDATE = "account/update/{accountName}"
     const val OPERATION_UPDATE = "operation/update"
     const val DIAGRAMS = "analytics/{accountName}/{year}/{month}"
     const val CATEGORY_UPDATE = "category/update"
