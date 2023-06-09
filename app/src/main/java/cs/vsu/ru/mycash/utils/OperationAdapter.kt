@@ -43,12 +43,18 @@ class OperationAdapter(private val onClickListener: OnClickListener) :
             categoryName.text = operation.category.name
             value.text = operation.value.toString()
 
-//            val f = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
             val date = LocalDateTime.parse(operation.dateTime)
-            val formattedDate = DateTimeFormatter.ofPattern("HH:mm").format(date)
-            time.text = formattedDate
+            val formattedDateTime = DateTimeFormatter.ofPattern("dd.MM HH:mm").format(date)
 
-            imageView.setColorFilter(-operation.category.color)
+            time.text = formattedDateTime
+
+            if (operation.category.color > 0) {
+                imageView.setColorFilter(-operation.category.color)
+            }
+            else {
+                imageView.setColorFilter(operation.category.color)
+            }
+
 
             holder.itemView.setOnClickListener {
                 onClickListener.onClick(operation)
