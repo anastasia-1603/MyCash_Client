@@ -1,5 +1,6 @@
 package cs.vsu.ru.mycash.ui.main.operation
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -78,6 +79,15 @@ class AddOperationViewModel : ViewModel() {
 
     fun setMode(mode: Mode) {
         _mode.value = mode
+    }
+
+    private val _imageUri: MutableLiveData<Uri?> by lazy {
+        MutableLiveData<Uri?>(null)
+    }
+    val imageUri: LiveData<Uri?> = _imageUri
+
+    fun setImageUri(imageUri: Uri?) {
+        _imageUri.value = imageUri
     }
 
     enum class Mode {

@@ -109,6 +109,7 @@
                     android:id="@+id/spinnerAccounts"
                     android:layout_width="0dp"
                     android:layout_height="35dp"
+                    android:spinnerMode="dialog"
                     android:layout_marginStart="30dp"
                     android:layout_marginTop="30dp"
                     android:layout_marginEnd="30dp"
@@ -121,6 +122,7 @@
                     android:id="@+id/spinnerCategories"
                     android:layout_width="0dp"
                     android:layout_height="35dp"
+                    android:spinnerMode="dialog"
                     android:layout_marginStart="30dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginEnd="30dp"
@@ -148,7 +150,6 @@
                     android:layout_marginTop="20dp"
                     android:text="Фото"
                     android:textSize="20sp"
-                    android:visibility="invisible"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/comment" />
 
@@ -193,9 +194,8 @@
                     android:id="@+id/photoBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
+                    android:layout_marginStart="10dp"
                     android:background="@color/background"
-                    android:visibility="invisible"
                     app:layout_constraintBottom_toBottomOf="@+id/textPhoto"
                     app:layout_constraintStart_toEndOf="@+id/textPhoto"
                     app:layout_constraintTop_toTopOf="@+id/textPhoto"
@@ -204,12 +204,25 @@
 
                 <ImageView
                     android:id="@+id/imageView"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="35dp"
+                    android:layout_width="186dp"
+                    android:layout_height="150dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="20dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textPhoto" />
+                    android:layout_marginEnd="35dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/deletePhoto"
+                    app:layout_constraintTop_toBottomOf="@+id/comment" />
+
+                <ImageButton
+                    android:id="@+id/deletePhoto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:background="@color/background"
+                    app:layout_constraintBottom_toBottomOf="@+id/photoBtn"
+                    app:layout_constraintStart_toEndOf="@+id/photoBtn"
+                    app:layout_constraintTop_toTopOf="@+id/photoBtn"
+                    app:srcCompat="@drawable/baseline_clear_24" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>

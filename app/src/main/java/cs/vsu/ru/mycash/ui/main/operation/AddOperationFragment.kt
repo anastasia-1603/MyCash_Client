@@ -1,11 +1,14 @@
 package cs.vsu.ru.mycash.ui.main.operation
 
+import android.app.Activity.RESULT_OK
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +16,8 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -41,6 +46,7 @@ class AddOperationFragment : Fragment(),
     private lateinit var apiService: ApiService
     private lateinit var appPrefs: AppPreferences
     private lateinit var addOperationViewModel: AddOperationViewModel
+    private val pickImage = 100
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
@@ -51,11 +57,8 @@ class AddOperationFragment : Fragment(),
         addOperationViewModel = ViewModelProvider(this)[AddOperationViewModel::class.java]
         appPrefs = activity?.let { AppPreferences(it) }!!
         _binding = FragmentAddOperationBinding.inflate(inflater, container, false)
-
         getAccounts()
-        Log.e("acc onc", addOperationViewModel.accounts.value.toString())
         getCategories()
-        Log.e("cat onc", addOperationViewModel.categories.value.toString())
 
         binding.incomeBtn.isEnabled = false
         binding.spendingButton.isEnabled = true
@@ -79,26 +82,28 @@ class AddOperationFragment : Fragment(),
             findNavController().navigateUp()
         }
 
+        binding.photoBtn.setOnClickListener {
+            val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+            startActivityForResult(gallery, pickImage)
 
-//        val imageView: ImageView = binding.imageView
-//
-//        val button: Button = findViewById(R.id.button)
-//        button.setOnClickListener {
-//            val uri: Uri = Uri.parse("android.resource://$packageName/${R.drawable.cat}")
-//            // remove previous image uri cache
-//            imageView.setImageURI(null)
-//            // set image view image from uri
-//            imageView.setImageURI(uri)
-//            // show the uri in text view
-//            textView.text = uri.toString()
-//        }
-//        binding.photoBtn.setOnClickListener {
-//            val selectImageIntent = registerForActivityResult(ActivityResultContracts.GetContent())
-//            { uri ->
-//                binding.imageView.setImageURI(uri)
-//            }
-//            selectImageIntent.launch("image/*")
-//        }
+        }
+
+        binding.deletePhoto.setOnClickListener {
+            binding.imageView.setImageURI(null)
+            binding.deletePhoto.isVisible = false
+        }
+
+        addOperationViewModel.imageUri.observe(viewLifecycleOwner) {
+
+            if (it != null)
+            {
+                binding.deletePhoto.isVisible = true
+                binding.imageView.setImageURI(it)
+            }
+            else {
+                binding.deletePhoto.isVisible = false
+            }
+        }
 
         addOperationViewModel.date.observe(viewLifecycleOwner) {
             val current = Calendar.getInstance()
@@ -258,6 +263,7 @@ class AddOperationFragment : Fragment(),
             })
 
         } else if (value.trim().isEmpty()) {
+            check = false
             binding.editTextSum.setError("Введите сумму")
         }
 
@@ -340,6 +346,19 @@ class AddOperationFragment : Fragment(),
         cal.set(Calendar.HOUR, hour)
         cal.set(Calendar.MINUTE, minute)
         addOperationViewModel.setDate(cal)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK && requestCode == pickImage) {
+            addOperationViewModel.setImageUri(data?.data)
+            val imageUri = addOperationViewModel.imageUri.value
+            if (imageUri != null)
+            {
+                binding.deletePhoto.isVisible = true
+                binding.imageView.setImageURI(imageUri)
+            }
+        }
     }
 
 }
