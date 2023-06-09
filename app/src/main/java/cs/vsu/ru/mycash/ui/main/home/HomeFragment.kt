@@ -64,7 +64,7 @@ class HomeFragment : Fragment() {
 
         val balance: TextView = binding.balance
         homeViewModel.balance.observe(viewLifecycleOwner) {
-            balance.text = "$it Р"
+            balance.text = "$it ₽"
         }
 
         homeViewModel.accountIndex.observe(viewLifecycleOwner) {
