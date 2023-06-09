@@ -264,17 +264,6 @@ class AddOperationFragment : Fragment(),
         return check
     }
 
-//    override fun onAttach(context: Context) {
-//        super.onAttach(context)
-//        addOperationViewModel = ViewModelProvider(this)[AddOperationViewModel::class.java]
-//        appPrefs = activity?.let { AppPreferences(it) }!!
-//
-//        Log.e("acc att", addOperationViewModel.accounts.value.toString())
-//        getCategories()
-//        getAccounts()
-//        Log.e("cat att", addOperationViewModel.categories.value.toString())
-//    }
-
     private fun getAccounts() {
         apiService = ApiClient.getClient(appPrefs.token.toString())
         apiService.getAccounts().enqueue(object : Callback<List<Account>> {
