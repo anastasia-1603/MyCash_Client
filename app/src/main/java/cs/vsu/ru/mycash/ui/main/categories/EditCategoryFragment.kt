@@ -66,7 +66,6 @@ class EditCategoryFragment : Fragment() {
         }
 
         binding.colorBtn.setOnClickListener {
-
             if (category != null) {
                 ColorPickerPopup
                     .Builder(context)
@@ -87,7 +86,6 @@ class EditCategoryFragment : Fragment() {
                     })
             }
         }
-
 
         binding.saveButton.setOnClickListener {
             val categoryName = binding.categName

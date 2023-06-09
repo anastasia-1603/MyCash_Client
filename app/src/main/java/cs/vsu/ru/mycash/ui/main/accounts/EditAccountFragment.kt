@@ -85,7 +85,7 @@ class EditAccountFragment : Fragment() {
             {
                 if (account != null)
                 {
-                    val oldAccountName = account.name
+                    val oldAccountName = account.name.toString()
                     account.name = accountName.text.toString()
                     val limit = binding.limit.text.toString()
                     if (limit.trim().isNotEmpty()) {
@@ -104,11 +104,6 @@ class EditAccountFragment : Fragment() {
         return binding.root
     }
 
-    //    val name: String,
-//    val balance: Double,
-//    val target: Double,
-//    val spendingLimit: Double,
-//    val isLimited: Boolean
     private fun updateAccount(account: Account, oldAccountName: String)
     {
         apiService = ApiClient.getClient(appPrefs.token.toString())
@@ -124,11 +119,8 @@ class EditAccountFragment : Fragment() {
         })
     }
 
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
-
 }
