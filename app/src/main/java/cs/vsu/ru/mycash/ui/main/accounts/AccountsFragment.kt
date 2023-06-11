@@ -87,6 +87,7 @@ class AccountsFragment : Fragment() {
                 response.body()?.let {
                     accountsViewModel.setAccountsList(it)
                 }
+                binding.loading.visibility = View.GONE
             }
 
             override fun onFailure(call: Call<List<Account>>, t: Throwable) {

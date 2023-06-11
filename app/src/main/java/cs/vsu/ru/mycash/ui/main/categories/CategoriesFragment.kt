@@ -74,6 +74,7 @@ class CategoriesFragment : Fragment() {
                     categoriesViewModel.setIncomeList(
                         categories.filter { it.type == CategoryType.INCOME })
                 }
+                binding.loading.visibility = View.GONE
             }
 
             override fun onFailure(call: Call<List<Category>>, t: Throwable) {

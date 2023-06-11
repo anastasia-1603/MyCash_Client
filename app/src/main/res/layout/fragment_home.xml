@@ -13,7 +13,6 @@
         android:background="@color/background"
         tools:context=".ui.main.home.HomeFragment">
 
-
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/floatingActionButton"
             android:layout_width="wrap_content"
@@ -195,12 +194,15 @@
             app:layout_constraintTop_toTopOf="@+id/date"
             app:tint="@color/textview_colors" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline3"
+        <ProgressBar
+            android:id="@+id/loading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_begin="188dp" />
+            android:layout_marginTop="10dp"
+            android:indeterminate="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

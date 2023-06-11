@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -57,6 +58,7 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        binding.loading.visibility = View.VISIBLE
         val accountName: TextView = binding.accountName
         homeViewModel.accountName.observe(viewLifecycleOwner) {
             accountName.text = it
@@ -318,6 +320,7 @@ class HomeFragment : Fragment() {
         super.onResume()
         loadOperations()
         homeViewModel.accountList.value?.let { accountSendViewModel.setAccountsList(it) }
+
     }
 
     class HomePagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
@@ -372,6 +375,7 @@ class HomeFragment : Fragment() {
                         homeViewModel.accountList.value?.let {
                             accountSendViewModel.setAccountsList(it)
                         }
+                        binding.loading.visibility = View.GONE
                     }
 
                     override fun onFailure(call: Call<Map<String, List<Operation>>>, t: Throwable) {

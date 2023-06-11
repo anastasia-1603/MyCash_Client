@@ -297,6 +297,7 @@ class AddOperationFragment : Fragment(),
                     addOperationViewModel.setCategories(categories)
                     configureSpinnerCategories()
                 }
+                binding.loading.visibility = View.GONE
             }
 
             override fun onFailure(call: Call<List<Category>>, t: Throwable) {

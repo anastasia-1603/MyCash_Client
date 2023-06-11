@@ -58,11 +58,8 @@ class RegisterFragment : Fragment() {
                         ApiClient.updateClient(tokenResponse)
                         val navController = findNavController()
                         appPrefs.isAuth = true
-
                         navController.navigate(R.id.profileFragment)
                     }
-
-
                 }
 
                 override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
