@@ -14,10 +14,10 @@ class AddOperationViewModel : ViewModel() {
     }
     val accountName: LiveData<String> = _accountName
 
-    private val _sum: MutableLiveData<String> by lazy {
+    private val _value: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
-    val sum: LiveData<String> = _sum
+    val value: LiveData<String> = _value
 
     private val _accounts : MutableLiveData<List<Account>> by lazy {
         MutableLiveData<List<Account>>()
@@ -73,8 +73,8 @@ class AddOperationViewModel : ViewModel() {
         _accountName.value = accountName
     }
 
-    fun setSum(sum: String) {
-        _sum.value = sum + "₽"
+    fun setValue(value: String) {
+        _value.value = value
     }
 
     fun setMode(mode: Mode) {
