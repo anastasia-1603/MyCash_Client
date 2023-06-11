@@ -24,6 +24,7 @@ import cs.vsu.ru.mycash.api.ApiClient
 import cs.vsu.ru.mycash.api.ApiService
 import cs.vsu.ru.mycash.data.*
 import cs.vsu.ru.mycash.databinding.FragmentHomeBinding
+import cs.vsu.ru.mycash.ui.main.operation.OperationViewModel
 import cs.vsu.ru.mycash.utils.AppPreferences
 import retrofit2.Call
 import retrofit2.Callback
@@ -40,7 +41,6 @@ class HomeFragment : Fragment() {
     private val accountSendViewModel: AccountSendViewModel by activityViewModels()
     private lateinit var homeViewModel: HomeViewModel
     private val binding get() = _binding!!
-    private val sdf1 = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
 
     private lateinit var apiService: ApiService
     private lateinit var appPrefs: AppPreferences
@@ -305,7 +305,8 @@ class HomeFragment : Fragment() {
             val date = homeViewModel.date.value
             val sdf1 = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
             if (date != null) {
-                binding.right.isEnabled = !sdf1.format(date.time).equals(sdf1.format(Calendar.getInstance().time))
+                binding.right.isEnabled =
+                    !sdf1.format(date.time).equals(sdf1.format(Calendar.getInstance().time))
             }
         } else {
             binding.right.isEnabled = true
@@ -348,14 +349,14 @@ class HomeFragment : Fragment() {
 
         if (calVm != null) {
             if (!calVm.time.after(Calendar.getInstance().time)) {
-                if (homeViewModel.mode.value == HomeViewModel.Mode.DAY) {
-                    call = apiService.getDataByDay(
+                call = if (homeViewModel.mode.value == HomeViewModel.Mode.DAY) {
+                    apiService.getDataByDay(
                         calVm.get(Calendar.YEAR),
                         calVm.get(Calendar.MONTH) + 1,
                         calVm.get(Calendar.DAY_OF_MONTH)
                     )
                 } else {
-                    call = apiService.getDataByMonth(
+                    apiService.getDataByMonth(
                         calVm.get(Calendar.YEAR), calVm.get(Calendar.MONTH) + 1
                     )
                 }
@@ -365,7 +366,9 @@ class HomeFragment : Fragment() {
                         response: Response<Map<String, List<Operation>>>
                     ) {
                         val map = response.body()
-                        if (map != null) { updateMap(map) }
+                        if (map != null) {
+                            updateMap(map)
+                        }
                         homeViewModel.accountList.value?.let {
                             accountSendViewModel.setAccountsList(it)
                         }
@@ -430,7 +433,7 @@ class HomeFragment : Fragment() {
         val accounts: ArrayList<AccountDto> = ArrayList()
         map.keys.forEach {
             val tmp = it.split(":")
-            val accountDto: AccountDto = AccountDto(tmp[0], tmp[1].toDouble())
+            val accountDto = AccountDto(tmp[0], tmp[1].toDouble())
             accounts.add(accountDto)
         }
         return accounts
