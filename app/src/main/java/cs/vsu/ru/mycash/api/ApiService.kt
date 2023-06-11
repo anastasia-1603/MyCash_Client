@@ -12,6 +12,8 @@ import cs.vsu.ru.mycash.api.Constants.DATA_MONTH
 import cs.vsu.ru.mycash.api.Constants.INIT_URL
 import cs.vsu.ru.mycash.api.Constants.LOGIN
 import cs.vsu.ru.mycash.api.Constants.OPERATION_ADD
+import cs.vsu.ru.mycash.api.Constants.OPERATION_DELETE
+import cs.vsu.ru.mycash.api.Constants.OPERATION_UPDATE
 import cs.vsu.ru.mycash.api.Constants.PREDICT
 import cs.vsu.ru.mycash.api.Constants.REGISTER
 import cs.vsu.ru.mycash.data.*
@@ -62,5 +64,11 @@ interface ApiService {
 
     @POST(ACCOUNT_DELETE)
     fun deleteAccount() : Call<Void>
+
+    @DELETE(OPERATION_DELETE)
+    fun deleteOperation(@Path("id") id: Long?) : Call<Void>
+
+    @POST(OPERATION_UPDATE)
+    fun updateOperation() : Call<OperationResponse>
 
 }
