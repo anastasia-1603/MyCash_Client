@@ -15,6 +15,7 @@ object Constants {
     const val ACCOUNT = "account/add"
     const val ACCOUNT_UPDATE = "account/update/{accountName}"
     const val OPERATION_UPDATE = "operation/update"
+    const val OPERATION_DELETE = "operation/delete/{id}"
     const val DIAGRAMS = "analytics/{accountName}/{year}/{month}"
     const val CATEGORY_UPDATE = "category/update"
     const val ACCOUNT_DELETE = "account/delete"
