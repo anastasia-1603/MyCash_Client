@@ -1,4 +1,4 @@
-package cs.vsu.ru.mycash.utils
+package cs.vsu.ru.mycash.ui.main.operation
 
 import android.os.Build
 import android.view.LayoutInflater
@@ -37,7 +37,6 @@ class OperationAdapter(private val onClickListener: OnClickListener) :
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: OperationViewHolder, position: Int) {
         val operation = data[position]
-
 
         with(holder.binding) {
             categoryName.text = operation.category.name

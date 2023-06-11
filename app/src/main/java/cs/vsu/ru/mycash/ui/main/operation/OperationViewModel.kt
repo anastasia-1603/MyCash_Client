@@ -1,4 +1,4 @@
-package cs.vsu.ru.mycash.ui.main.home
+package cs.vsu.ru.mycash.ui.main.operation
 
 import android.util.Log
 import androidx.lifecycle.LiveData
