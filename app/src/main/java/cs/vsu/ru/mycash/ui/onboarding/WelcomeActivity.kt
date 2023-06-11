@@ -10,11 +10,9 @@ class WelcomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityWelcomeBinding
     override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(R.style.Theme_MyCash_NoActionBar)
         super.onCreate(savedInstanceState)
         binding = ActivityWelcomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
 
         binding.button.setOnClickListener {
             val intent = Intent(this@WelcomeActivity, StartActivity::class.java)

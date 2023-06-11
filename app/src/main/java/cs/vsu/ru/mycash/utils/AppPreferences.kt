@@ -11,7 +11,6 @@ class AppPreferences(context: Context) {
     private val IS_FIRST_TIME_LAUNCH = "is_first_time_launch"
     private val IS_AUTH = "is_auth"
     private val TOKEN = "TOKEN"
-    private val NEW_TOKEN = "NEW_TOKEN"
 
     val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
@@ -26,9 +25,5 @@ class AppPreferences(context: Context) {
     var token: String?
         get() = prefs.getString(TOKEN, "token")
         set(value) = prefs.edit().putString(TOKEN, value).apply()
-
-    var newToken: String?
-        get() = prefs.getString(NEW_TOKEN, "newToken")
-        set(value) = prefs.edit().putString(NEW_TOKEN, value).apply()
 
 }

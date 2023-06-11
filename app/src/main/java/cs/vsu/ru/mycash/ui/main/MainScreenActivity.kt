@@ -22,18 +22,19 @@ class MainScreenActivity : AppCompatActivity() {
     private lateinit var appPrefs: AppPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(R.style.Theme_MyCash_NoActionBar)
+//        setTheme(R.style.Theme_MyCash_NoActionBar)
         super.onCreate(savedInstanceState)
         appPrefs = AppPreferences(this)
-        if (appPrefs.isFirstTimeLaunch) {
-            startActivity(Intent(this, WelcomeActivity::class.java))
-            finish()
-        }
+//        if (appPrefs.isFirstTimeLaunch) {
+//            startActivity(Intent(this, WelcomeActivity::class.java))
+//            finish()
+//        }
 
         binding = ActivityMainScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         navController = Navigation.findNavController(this, R.id.nav_host_fragment)
+        binding.navView.setupWithNavController(navController)
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.profileFragment) {
                 if (!appPrefs.isAuth) {
@@ -41,7 +42,6 @@ class MainScreenActivity : AppCompatActivity() {
                 }
             }
         }
-        binding.navView.setupWithNavController(navController)
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {

@@ -14,4 +14,5 @@ class MyApp : Application() {
         YandexMetrica.enableActivityAutoTracking(this)
 
     }
+
 }
