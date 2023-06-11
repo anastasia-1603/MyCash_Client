@@ -3,9 +3,7 @@ package cs.vsu.ru.mycash.ui.main.operation
 import android.app.Activity.RESULT_OK
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -14,19 +12,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import cs.vsu.ru.mycash.R
 import cs.vsu.ru.mycash.api.ApiClient
 import cs.vsu.ru.mycash.api.ApiService
 import cs.vsu.ru.mycash.data.*
 import cs.vsu.ru.mycash.databinding.FragmentAddOperationBinding
-import cs.vsu.ru.mycash.ui.main.home.OperationViewModel
 import cs.vsu.ru.mycash.utils.AppPreferences
 import retrofit2.Call
 import retrofit2.Callback
@@ -95,12 +89,10 @@ class AddOperationFragment : Fragment(),
 
         addOperationViewModel.imageUri.observe(viewLifecycleOwner) {
 
-            if (it != null)
-            {
+            if (it != null) {
                 binding.deletePhoto.isVisible = true
                 binding.imageView.setImageURI(it)
-            }
-            else {
+            } else {
                 binding.deletePhoto.isVisible = false
             }
         }
@@ -130,6 +122,7 @@ class AddOperationFragment : Fragment(),
         }
         return binding.root
     }
+
     private fun configureSpinnerCategories() {
         if (addOperationViewModel.categories.value != null) {
             var categoriesNames: ArrayList<String> = ArrayList()
@@ -353,8 +346,7 @@ class AddOperationFragment : Fragment(),
         if (resultCode == RESULT_OK && requestCode == pickImage) {
             addOperationViewModel.setImageUri(data?.data)
             val imageUri = addOperationViewModel.imageUri.value
-            if (imageUri != null)
-            {
+            if (imageUri != null) {
                 binding.deletePhoto.isVisible = true
                 binding.imageView.setImageURI(imageUri)
             }
