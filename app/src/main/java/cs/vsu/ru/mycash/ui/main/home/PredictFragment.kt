@@ -33,9 +33,7 @@ class PredictFragment : Fragment() {
 
     private var _binding: FragmentPredictBinding? = null
     private var cal = Calendar.getInstance()
-    private val dateFormat = "d MMMM"
     private lateinit var predictViewModel: PredictViewModel
-//    private val homeViewModel :HomeViewModel by activityViewModels()
     private val accountSendViewModel :AccountSendViewModel by activityViewModels()
     private val binding get() = _binding!!
 
@@ -52,9 +50,8 @@ class PredictFragment : Fragment() {
         appPrefs = activity?.let { AppPreferences(it) }!!
         _binding = FragmentPredictBinding.inflate(inflater, container, false)
         predictViewModel = ViewModelProvider(this)[PredictViewModel::class.java]
-        Log.e("acc list in predict", accountSendViewModel.accountList.value.toString())
-        Log.e("acc name in predict", accountSendViewModel.accountName.value.toString())
-        Log.e("acc balance in predict", accountSendViewModel.balance.value.toString())
+        binding.loading.visibility = View.VISIBLE
+
         accountSendViewModel.accountList.value?.let { predictViewModel.setAccountsList(it) }
         val cal = Calendar.getInstance()
         val month = Calendar.getInstance().get(Calendar.MONTH)
@@ -71,7 +68,7 @@ class PredictFragment : Fragment() {
 
         val balance: TextView = binding.balancePredict
         predictViewModel.balance.observe(viewLifecycleOwner) {
-            balance.text = "$it  Р"
+            balance.text = "$it Р"
         }
 
         val predictExp = binding.predictExp
@@ -88,7 +85,7 @@ class PredictFragment : Fragment() {
         val color = binding.colorCateg
         val sum = binding.predictCateg
         predictViewModel.category.observe(viewLifecycleOwner) {
-            categ.text = it.name.toString()
+            categ.text = it.name
             color.setColorFilter(it.color)
 
         }
@@ -105,7 +102,7 @@ class PredictFragment : Fragment() {
             if (index != null) {
                 val account = accounts?.get(index)
                 if (account != null) {
-                    predictViewModel.setAccountName(account.name.toString())
+                    predictViewModel.setAccountName(account.name)
                     getPredict()
                 }
             }
@@ -136,14 +133,12 @@ class PredictFragment : Fragment() {
 
                 dateBtn.text = monthNames[cal.get(Calendar.MONTH)]
             }
-
         }
-
 
         accountSendViewModel.accountList.value?.let { predictViewModel.setAccountsList(it) }
         accountSendViewModel.accountIndex.value?.let { predictViewModel.setAccountIndex(it) }
         val ind = accountSendViewModel.accountIndex.value
-        ind?.let { accountSendViewModel.accountList.value?.get(it)?.name ?: "name" }
+        ind?.let { accountSendViewModel.accountList.value?.get(it)?.name ?: "" }
             ?.let { predictViewModel.setAccountName(it) }
         binding.date.setOnClickListener {
             val dialog = datePickerDialog()
@@ -185,15 +180,8 @@ class PredictFragment : Fragment() {
             predictViewModel.incrementAccountIndex()
         }
 
-
-
         return root
     }
-
-//    override fun onResume() {
-//        super.onResume()
-//        getPredict()
-//    }
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -236,6 +224,7 @@ class PredictFragment : Fragment() {
 
     private fun getPredict()
     {
+        binding.loading.visibility = View.VISIBLE
         apiService = ApiClient.getClient(appPrefs.token.toString())
         val date = predictViewModel.date.value
         if (date != null) {
@@ -273,6 +262,7 @@ class PredictFragment : Fragment() {
                             predictViewModel.setBalance(
                                 balance + resp.incomePrediction - resp.expensePrediction)
                         }
+                        binding.loading.visibility = View.GONE
                     }
                 }
                 override fun onFailure(call: Call<PredictionResponse>, t: Throwable) {
@@ -281,8 +271,6 @@ class PredictFragment : Fragment() {
 
             })
         }
-
-
     }
 
 }
