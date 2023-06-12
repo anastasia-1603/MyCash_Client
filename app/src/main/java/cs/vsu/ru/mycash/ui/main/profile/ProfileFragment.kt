@@ -42,9 +42,9 @@ class ProfileFragment : Fragment() {
 
             alertDialogBuilder.setPositiveButton("Да") { dialog, _ ->
                 appPrefs.isAuth = false
-                navController.navigateUp() //todo не уверена что надо
-                navController.navigate(R.id.profileFragment)
                 dialog.dismiss()
+                navController.navigate(R.id.profileFragment)
+
             }
             alertDialogBuilder.setNegativeButton("Нет") { dialog, _ ->
                 dialog.dismiss()
@@ -59,9 +59,9 @@ class ProfileFragment : Fragment() {
 
             alertDialogBuilder.setPositiveButton("Да") { dialog, _ ->
                 appPrefs.isAuth = false
-                navController.navigateUp() //todo не уверена что надо
-                navController.navigate(R.id.profileFragment)
                 dialog.dismiss()
+                navController.navigate(R.id.profileFragment)
+
             }
             alertDialogBuilder.setNegativeButton("Нет") { dialog, _ ->
                 dialog.dismiss()
