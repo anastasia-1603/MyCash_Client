@@ -17,6 +17,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.yandex.metrica.impl.ob.al
 import cs.vsu.ru.mycash.api.ApiClient
 import cs.vsu.ru.mycash.api.ApiService
 import cs.vsu.ru.mycash.data.*
@@ -313,14 +314,17 @@ class AddOperationFragment : Fragment(),
     }
 
     private fun pickDate() {
+        val cur = Calendar.getInstance()
         binding.dateButton.setOnClickListener {
             context?.let { it1 ->
-                DatePickerDialog(
+                val datePickerDialog = DatePickerDialog(
                     it1, this,
                     cal.get(Calendar.YEAR),
                     cal.get(Calendar.MONTH),
                     cal.get(Calendar.DAY_OF_MONTH)
-                ).show()
+                )
+                datePickerDialog.datePicker.maxDate = cur.time.time
+                datePickerDialog.show()
             }
         }
     }
