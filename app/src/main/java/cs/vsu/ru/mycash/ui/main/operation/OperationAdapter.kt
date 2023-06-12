@@ -47,13 +47,7 @@ class OperationAdapter(private val onClickListener: OnClickListener) :
 
             time.text = formattedDateTime
 
-            if (operation.category.color > 0) {
-                imageView.setColorFilter(-operation.category.color)
-            }
-            else {
-                imageView.setColorFilter(operation.category.color)
-            }
-
+            imageView.setColorFilter(operation.category.color)
 
             holder.itemView.setOnClickListener {
                 onClickListener.onClick(operation)

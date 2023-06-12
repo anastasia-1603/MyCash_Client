@@ -89,7 +89,7 @@ class PredictFragment : Fragment() {
         val sum = binding.predictCateg
         predictViewModel.category.observe(viewLifecycleOwner) {
             categ.text = it.name.toString()
-            color.setColorFilter(-it.color)
+            color.setColorFilter(it.color)
 
         }
 

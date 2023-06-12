@@ -51,13 +51,7 @@ class EditCategoryFragment : Fragment() {
                 binding.limitText.isVisible = false
             }
             binding.categName.text = category.name.toString()
-            if (category.color > 0)
-            {
-                binding.colorBtn.setColorFilter(-category.color)
-            }
-            else {
-                binding.colorBtn.setColorFilter(category.color)
-            }
+            binding.colorBtn.setColorFilter(category.color)
 
             if (category.isLimited) {
                 binding.limit.setText(category.spendingLimit.toString())
