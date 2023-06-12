@@ -346,6 +346,7 @@ class HomeFragment : Fragment() {
 
 
     private fun loadOperations() {
+        binding.loading.visibility = View.VISIBLE
         apiService = ApiClient.getClient(appPrefs.token.toString())
         val call: Call<Map<String, List<Operation>>>
         val calVm = homeViewModel.date.value
