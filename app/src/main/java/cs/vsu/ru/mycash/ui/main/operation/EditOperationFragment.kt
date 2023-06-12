@@ -1,6 +1,7 @@
 package cs.vsu.ru.mycash.ui.main.operation
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
@@ -94,11 +95,23 @@ class EditOperationFragment : Fragment(),
         }
 
         binding.deleteButton.setOnClickListener {
-            if (operation != null)
-            {
-                deleteOperation(operation)
-                findNavController().navigateUp()
+            val alertDialogBuilder = AlertDialog.Builder(requireContext())
+            alertDialogBuilder.setMessage("Вы уверены?")
+
+            alertDialogBuilder.setPositiveButton("Да") { dialog, _ ->
+                if (operation != null)
+                {
+                    deleteOperation(operation)
+                    dialog.dismiss()
+                    findNavController().navigateUp()
+                }
+
             }
+            alertDialogBuilder.setNegativeButton("Нет") { dialog, _ ->
+                dialog.dismiss()
+            }
+            val alertDialog = alertDialogBuilder.create()
+            alertDialog.show()
 
         }
 
