@@ -26,16 +26,27 @@ interface ApiService {
     @POST(INIT_URL)
     fun init(@Body accountInit: AccountInit): Call<TokenResponse>
 
+//    @GET(DATA_DAY)
+//    fun getDataByDay(@Path("year") year: Int,
+//                     @Path("month") month: Int,
+//                     @Path("day") day: Int) :
+//            Call<Map<String, List<Operation>>>
+//
+//    @GET(DATA_MONTH)
+//    fun getDataByMonth(@Path("year") year: Int,
+//                       @Path("month") month: Int) :
+//            Call<Map<String, List<Operation>>>
+
     @GET(DATA_DAY)
     fun getDataByDay(@Path("year") year: Int,
                      @Path("month") month: Int,
                      @Path("day") day: Int) :
-            Call<Map<String, List<Operation>>>
+            Call<List<MainScreenAccountResponse>>
 
     @GET(DATA_MONTH)
     fun getDataByMonth(@Path("year") year: Int,
                        @Path("month") month: Int) :
-            Call<Map<String, List<Operation>>>
+            Call<List<MainScreenAccountResponse>>
 
     @POST(REGISTER)
     fun register(@Body registerRequest: RegisterRequest) : Call<TokenResponse>

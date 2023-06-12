@@ -1,27 +1,21 @@
 package cs.vsu.ru.mycash.ui.main.operation
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import cs.vsu.ru.mycash.api.ApiService
-import cs.vsu.ru.mycash.data.Account
+import cs.vsu.ru.mycash.data.MainScreenAccountResponse
 import cs.vsu.ru.mycash.data.Operation
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.util.*
 
 class OperationViewModel : ViewModel() {
 
 
-    private val _map: MutableLiveData<Map<String, List<Operation>>> by lazy {
-        MutableLiveData<Map<String, List<Operation>>>()
+    private val _data: MutableLiveData<List<MainScreenAccountResponse>> by lazy {
+        MutableLiveData<List<MainScreenAccountResponse>>()
     }
-    val map: LiveData<Map<String, List<Operation>>> = _map
+    val data: LiveData<List<MainScreenAccountResponse>> = _data
 
-    fun setMap(map: Map<String, List<Operation>>) {
-        _map.value = map
+    fun setData(data: List<MainScreenAccountResponse>) {
+        _data.value = data
     }
 
     private val _operationList: MutableLiveData<List<Operation>> by lazy {
