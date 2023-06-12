@@ -65,7 +65,7 @@ interface ApiService {
     fun updateCategory(@Body category: Category) : Call<Void>
 
     @POST(ACCOUNT_DELETE)
-    fun deleteAccount() : Call<Void>
+    fun deleteAccount(@Path("accountName") accountName: String) : Call<Void>
 
     @DELETE(OPERATION_DELETE)
     fun deleteOperation(@Path("id") id: Long?) : Call<Void>

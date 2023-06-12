@@ -6,7 +6,6 @@ object Constants {
     const val LOGIN = "auth/login"
     const val REGISTER = "auth/register"
     const val CATEGORY_URL = "category/get_all"
-    const val INFO = "main/get/{account}/{year}/{month}/{day}"
     const val DATA_DAY = "main/get/{year}/{month}/{day}"
     const val ACCOUNTS = "account/get_all"
     const val DATA_MONTH = "main/get/{year}/{month}"
@@ -18,5 +17,5 @@ object Constants {
     const val OPERATION_DELETE = "operation/delete/{id}"
     const val ANALYTICS = "analytics/{accountName}/{year}/{month}"
     const val CATEGORY_UPDATE = "category/update"
-    const val ACCOUNT_DELETE = "account/delete"
+    const val ACCOUNT_DELETE = "account/delete/{accountName}"
 }
