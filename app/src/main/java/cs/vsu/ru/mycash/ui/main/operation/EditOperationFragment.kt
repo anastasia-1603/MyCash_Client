@@ -377,13 +377,13 @@ class EditOperationFragment : Fragment(),
         cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
         TimePickerDialog(
             context, this,
-            cal.get(Calendar.HOUR),
+            cal.get(Calendar.HOUR_OF_DAY),
             cal.get(Calendar.MINUTE), true
         ).show()
     }
 
     override fun onTimeSet(p0: TimePicker?, hour: Int, minute: Int) {
-        cal.set(Calendar.HOUR, hour)
+        cal.set(Calendar.HOUR_OF_DAY, hour)
         cal.set(Calendar.MINUTE, minute)
         editOperationViewModel.setDate(cal)
     }
