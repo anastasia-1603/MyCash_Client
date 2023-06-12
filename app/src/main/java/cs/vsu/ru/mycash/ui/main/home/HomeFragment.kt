@@ -19,6 +19,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayoutMediator
 import cs.vsu.ru.mycash.R
 import cs.vsu.ru.mycash.api.ApiClient
@@ -338,12 +339,6 @@ class HomeFragment : Fragment() {
             }
         }
     }
-
-    private fun checkDateAfterNow(cal: Calendar): Boolean {
-        val cur = Calendar.getInstance()
-        return !cal.time.after(cur.time)
-    }
-
 
     private fun loadOperations() {
         binding.loading.visibility = View.VISIBLE
