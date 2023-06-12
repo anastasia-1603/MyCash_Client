@@ -48,9 +48,8 @@ class DiagramsFragment : Fragment() {
     ): View {
         appPrefs = activity?.let { AppPreferences(it) }!!
         _binding = FragmentDiagramsBinding.inflate(inflater, container, false)
+        binding.loading.visibility = View.VISIBLE
         getAccounts()
-
-
 
         if (diagramsViewModel.accountList.value != null && diagramsViewModel.accountList.value!!.size > 1) {
             binding.leftAccount.isVisible = true
@@ -161,6 +160,7 @@ class DiagramsFragment : Fragment() {
     }
 
     private fun getAnalytics() {
+        binding.loading.visibility = View.VISIBLE
         apiService = ApiClient.getClient(appPrefs.token.toString())
         val accName = diagramsViewModel.accountName.value.toString()
         val date = diagramsViewModel.date.value
@@ -187,6 +187,7 @@ class DiagramsFragment : Fragment() {
                             Log.e("all", all.toString())
                             Log.e("exp", exp.toString())
                             Log.e("inc", inc.toString())
+                            binding.loading.visibility = View.GONE
                         }
                     }
 

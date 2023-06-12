@@ -86,15 +86,15 @@ class DiagramsAllFragment : Fragment() {
             "Июн",
             "Июл",
             "Авг",
-            "Сене",
+            "Сент",
             "Окт",
             "Нояб",
             "Дек"
         )
         val pastMonth = ArrayList<String>()
         var cur = curMonth
-        for (i in 0..11) {
-            pastMonth.add(0, monthNames[cur])
+        for (i in 0..5) {
+            pastMonth.add(monthNames[cur])
             if (cur == 0) {
                 cur = monthNames.size - 1
             } else {
