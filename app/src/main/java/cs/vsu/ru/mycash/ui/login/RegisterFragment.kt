@@ -53,12 +53,18 @@ class RegisterFragment : Fragment() {
                 ) {
                     if (response.body() != null)
                     {
+                        val alertDialogBuilder = AlertDialog.Builder(requireContext())
+                        alertDialogBuilder.setMessage("Вы успешно зарегистрированы!")
+                        val alertDialog = alertDialogBuilder.create()
+                        alertDialog.show()
+
                         val tokenResponse = response.body()?.token.toString()
                         appPrefs.token = tokenResponse
                         ApiClient.updateClient(tokenResponse)
                         val navController = findNavController()
                         appPrefs.isAuth = true
                         navController.navigate(R.id.profileFragment)
+                        alertDialog.dismiss()
                     }
                 }
 
