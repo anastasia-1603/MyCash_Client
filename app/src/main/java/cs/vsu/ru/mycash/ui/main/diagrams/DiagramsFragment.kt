@@ -1,38 +1,135 @@
 package cs.vsu.ru.mycash.ui.main.diagrams
 
-import androidx.lifecycle.ViewModelProvider
+import android.app.DatePickerDialog
+import android.content.res.Resources
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.Button
+import android.widget.Toast
+import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import cs.vsu.ru.mycash.R
+import cs.vsu.ru.mycash.api.ApiClient
+import cs.vsu.ru.mycash.api.ApiService
+import cs.vsu.ru.mycash.data.Account
+import cs.vsu.ru.mycash.data.diagrams.AnalyticsResponse
 import cs.vsu.ru.mycash.databinding.FragmentDiagramsBinding
-import cs.vsu.ru.mycash.ui.main.diagrams.DiagramsViewModel
-import cs.vsu.ru.mycash.ui.main.home.HomeFragment
-import cs.vsu.ru.mycash.ui.main.home.TabAllFragment
-import cs.vsu.ru.mycash.ui.main.home.TabExpensesFragment
-import cs.vsu.ru.mycash.ui.main.home.TabIncomeFragment
+import cs.vsu.ru.mycash.ui.main.home.HomeViewModel
+import cs.vsu.ru.mycash.utils.AppPreferences
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.text.SimpleDateFormat
+import java.util.*
 
 class DiagramsFragment : Fragment() {
 
     private var _binding: FragmentDiagramsBinding? = null
-
+    private lateinit var apiService: ApiService
+    private lateinit var appPrefs: AppPreferences
+    private var cal = Calendar.getInstance()
     private val binding get() = _binding!!
+    private val diagramsExpensesViewModel: DiagramsExpensesViewModel by activityViewModels()
+    private val diagramsIncomeViewModel: DiagramsIncomeViewModel by activityViewModels()
+    private val diagramsAllViewModel: DiagramsAllViewModel by activityViewModels()
+    private val diagramsViewModel: DiagramsViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val diagramsViewModel = ViewModelProvider(this)[DiagramsViewModel::class.java]
-
+        appPrefs = activity?.let { AppPreferences(it) }!!
         _binding = FragmentDiagramsBinding.inflate(inflater, container, false)
+        getAccounts()
+
+
+
+        if (diagramsViewModel.accountList.value != null && diagramsViewModel.accountList.value!!.size > 1) {
+            binding.leftAccount.isVisible = true
+            binding.rightAccount.isVisible = true
+        } else {
+            binding.leftAccount.isVisible = false
+            binding.rightAccount.isVisible = false
+        }
+
         val root: View = binding.root
 
+
+        diagramsViewModel.accountIndex.observe(viewLifecycleOwner) {
+            val accounts = diagramsViewModel.accountList.value
+            if (accounts != null && accounts.isNotEmpty()) {
+                val accountName = diagramsViewModel.accountName.value
+                binding.accountName.text = accountName
+                getAnalytics()
+            }
+        }
+
+        binding.leftAccount.setOnClickListener {
+            diagramsViewModel.decrementAccountIndex()
+        }
+
+        binding.rightAccount.setOnClickListener {
+            diagramsViewModel.incrementAccountIndex()
+        }
+
+        val dateBtn: Button = binding.date
+
+        diagramsViewModel.date.observe(viewLifecycleOwner) {
+            val monthNames = arrayOf(
+                "Январь",
+                "Февраль",
+                "Март",
+                "Апрель",
+                "Май",
+                "Июнь",
+                "Июль",
+                "Август",
+                "Сентябрь",
+                "Октябрь",
+                "Ноябрь",
+                "Декабрь"
+            )
+            dateBtn.text = monthNames[cal.get(Calendar.MONTH)]
+            configureBtnRight()
+        }
+
+        binding.date.setOnClickListener {
+            val maxC = Calendar.getInstance()
+            val cur = Calendar.getInstance()
+            maxC.set(Calendar.YEAR, cur.get(Calendar.YEAR))
+            maxC.set(Calendar.MONTH, cur.get(Calendar.MONTH))
+            val dialog = datePickerDialog()
+            dialog?.show()
+            val day = dialog?.findViewById<View>(
+                Resources.getSystem().getIdentifier("android:id/day", null, null)
+            )
+            if (day != null) {
+                day.visibility = View.GONE
+            }
+        }
+
+        binding.left.setOnClickListener {
+            cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 1)
+            diagramsViewModel.setDate(cal)
+            getAnalytics()
+        }
+
+        binding.right.setOnClickListener {
+            val date = diagramsViewModel.date.value
+            if (date != null) {
+                cal.set(Calendar.MONTH, date.get(Calendar.MONTH) + 1)
+            }
+            diagramsViewModel.setDate(cal)
+            getAnalytics()
+        }
 
         val viewPager = binding.viewPager
         viewPager.adapter = DiagramsPagerAdapter(this)
@@ -47,6 +144,79 @@ class DiagramsFragment : Fragment() {
         tabLayoutMediator.attach()
 
         return root
+    }
+
+    private fun configureBtnRight() {
+        val date = diagramsViewModel.date.value
+        if (date != null) {
+            if (date.get(Calendar.MONTH) == Calendar.getInstance().get(Calendar.MONTH)
+                && date.get(Calendar.YEAR) == Calendar.getInstance().get(Calendar.YEAR)
+            ) {
+                binding.right.isEnabled = false
+            }
+            else {
+                binding.right.isEnabled = true
+            }
+        }
+    }
+
+    private fun getAnalytics() {
+        apiService = ApiClient.getClient(appPrefs.token.toString())
+        val accName = diagramsViewModel.accountName.value.toString()
+        val date = diagramsViewModel.date.value
+        if (date != null)
+        {
+            val year = date.get(Calendar.YEAR).toString()
+            val month = date.get(Calendar.MONTH) + 1
+            apiService.getAnalytics(accName, year, month.toString())
+                .enqueue(object  : Callback<AnalyticsResponse> {
+                    override fun onResponse(
+                        call: Call<AnalyticsResponse>,
+                        response: Response<AnalyticsResponse>
+                    ) {
+                        val resp = response.body()
+                        if (resp != null)
+                        {
+                            val all = resp.all
+                            val exp = resp.expenses
+                            val inc = resp.incomes
+                            diagramsViewModel.setData(resp)
+                            diagramsAllViewModel.setData(all)
+                            diagramsExpensesViewModel.setDataList(exp)
+                            diagramsIncomeViewModel.setDataList(inc)
+                            Log.e("all", all.toString())
+                            Log.e("exp", exp.toString())
+                            Log.e("inc", inc.toString())
+                        }
+                    }
+
+                    override fun onFailure(call: Call<AnalyticsResponse>, t: Throwable) {
+                        Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
+                    }
+
+                })
+        }
+
+    }
+
+
+    private fun getAccounts() {
+        apiService = ApiClient.getClient(appPrefs.token.toString())
+        apiService.getAccounts().enqueue(object : retrofit2.Callback<List<Account>> {
+            override fun onResponse(call: Call<List<Account>>, response: Response<List<Account>>) {
+                val accounts = response.body()
+                if (accounts != null) {
+                    diagramsViewModel.setAccountList(accounts)
+                    binding.accountName.text = diagramsViewModel.accountName.value
+                    getAnalytics()
+                }
+            }
+
+            override fun onFailure(call: Call<List<Account>>, t: Throwable) {
+                Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
+            }
+
+        })
     }
 
     override fun onDestroyView() {
@@ -70,5 +240,31 @@ class DiagramsFragment : Fragment() {
         }
     }
 
+    private fun datePickerDialog(): DatePickerDialog? {
+        val c = diagramsViewModel.date.value ?: Calendar.getInstance()
 
+        val year = c.get(Calendar.YEAR)
+        val month = c.get(Calendar.MONTH)
+        val day = c.get(Calendar.DAY_OF_MONTH)
+
+        val datePickerDialog = context?.let {
+            DatePickerDialog(
+                it, android.R.style.Theme_Holo_Light_Dialog, { _, year, monthOfYear, dayOfMonth ->
+                    cal.set(Calendar.YEAR, year)
+                    cal.set(Calendar.MONTH, monthOfYear)
+                    cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                    diagramsViewModel.setDate(cal)
+                }, year, month, day
+            )
+        }
+        if (datePickerDialog != null) {
+            val maxC = Calendar.getInstance()
+            val cur = Calendar.getInstance()
+            maxC.set(Calendar.YEAR, cur.get(Calendar.YEAR))
+            maxC.set(Calendar.MONTH, cur.get(Calendar.MONTH))
+            maxC.set(Calendar.DAY_OF_MONTH, 1)
+            datePickerDialog.datePicker.maxDate = maxC.time.time
+        }
+        return datePickerDialog
+    }
 }

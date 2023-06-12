@@ -5,6 +5,7 @@ import cs.vsu.ru.mycash.api.Constants.ACCOUNT
 import cs.vsu.ru.mycash.api.Constants.ACCOUNTS
 import cs.vsu.ru.mycash.api.Constants.ACCOUNT_DELETE
 import cs.vsu.ru.mycash.api.Constants.ACCOUNT_UPDATE
+import cs.vsu.ru.mycash.api.Constants.ANALYTICS
 import cs.vsu.ru.mycash.api.Constants.CATEGORY_UPDATE
 import cs.vsu.ru.mycash.api.Constants.CATEGORY_URL
 import cs.vsu.ru.mycash.api.Constants.DATA_DAY
@@ -17,6 +18,7 @@ import cs.vsu.ru.mycash.api.Constants.OPERATION_UPDATE
 import cs.vsu.ru.mycash.api.Constants.PREDICT
 import cs.vsu.ru.mycash.api.Constants.REGISTER
 import cs.vsu.ru.mycash.data.*
+import cs.vsu.ru.mycash.data.diagrams.AnalyticsResponse
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -70,5 +72,10 @@ interface ApiService {
 
     @POST(OPERATION_UPDATE)
     fun updateOperation() : Call<OperationResponse>
+
+    @GET(ANALYTICS)
+    fun getAnalytics(@Path("accountName") accountName: String,
+                     @Path("year") year: String,
+                     @Path("month") month: String) : Call<AnalyticsResponse>
 
 }
