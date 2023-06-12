@@ -49,6 +49,7 @@ class AccountsFragment : Fragment() {
         val manager = LinearLayoutManager(context)
         adapter = AccountsAdapter(AccountsAdapter.OnClickListener{ account ->
             editAccountViewModel.setAccount(account)
+            accountsViewModel.accountList.value?.let { editAccountViewModel.setAccountsNum(it.size) }
             findNavController().navigate(R.id.editAccountFragment)
         })
 

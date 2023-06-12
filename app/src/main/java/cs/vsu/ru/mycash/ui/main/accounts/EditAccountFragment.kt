@@ -1,11 +1,13 @@
 package cs.vsu.ru.mycash.ui.main.accounts
 
+import android.app.AlertDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -28,7 +30,6 @@ class EditAccountFragment : Fragment() {
     private lateinit var appPrefs: AppPreferences
     private val editAccountViewModel: EditAccountViewModel by activityViewModels()
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -42,8 +43,22 @@ class EditAccountFragment : Fragment() {
 
         val account = editAccountViewModel.account.value
 
+        binding.cancelButton.isVisible = editAccountViewModel.accountsNum.value!! > 1
         binding.cancelButton.setOnClickListener {
-            findNavController().navigateUp()
+            val alertDialogBuilder = AlertDialog.Builder(requireContext())
+            alertDialogBuilder.setMessage("Вы уверены?")
+
+            alertDialogBuilder.setPositiveButton("Да") { dialog, _ ->
+                deleteAccount()
+                dialog.dismiss()
+                findNavController().navigateUp()
+            }
+            alertDialogBuilder.setNegativeButton("Нет") { dialog, _ ->
+                dialog.dismiss()
+            }
+            val alertDialog = alertDialogBuilder.create()
+            alertDialog.show()
+
         }
 
         if (account != null)
@@ -110,13 +125,32 @@ class EditAccountFragment : Fragment() {
 
         apiService.updateAccount(oldAccountName, account).enqueue(object: Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                findNavController().navigateUp()
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
                 Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    private fun deleteAccount() {
+        apiService = ApiClient.getClient(appPrefs.token.toString())
+        val account = editAccountViewModel.account.value
+        if (account != null) {
+            apiService.deleteAccount(account.name)
+                .enqueue(object : Callback<Void> {
+                    override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                        findNavController().navigateUp()
+                    }
+
+                    override fun onFailure(call: Call<Void>, t: Throwable) {
+                        Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
+                    }
+
+                })
+
+        }
+
     }
 
     override fun onDestroyView() {
