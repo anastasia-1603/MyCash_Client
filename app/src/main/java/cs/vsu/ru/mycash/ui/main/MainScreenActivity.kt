@@ -36,6 +36,10 @@ class MainScreenActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.profileFragment) {
                 if (!appPrefs.isAuth) {
+                    if (appPrefs.token == "") {
+                        startActivity(Intent(this, WelcomeActivity::class.java))
+                        finish()
+                    }
                     navController.navigate(R.id.profileUnauthFragment)
                 }
             }
