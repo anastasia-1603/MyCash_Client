@@ -18,6 +18,7 @@ import cs.vsu.ru.mycash.utils.AppPreferences
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Double
 
 class AccountAddFragment : Fragment() {
 
@@ -61,13 +62,27 @@ class AccountAddFragment : Fragment() {
     {
         apiService = ApiClient.getClient(appPrefs.token.toString())
         val goal = binding.goal
-        val target = if (goal.text.trim().isEmpty()) { null } else {
-            goal.text.toString().toDouble()
+
+        var target : kotlin.Double? = null
+        if (goal.text.trim().isNotEmpty()) {
+            if (binding.goal.text.toString().toDouble() < 0) {
+                binding.goal.error = "Введите положительное значение"
+            }
+            else
+            {
+                target = goal.text.toString().toDouble()
+            }
         }
         val isLimited = binding.limit.text.trim().isNotEmpty()
-        val limit = if (isLimited) {
-            binding.limit.text.toString().toDouble()
-        } else { null }
+        var limit : kotlin.Double? = null
+        if (isLimited) {
+            if (binding.limit.text.toString().toDouble() < 0) {
+                binding.limit.error = "Введите положительное значение"
+            }
+            else{
+                limit = binding.limit.text.toString().toDouble()
+            }
+        }
         val account = Account(accountName,
             0.0,
             target, limit, isLimited)

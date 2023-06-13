@@ -208,11 +208,17 @@ class AddOperationFragment : Fragment(),
 
         val cal = addOperationViewModel.date.value
         val comment = binding.comment.text.toString()
+
+        val uri = if (addOperationViewModel.imageUri.value != null) {
+            addOperationViewModel.imageUri.value.toString()
+        }
+        else
+        { null }
         var check = true
         if (category != null && categoryName != null && categoryName.trim().isNotEmpty()
             && accountName != null && accountName.trim().isNotEmpty()
             && value != null && value.trim().isNotEmpty()
-            && cal != null
+            && cal != null && value.toString().toDouble() > 0
         ) {
             val datetime: LocalDateTime = LocalDateTime.ofInstant(
                 cal.toInstant(), cal.timeZone.toZoneId()
@@ -223,7 +229,8 @@ class AddOperationFragment : Fragment(),
                 accountName,
                 value.toString().toDouble(),
                 datetime.toString(),
-                comment
+                comment,
+                uri
             )
             apiService = ApiClient.getClient(appPrefs.token.toString())
 
@@ -271,7 +278,11 @@ class AddOperationFragment : Fragment(),
 
         } else if (value.trim().isEmpty()) {
             check = false
-            binding.editTextSum.setError("Введите сумму")
+            binding.editTextSum.error = "Введите сумму"
+        }
+        else if (value.toString().toDouble() < 0) {
+            check = false
+            binding.editTextSum.error = "Введите положительное значение"
         }
 
         return check
@@ -306,7 +317,6 @@ class AddOperationFragment : Fragment(),
                 response: Response<List<Category>>
             ) {
                 val categories = response.body()
-                Log.d("categories response", response.body().toString())
                 if (categories != null) {
                     addOperationViewModel.setCategories(categories)
                     configureSpinnerCategories()
