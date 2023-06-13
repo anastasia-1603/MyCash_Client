@@ -125,6 +125,7 @@ class EditAccountFragment : Fragment() {
 
         apiService.updateAccount(oldAccountName, account).enqueue(object: Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                findNavController().navigateUp()
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
