@@ -10,6 +10,7 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import cs.vsu.ru.mycash.api.ApiService
+import cs.vsu.ru.mycash.data.diagrams.AnalyticsResponse
 import cs.vsu.ru.mycash.databinding.FragmentDiagramsExpensesBinding
 import cs.vsu.ru.mycash.utils.AppPreferences
 import kotlin.streams.toList
@@ -19,21 +20,26 @@ class DiagramsExpensesFragment : Fragment() {
     private lateinit var binding: FragmentDiagramsExpensesBinding
     private val diagramsViewModel: DiagramsViewModel by activityViewModels()
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         binding = FragmentDiagramsExpensesBinding.inflate(inflater, container, false)
 
-        configureChart()
-
-        val barData = BarData(getChartData())
-        binding.stackedBarChart.data = barData
+        diagramsViewModel.data.observe(viewLifecycleOwner) {
+            binding.stackedBarChart.notifyDataSetChanged()
+            binding.stackedBarChart.invalidate()
+            setChartData()
+        }
         return binding.root
     }
 
+
+    private fun setChartData() {
+        configureChart()
+        val barData = BarData(getChartData())
+        binding.stackedBarChart.data = barData
+    }
 
     private fun getChartData(): BarDataSet {
 
@@ -53,13 +59,25 @@ class DiagramsExpensesFragment : Fragment() {
                 it.key.color
             }.toList()
 
-            map.entries.stream().map { entry ->
-                val floatArray = entry.value.values.stream().map {
-                    it.toFloat()
-                }.toList().toTypedArray().toFloatArray()
+            for (entry in map.entries)
+            {
+                val floatList = ArrayList<Float>()
+                for (sum in entry.value.values) {
+                    floatList.add(sum.toFloat())
+                }
+                val floatArray = floatList.toFloatArray()
 
                 dataList.add(BarEntry(entry.key.toFloat(), floatArray))
             }
+
+
+//            map.entries.stream().map { entry ->
+//                val floatArray = entry.value.values.stream().map {
+//                    it.toFloat()
+//                }.toList().toTypedArray().toFloatArray()
+//
+//                dataList.add(BarEntry(entry.key.toFloat(), floatArray))
+//            }
         }
         val barDataSet = BarDataSet(dataList, "Расходы")
         barDataSet.colors = listC

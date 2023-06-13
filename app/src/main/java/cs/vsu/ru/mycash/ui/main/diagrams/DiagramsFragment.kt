@@ -3,6 +3,7 @@ package cs.vsu.ru.mycash.ui.main.diagrams
 import android.app.DatePickerDialog
 import android.content.res.Resources
 import android.os.Bundle
+import android.provider.SyncStateContract.Helpers.update
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import cs.vsu.ru.mycash.R
 import cs.vsu.ru.mycash.api.ApiClient
@@ -36,9 +38,9 @@ class DiagramsFragment : Fragment() {
     private lateinit var appPrefs: AppPreferences
     private var cal = Calendar.getInstance()
     private val binding get() = _binding!!
-    private val diagramsExpensesViewModel: DiagramsExpensesViewModel by activityViewModels()
-    private val diagramsIncomeViewModel: DiagramsIncomeViewModel by activityViewModels()
-    private val diagramsAllViewModel: DiagramsAllViewModel by activityViewModels()
+//    private val diagramsExpensesViewModel: DiagramsExpensesViewModel by activityViewModels()
+//    private val diagramsIncomeViewModel: DiagramsIncomeViewModel by activityViewModels()
+//    private val diagramsAllViewModel: DiagramsAllViewModel by activityViewModels()
     private val diagramsViewModel: DiagramsViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -49,7 +51,7 @@ class DiagramsFragment : Fragment() {
         appPrefs = activity?.let { AppPreferences(it) }!!
         _binding = FragmentDiagramsBinding.inflate(inflater, container, false)
         binding.loading.visibility = View.VISIBLE
-        getAccounts()
+
 
         if (diagramsViewModel.accountList.value != null && diagramsViewModel.accountList.value!!.size > 1) {
             binding.leftAccount.isVisible = true
@@ -142,8 +144,27 @@ class DiagramsFragment : Fragment() {
             }
         tabLayoutMediator.attach()
 
+//        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+//            override fun onTabSelected(tab: TabLayout.Tab?) {
+//                getAnalytics()
+//            }
+//
+//            override fun onTabUnselected(tab: TabLayout.Tab?) {
+//            }
+//
+//            override fun onTabReselected(tab: TabLayout.Tab?) {
+//            }
+//        })
+
+        getAccounts()
         return root
     }
+
+
+//    override fun onResume() {
+//        super.onResume()
+//
+//    }
 
     private fun configureBtnRight() {
         val date = diagramsViewModel.date.value
@@ -180,13 +201,11 @@ class DiagramsFragment : Fragment() {
                             val all = resp.all
                             val exp = resp.expenses
                             val inc = resp.incomes
-                            diagramsViewModel.setData(resp)
-                            diagramsAllViewModel.setData(all)
-                            diagramsExpensesViewModel.setDataList(exp)
-                            diagramsIncomeViewModel.setDataList(inc)
                             Log.e("all", all.toString())
-                            Log.e("exp", exp.toString())
-                            Log.e("inc", inc.toString())
+                            diagramsViewModel.setData(resp)
+//                            diagramsAllViewModel.setData(all)
+//                            diagramsExpensesViewModel.setDataList(exp)
+//                            diagramsIncomeViewModel.setDataList(inc)
                             binding.loading.visibility = View.GONE
                         }
                     }
@@ -199,7 +218,6 @@ class DiagramsFragment : Fragment() {
         }
 
     }
-
 
     private fun getAccounts() {
         apiService = ApiClient.getClient(appPrefs.token.toString())
