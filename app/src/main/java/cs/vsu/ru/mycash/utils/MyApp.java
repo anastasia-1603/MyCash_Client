@@ -6,7 +6,6 @@ import com.yandex.metrica.YandexMetrica;
 import com.yandex.metrica.YandexMetricaConfig;
 
 public class MyApp extends Application {
-
     @Override
     public void onCreate() {
         super.onCreate();
