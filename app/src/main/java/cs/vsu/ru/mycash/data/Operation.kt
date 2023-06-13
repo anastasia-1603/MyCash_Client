@@ -8,5 +8,6 @@ data class Operation(
     var accountName: String,
     var value: Double,
     var dateTime: String,
-    var comment: String
+    var comment: String,
+    var picturePath: String?
 )
