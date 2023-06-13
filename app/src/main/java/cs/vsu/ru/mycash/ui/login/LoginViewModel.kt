@@ -10,10 +10,4 @@ class LoginViewModel() : ViewModel() {
         MutableLiveData<String>()
     }
     val username: LiveData<String> = _username
-
-    private val _password: MutableLiveData<String> by lazy {
-        MutableLiveData<String>()
-    }
-
-    val password: LiveData<String> = _password
 }
