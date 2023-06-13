@@ -8,13 +8,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import cs.vsu.ru.mycash.R
 import cs.vsu.ru.mycash.api.ApiClient
 import cs.vsu.ru.mycash.api.ApiService
+import cs.vsu.ru.mycash.data.ApiError
 import cs.vsu.ru.mycash.data.RegisterRequest
 import cs.vsu.ru.mycash.data.TokenResponse
 import cs.vsu.ru.mycash.databinding.FragmentSignInBinding
 import cs.vsu.ru.mycash.utils.AppPreferences
+import cs.vsu.ru.mycash.utils.ErrorUtils
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -23,13 +28,13 @@ class SignInFragment : Fragment() {
     private var _binding: FragmentSignInBinding? = null
     private lateinit var appPrefs: AppPreferences
     private val binding get() = _binding!!
+    private val loginViewModel: LoginViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val viewModel = ViewModelProvider(this)[LoginViewModel::class.java]
 
         appPrefs = activity?.let { AppPreferences(it) }!!
         _binding = FragmentSignInBinding.inflate(inflater, container, false)
@@ -38,6 +43,7 @@ class SignInFragment : Fragment() {
         val password = binding.password
 
         binding.continueBtn.setOnClickListener {
+            binding.loading.visibility = View.VISIBLE
             var valid = true
             if (username.text.trim().isEmpty()) {
                 username.error = "Введите логин"
@@ -45,6 +51,7 @@ class SignInFragment : Fragment() {
             }
             if (password.text.trim().isEmpty()) {
                 password.error = "Введите пароль"
+                valid = false
             }
 
             if (valid) {
@@ -55,16 +62,25 @@ class SignInFragment : Fragment() {
                         password.text.toString()
                     )
                 )
-
                 call.enqueue(object : Callback<TokenResponse> {
                     override fun onResponse(
                         call: Call<TokenResponse>,
                         response: Response<TokenResponse>
                     ) {
-                        val tokenResponse = response.body()?.token.toString()
-                        appPrefs.token = tokenResponse
-                        ApiClient.updateClient(tokenResponse)
-                        appPrefs.isAuth = true
+                        if (response.isSuccessful) {
+                            val tokenResponse = response.body()?.token.toString()
+                            appPrefs.token = tokenResponse
+                            ApiClient.updateClient(tokenResponse)
+                            appPrefs.isAuth = true
+                            appPrefs.username = username.text.toString()
+                            binding.loading.visibility = View.GONE
+                            findNavController().navigate(R.id.profileFragment)
+                        }
+                        else {
+                            val error : ApiError = ErrorUtils.parseError(response)
+                            Log.e("login error message", error.message)
+                        }
+
                     }
 
                     override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
@@ -74,8 +90,6 @@ class SignInFragment : Fragment() {
                 })
             }
         }
-
-
 
         return binding.root
     }
