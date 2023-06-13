@@ -42,6 +42,7 @@ class ProfileFragment : Fragment() {
 
             alertDialogBuilder.setPositiveButton("Да") { dialog, _ ->
                 appPrefs.isAuth = false
+                appPrefs.token = ""
                 dialog.dismiss()
                 navController.navigate(R.id.profileFragment)
 
