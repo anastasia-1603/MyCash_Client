@@ -6,9 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.github.mikephil.charting.components.Legend
-import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.components.XAxis.XAxisPosition
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
@@ -65,8 +62,7 @@ class DiagramsExpensesFragment : Fragment() {
                 it.key.name
             }.toList().toTypedArray()
 
-            for (entry in map.entries)
-            {
+            for (entry in map.entries) {
                 val floatList = ArrayList<Float>()
                 for (sum in entry.value.values) {
                     floatList.add(sum.toFloat())
@@ -76,14 +72,6 @@ class DiagramsExpensesFragment : Fragment() {
                 dataList.add(BarEntry(entry.key.toFloat(), floatArray))
             }
 
-
-//            map.entries.stream().map { entry ->
-//                val floatArray = entry.value.values.stream().map {
-//                    it.toFloat()
-//                }.toList().toTypedArray().toFloatArray()
-//
-//                dataList.add(BarEntry(entry.key.toFloat(), floatArray))
-//            }
         }
         val barDataSet = BarDataSet(dataList, "")
         barDataSet.colors = listC
@@ -94,7 +82,7 @@ class DiagramsExpensesFragment : Fragment() {
     }
 
     private fun configureChart() {
-        val chart =  binding.stackedBarChart
+        val chart = binding.stackedBarChart
         chart.xAxis.setDrawGridLines(false)
         chart.description.isEnabled = false
         chart.legend.isWordWrapEnabled = true
