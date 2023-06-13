@@ -16,10 +16,8 @@ import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.yandex.metrica.impl.ob.re
 import cs.vsu.ru.mycash.R
 import cs.vsu.ru.mycash.api.ApiClient
 import cs.vsu.ru.mycash.api.ApiService
@@ -73,7 +71,10 @@ class AddOperationFragment : Fragment(),
         pickDate()
 
         binding.saveButton.setOnClickListener {
-            postOperation()
+            if (postOperation()) {
+                findNavController().navigate(R.id.homeFragment)
+            }
+
         }
 
         binding.cancelButton.setOnClickListener {
@@ -233,30 +234,26 @@ class AddOperationFragment : Fragment(),
                 ) {
                     val resp = response.body()
                     if (resp != null) {
-                        if (type == AddOperationViewModel.Mode.EXPENSES)
-                        {
-                            if (resp.overLimitType == OverLimitType.CATEGORY) {
-                                val alertDialogBuilder = AlertDialog.Builder(activity)
-                                alertDialogBuilder.setMessage("Вы превысили лимит по категории!")
+                        if (resp.overLimitType == OverLimitType.CATEGORY) {
+                            val alertDialogBuilder = AlertDialog.Builder(activity)
+                            alertDialogBuilder.setMessage("Вы превысили лимит по категории!")
 
-                                alertDialogBuilder.setNegativeButton("Добавить и закрыть") { dialog, _ ->
-                                    dialog.dismiss()
-                                    findNavController().navigate(R.id.homeFragment)
-                                }
-                                val alertDialog = alertDialogBuilder.create()
-                                alertDialog.show()
-                            } else if (resp.overLimitType == OverLimitType.ACCOUNT) {
-                                val alertDialogBuilder = AlertDialog.Builder(requireContext())
-                                alertDialogBuilder.setMessage("Вы превысили лимит по счету!")
-
-                                alertDialogBuilder.setNegativeButton("Добавить и закрыть") { dialog, _ ->
-                                    dialog.dismiss()
-                                    findNavController().navigate(R.id.homeFragment)
-                                }
-                                val alertDialog = alertDialogBuilder.create()
-                                alertDialog.show()
+                            alertDialogBuilder.setNegativeButton("Закрыть") { dialog, _ ->
+                                dialog.dismiss()
                             }
+                            val alertDialog = alertDialogBuilder.create()
+                            alertDialog.show()
+                        } else if (resp.overLimitType == OverLimitType.ACCOUNT) {
+                            val alertDialogBuilder = AlertDialog.Builder(requireContext())
+                            alertDialogBuilder.setMessage("Вы превысили лимит по счету!")
+
+                            alertDialogBuilder.setNegativeButton("Закрыть") { dialog, _ ->
+                                dialog.dismiss()
+                            }
+                            val alertDialog = alertDialogBuilder.create()
+                            alertDialog.show()
                         }
+
 
                         check = true
                     } else {
