@@ -1,6 +1,7 @@
 package cs.vsu.ru.mycash.ui.main.operation
 
 import android.app.Activity.RESULT_OK
+import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
@@ -15,9 +16,11 @@ import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.yandex.metrica.impl.ob.al
+import com.yandex.metrica.impl.ob.re
+import cs.vsu.ru.mycash.R
 import cs.vsu.ru.mycash.api.ApiClient
 import cs.vsu.ru.mycash.api.ApiService
 import cs.vsu.ru.mycash.data.*
@@ -41,6 +44,7 @@ class AddOperationFragment : Fragment(),
     private lateinit var apiService: ApiService
     private lateinit var appPrefs: AppPreferences
     private lateinit var addOperationViewModel: AddOperationViewModel
+    private val myactivity = activity
     private val pickImage = 100
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -51,6 +55,7 @@ class AddOperationFragment : Fragment(),
     ): View {
         addOperationViewModel = ViewModelProvider(this)[AddOperationViewModel::class.java]
         appPrefs = activity?.let { AppPreferences(it) }!!
+        Log.e("myactivity", myactivity.toString())
         _binding = FragmentAddOperationBinding.inflate(inflater, container, false)
         getAccounts()
         getCategories()
@@ -68,9 +73,7 @@ class AddOperationFragment : Fragment(),
         pickDate()
 
         binding.saveButton.setOnClickListener {
-            if (postOperation()) {
-                findNavController().navigateUp()
-            }
+            postOperation()
         }
 
         binding.cancelButton.setOnClickListener {
@@ -198,8 +201,9 @@ class AddOperationFragment : Fragment(),
         val categoryName = addOperationViewModel.categoryName.value
         val category = addOperationViewModel.categories.value?.find { it.name == categoryName }
         val accountName = addOperationViewModel.accountName.value
-        val account = addOperationViewModel.accounts.value?.filter { it.name == accountName }
         val value = binding.editTextSum.text
+
+        val type = addOperationViewModel.mode.value
 
         val cal = addOperationViewModel.date.value
         val comment = binding.comment.text.toString()
@@ -227,21 +231,33 @@ class AddOperationFragment : Fragment(),
                     call: Call<OperationResponse>,
                     response: Response<OperationResponse>
                 ) {
-                    Log.d("oper response", response.body().toString())
-                    if (response.body() != null) {
-                        if (response.body()!!.type == LimitType.CATEGORY) {
-                            Toast.makeText(
-                                context,
-                                "Вы превысили лимит по категории!",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        } else if (response.body()!!.type == LimitType.ACCOUNT) {
-                            Toast.makeText(
-                                context,
-                                "Вы превысили лимит по счету!",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                    val resp = response.body()
+                    if (resp != null) {
+                        if (type == AddOperationViewModel.Mode.EXPENSES)
+                        {
+                            if (resp.overLimitType == OverLimitType.CATEGORY) {
+                                val alertDialogBuilder = AlertDialog.Builder(activity)
+                                alertDialogBuilder.setMessage("Вы превысили лимит по категории!")
+
+                                alertDialogBuilder.setNegativeButton("Добавить и закрыть") { dialog, _ ->
+                                    dialog.dismiss()
+                                    findNavController().navigate(R.id.homeFragment)
+                                }
+                                val alertDialog = alertDialogBuilder.create()
+                                alertDialog.show()
+                            } else if (resp.overLimitType == OverLimitType.ACCOUNT) {
+                                val alertDialogBuilder = AlertDialog.Builder(requireContext())
+                                alertDialogBuilder.setMessage("Вы превысили лимит по счету!")
+
+                                alertDialogBuilder.setNegativeButton("Добавить и закрыть") { dialog, _ ->
+                                    dialog.dismiss()
+                                    findNavController().navigate(R.id.homeFragment)
+                                }
+                                val alertDialog = alertDialogBuilder.create()
+                                alertDialog.show()
+                            }
                         }
+
                         check = true
                     } else {
 
@@ -251,7 +267,7 @@ class AddOperationFragment : Fragment(),
                 }
 
                 override fun onFailure(call: Call<OperationResponse>, t: Throwable) {
-                    Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), t.message, Toast.LENGTH_SHORT).show()
                 }
 
             })
