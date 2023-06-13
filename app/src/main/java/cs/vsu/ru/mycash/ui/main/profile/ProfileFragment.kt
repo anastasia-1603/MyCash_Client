@@ -31,10 +31,13 @@ class ProfileFragment : Fragment() {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+
         val navController = findNavController()
         binding.buttonCustomize.setOnClickListener {
             navController.navigate(R.id.profileEditFragment)
         }
+
+        binding.profileName.text = appPrefs.username.toString()
 
         binding.buttonOut.setOnClickListener {
             val alertDialogBuilder = AlertDialog.Builder(requireContext())
@@ -43,6 +46,7 @@ class ProfileFragment : Fragment() {
             alertDialogBuilder.setPositiveButton("Да") { dialog, _ ->
                 appPrefs.isAuth = false
                 appPrefs.token = ""
+                appPrefs.username = ""
                 dialog.dismiss()
                 navController.navigate(R.id.profileFragment)
 
@@ -60,6 +64,8 @@ class ProfileFragment : Fragment() {
 
             alertDialogBuilder.setPositiveButton("Да") { dialog, _ ->
                 appPrefs.isAuth = false
+                appPrefs.token = ""
+                appPrefs.username = ""
                 dialog.dismiss()
                 navController.navigate(R.id.profileFragment)
 
