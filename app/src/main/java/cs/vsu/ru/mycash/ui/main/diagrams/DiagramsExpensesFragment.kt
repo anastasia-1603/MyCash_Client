@@ -6,14 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.components.XAxis.XAxisPosition
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
-import cs.vsu.ru.mycash.api.ApiService
-import cs.vsu.ru.mycash.data.diagrams.AnalyticsResponse
 import cs.vsu.ru.mycash.databinding.FragmentDiagramsExpensesBinding
-import cs.vsu.ru.mycash.utils.AppPreferences
 import kotlin.streams.toList
+
 
 class DiagramsExpensesFragment : Fragment() {
 
@@ -46,6 +47,7 @@ class DiagramsExpensesFragment : Fragment() {
         val dataList: ArrayList<BarEntry> = ArrayList()
         val data = diagramsViewModel.data.value
         var listC = emptyList<Int>()
+        var listNames: Array<String>? = null
         if (data != null) {
             val expData = data.expenses
 
@@ -58,6 +60,10 @@ class DiagramsExpensesFragment : Fragment() {
             listC = map.entries.first().value.entries.stream().map {
                 it.key.color
             }.toList()
+
+            listNames = map.entries.first().value.entries.stream().map {
+                it.key.name
+            }.toList().toTypedArray()
 
             for (entry in map.entries)
             {
@@ -79,14 +85,19 @@ class DiagramsExpensesFragment : Fragment() {
 //                dataList.add(BarEntry(entry.key.toFloat(), floatArray))
 //            }
         }
-        val barDataSet = BarDataSet(dataList, "Расходы")
+        val barDataSet = BarDataSet(dataList, "")
         barDataSet.colors = listC
+        barDataSet.setDrawValues(false)
+        barDataSet.stackLabels = listNames
+
         return barDataSet
     }
 
     private fun configureChart() {
-        binding.stackedBarChart.xAxis.setDrawGridLines(false)
-        binding.stackedBarChart.description.isEnabled = false
+        val chart =  binding.stackedBarChart
+        chart.xAxis.setDrawGridLines(false)
+        chart.description.isEnabled = false
+        chart.legend.isWordWrapEnabled = true
     }
 
 }

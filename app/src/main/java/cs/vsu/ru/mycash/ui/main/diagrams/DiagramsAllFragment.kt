@@ -71,6 +71,7 @@ class DiagramsAllFragment : Fragment() {
     private fun configureChart() {
         binding.lineChart.xAxis.setDrawGridLines(false)
         binding.lineChart.description.isEnabled = false
+        binding.lineChart.legend.isWordWrapEnabled = true
     }
 
     private fun getBalanceDataSet(balanceList : List<Double>) : LineDataSet {
