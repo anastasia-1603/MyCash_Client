@@ -1,10 +1,10 @@
 package cs.vsu.ru.mycash.data
 
 data class OperationResponse(
-    val type: LimitType
+    val overLimitType: OverLimitType
 )
 
-enum class LimitType {
+enum class OverLimitType {
     NONE,
     CATEGORY,
     ACCOUNT

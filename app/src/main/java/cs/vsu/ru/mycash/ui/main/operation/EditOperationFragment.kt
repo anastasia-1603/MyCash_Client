@@ -266,13 +266,13 @@ class EditOperationFragment : Fragment(),
                     response: Response<OperationResponse>
                 ) {
                     if (response.body() != null) {
-                        if (response.body()!!.type == LimitType.CATEGORY) {
+                        if (response.body()!!.overLimitType == OverLimitType.CATEGORY) {
                             Toast.makeText(
                                 context,
                                 "Вы превысили лимит по категории!",
                                 Toast.LENGTH_SHORT
                             ).show()
-                        } else if (response.body()!!.type == LimitType.ACCOUNT) {
+                        } else if (response.body()!!.overLimitType == OverLimitType.ACCOUNT) {
                             Toast.makeText(
                                 context,
                                 "Вы превысили лимит по счету!",
