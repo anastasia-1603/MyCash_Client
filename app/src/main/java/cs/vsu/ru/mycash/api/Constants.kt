@@ -3,6 +3,7 @@ package cs.vsu.ru.mycash.api
 object Constants {
     const val BASE_URL = "http://45.140.168.75:4080/api/"
     const val INIT_URL = "auth/new"
+    const val DELETE_USER = "auth/delete"
     const val LOGIN = "auth/login"
     const val REGISTER = "auth/register"
     const val CATEGORY_URL = "category/get_all"
