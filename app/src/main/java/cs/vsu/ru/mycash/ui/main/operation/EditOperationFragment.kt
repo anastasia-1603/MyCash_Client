@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -53,10 +54,13 @@ class EditOperationFragment : Fragment(),
         _binding = FragmentEditOperationBinding.inflate(inflater, container, false)
 
         val operation = editOperationViewModel.operation.value
-        if (operation != null)
-        {
+        if (operation != null) {
             binding.editTextSum.setText(operation.value.toString())
             binding.comment.setText(operation.comment.toString())
+            if (operation.picturePath != null) {
+                binding.deletePhoto.isVisible = true
+                binding.imageView.setImageURI(Uri.parse(operation.picturePath))
+            }
         }
 
         Log.e("operation edit", operation.toString())
@@ -64,12 +68,10 @@ class EditOperationFragment : Fragment(),
         getAccounts()
         getCategories()
 
-        if (editOperationViewModel.mode.value == EditOperationViewModel.Mode.INCOME)
-        {
+        if (editOperationViewModel.mode.value == EditOperationViewModel.Mode.INCOME) {
             binding.incomeBtn.isEnabled = false
             binding.spendingButton.isEnabled = true
-        }
-        else {
+        } else {
             binding.incomeBtn.isEnabled = true
             binding.spendingButton.isEnabled = false
         }
@@ -85,8 +87,7 @@ class EditOperationFragment : Fragment(),
         pickDate()
 
         binding.saveButton.setOnClickListener {
-            if (operation != null)
-            {
+            if (operation != null) {
                 if (updateOperation(operation)) {
                     findNavController().navigateUp()
                 }
@@ -99,8 +100,7 @@ class EditOperationFragment : Fragment(),
             alertDialogBuilder.setMessage("Вы уверены?")
 
             alertDialogBuilder.setPositiveButton("Да") { dialog, _ ->
-                if (operation != null)
-                {
+                if (operation != null) {
                     deleteOperation(operation)
                     dialog.dismiss()
                     findNavController().navigateUp()
@@ -242,11 +242,12 @@ class EditOperationFragment : Fragment(),
 
         val cal = editOperationViewModel.date.value
         val comment = binding.comment.text.toString()
+        val uri = editOperationViewModel.imageUri.value
         var check = true
         if (category != null && categoryName != null && categoryName.trim().isNotEmpty()
             && accountName != null && accountName.trim().isNotEmpty()
             && value != null && value.trim().isNotEmpty()
-            && cal != null
+            && cal != null && value.toString().toDouble() > 0
         ) {
             val datetime: LocalDateTime = LocalDateTime.ofInstant(
                 cal.toInstant(), cal.timeZone.toZoneId()
@@ -257,6 +258,12 @@ class EditOperationFragment : Fragment(),
             operation.value = value.toString().toDouble()
             operation.dateTime = datetime.toString()
             operation.comment = comment
+            if (uri != null) {
+                operation.picturePath = uri.toString()
+            }
+            else {
+                operation.picturePath = null
+            }
 
             apiService = ApiClient.getClient(appPrefs.token.toString())
 
@@ -296,17 +303,18 @@ class EditOperationFragment : Fragment(),
         } else if (value.trim().isEmpty()) {
             check = false
             binding.editTextSum.error = "Введите сумму"
+        } else if (value.toString().toDouble() < 0) {
+            check = false
+            binding.editTextSum.error = "Введите положительное значение"
         }
 
         return check
     }
 
-    private fun deleteOperation(operation: Operation) : Boolean
-    {
+    private fun deleteOperation(operation: Operation): Boolean {
         var check = true
         apiService = ApiClient.getClient(appPrefs.token.toString())
-        if (operation.id != null)
-        {
+        if (operation.id != null) {
             apiService.deleteOperation(operation.id).enqueue(object : Callback<Void> {
                 override fun onResponse(call: Call<Void>, response: Response<Void>) {
                     check = true
@@ -317,8 +325,7 @@ class EditOperationFragment : Fragment(),
                     check = false
                 }
             })
-        }
-        else {
+        } else {
             check = false
         }
 

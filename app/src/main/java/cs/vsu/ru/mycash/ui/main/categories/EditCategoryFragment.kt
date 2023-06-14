@@ -56,7 +56,6 @@ class EditCategoryFragment : Fragment() {
             if (category.isLimited) {
                 binding.limit.setText(category.spendingLimit.toString())
             }
-
         }
 
         binding.colorBtn.setOnClickListener {
@@ -89,8 +88,13 @@ class EditCategoryFragment : Fragment() {
                 if (category != null) {
                     val limit = binding.limit.text.toString()
                     if (limit.trim().isNotEmpty()) {
-                        category.spendingLimit = limit.toDouble()
-                        category.isLimited = true
+                        if (limit.toDouble() < 0) {
+                            binding.limit.error = "Введите положительное значение"
+                        }
+                        else {
+                            category.spendingLimit = limit.toDouble()
+                            category.isLimited = true
+                        }
                     }
                     editCategoryViewModel.setCategory(category)
                     updateCategory(category)

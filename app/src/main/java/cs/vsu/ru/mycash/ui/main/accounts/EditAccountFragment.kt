@@ -102,14 +102,27 @@ class EditAccountFragment : Fragment() {
                 {
                     val oldAccountName = account.name.toString()
                     account.name = accountName.text.toString()
-                    val limit = binding.limit.text.toString()
-                    if (limit.trim().isNotEmpty()) {
-                        account.spendingLimit = limit.toDouble()
-                        account.isLimited = true
+                    val limit = binding.limit
+
+                    if (limit.text.toString().trim().isNotEmpty()) {
+                        if (limit.text.toString().toDouble() < 0) {
+                            limit.error = "Введите положительное значение"
+                        }
+                        else {
+                            account.spendingLimit = limit.text.toString().toDouble()
+                            account.isLimited = true
+                        }
+
                     }
-                    val target = binding.goal.text.toString()
-                    if (target.trim().isNotEmpty()) {
-                        account.target = target.toDouble()
+                    val target = binding.goal
+                    if (target.text.toString().trim().isNotEmpty()) {
+                        if (target.text.toString().toDouble() < 0) {
+                            target.error = "Введите положительное значение"
+                        }
+                        else {
+                            account.target = target.text.toString().toDouble()
+                        }
+
                     }
                     updateAccount(account, oldAccountName)
                 }
