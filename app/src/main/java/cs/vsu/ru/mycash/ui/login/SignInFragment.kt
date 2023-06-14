@@ -1,28 +1,24 @@
 package cs.vsu.ru.mycash.ui.login
 
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import cs.vsu.ru.mycash.R
 import cs.vsu.ru.mycash.api.ApiClient
-import cs.vsu.ru.mycash.api.ApiService
-import cs.vsu.ru.mycash.data.ApiError
 import cs.vsu.ru.mycash.data.RegisterRequest
 import cs.vsu.ru.mycash.data.TokenResponse
 import cs.vsu.ru.mycash.databinding.FragmentSignInBinding
 import cs.vsu.ru.mycash.utils.AppPreferences
-import cs.vsu.ru.mycash.utils.ErrorUtils
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
 
 class SignInFragment : Fragment() {
     private var _binding: FragmentSignInBinding? = null
@@ -67,7 +63,7 @@ class SignInFragment : Fragment() {
                         call: Call<TokenResponse>,
                         response: Response<TokenResponse>
                     ) {
-                        if (response.isSuccessful) {
+                        if (response.body() != null) {
                             val tokenResponse = response.body()?.token.toString()
                             appPrefs.token = tokenResponse
                             ApiClient.updateClient(tokenResponse)
@@ -77,10 +73,11 @@ class SignInFragment : Fragment() {
                             findNavController().navigate(R.id.profileFragment)
                         }
                         else {
-                            val error : ApiError = ErrorUtils.parseError(response)
-                            Log.e("login error message", error.message)
+                            if (response.code() == 401)
+                            {
+                                Toast.makeText(context, "Неправильный логин или пароль", Toast.LENGTH_SHORT).show()
+                            }
                         }
-
                     }
 
                     override fun onFailure(call: Call<TokenResponse>, t: Throwable) {

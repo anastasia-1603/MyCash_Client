@@ -17,6 +17,7 @@ import cs.vsu.ru.mycash.data.TokenResponse
 import cs.vsu.ru.mycash.databinding.FragmentRegisterBinding
 import cs.vsu.ru.mycash.utils.AppPreferences
 import cs.vsu.ru.mycash.utils.ErrorUtils
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -73,20 +74,18 @@ class RegisterFragment : Fragment() {
                             appPrefs.isAuth = true
                             appPrefs.username = username
                             navController.navigate(R.id.profileFragment)
-                            binding.loading.visibility = View.GONE
+
                             alertDialog.dismiss()
 
                         }
-                        else {
-                            val error : ApiError = ErrorUtils.parseError(response)
-                            if (error.statusCode == 409)
-                            {
-                                Toast.makeText(context,"Пользователь с таким именем уже существует!", Toast.LENGTH_SHORT).show()
-                            }
-                            Log.e("register error message", error.message)
+                    }
+                    else {
+                        if (response.code() == 409) {
+                            Toast.makeText(context, "Пользователь с таким логином уже существует", Toast.LENGTH_LONG).show()
                         }
 
                     }
+                    binding.loading.visibility = View.GONE
                 }
 
                 override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
