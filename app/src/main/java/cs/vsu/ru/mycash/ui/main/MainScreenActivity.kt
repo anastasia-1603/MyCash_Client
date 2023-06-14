@@ -40,6 +40,7 @@ class MainScreenActivity : AppCompatActivity() {
                         startActivity(Intent(this, WelcomeActivity::class.java))
                         finish()
                     }
+
                     navController.navigate(R.id.profileUnauthFragment)
                 }
             }
