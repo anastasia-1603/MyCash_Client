@@ -88,7 +88,10 @@ class AccountAddFragment : Fragment() {
             target, limit, isLimited)
         apiService.addAccount(account).enqueue(object: Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                findNavController().navigateUp()
+                if (response.body() != null) {
+                    findNavController().navigateUp()
+                }
+
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
