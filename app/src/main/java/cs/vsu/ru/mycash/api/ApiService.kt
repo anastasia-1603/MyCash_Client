@@ -10,6 +10,7 @@ import cs.vsu.ru.mycash.api.Constants.CATEGORY_UPDATE
 import cs.vsu.ru.mycash.api.Constants.CATEGORY_URL
 import cs.vsu.ru.mycash.api.Constants.DATA_DAY
 import cs.vsu.ru.mycash.api.Constants.DATA_MONTH
+import cs.vsu.ru.mycash.api.Constants.DELETE_USER
 import cs.vsu.ru.mycash.api.Constants.INIT_URL
 import cs.vsu.ru.mycash.api.Constants.LOGIN
 import cs.vsu.ru.mycash.api.Constants.OPERATION_ADD
@@ -25,17 +26,6 @@ import retrofit2.http.*
 interface ApiService {
     @POST(INIT_URL)
     fun init(@Body accountInit: AccountInit): Call<TokenResponse>
-
-//    @GET(DATA_DAY)
-//    fun getDataByDay(@Path("year") year: Int,
-//                     @Path("month") month: Int,
-//                     @Path("day") day: Int) :
-//            Call<Map<String, List<Operation>>>
-//
-//    @GET(DATA_MONTH)
-//    fun getDataByMonth(@Path("year") year: Int,
-//                       @Path("month") month: Int) :
-//            Call<Map<String, List<Operation>>>
 
     @GET(DATA_DAY)
     fun getDataByDay(@Path("year") year: Int,
@@ -53,6 +43,9 @@ interface ApiService {
 
     @POST(LOGIN)
     fun signIn(@Body registerRequest: RegisterRequest) : Call<TokenResponse>
+
+    @DELETE(DELETE_USER)
+    fun delete() : Call<Void>
 
     @GET(CATEGORY_URL)
     fun getCategories() : Call<List<Category>>
