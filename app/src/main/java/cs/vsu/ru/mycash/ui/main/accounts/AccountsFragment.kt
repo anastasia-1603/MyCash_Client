@@ -69,7 +69,7 @@ class AccountsFragment : Fragment() {
             }
             else
             {
-                findNavController().navigate(R.id.profileUnauthFragment)
+                findNavController().navigate(R.id.profileFragment)
             }
 
         }
