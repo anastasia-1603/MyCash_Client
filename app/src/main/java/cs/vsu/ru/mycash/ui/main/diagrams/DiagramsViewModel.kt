@@ -1,5 +1,6 @@
 package cs.vsu.ru.mycash.ui.main.diagrams
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -49,8 +50,10 @@ class DiagramsViewModel : ViewModel() {
 
     }
     fun incrementAccountIndex() {
+        Log.e("_accountList.value?.size", _accountList.value?.size.toString())
         if (_accountIndex.value == _accountList.value?.size?.minus(1))
         {
+
             setAccountIndex(0)
         }
         else

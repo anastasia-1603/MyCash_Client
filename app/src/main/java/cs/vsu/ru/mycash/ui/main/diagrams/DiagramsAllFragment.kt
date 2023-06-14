@@ -2,6 +2,7 @@ package cs.vsu.ru.mycash.ui.main.diagrams
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,6 +45,7 @@ class DiagramsAllFragment : Fragment() {
 
         if (analyticsResp != null) {
             allMonthData = analyticsResp.all
+            Log.e("all", allMonthData.toString())
             val balanceList = allMonthData.balanceMonths as ArrayList<Double>
             val expenses = allMonthData.expenses as ArrayList<Double>
             val incomes = allMonthData.incomes as ArrayList<Double>
@@ -63,6 +65,9 @@ class DiagramsAllFragment : Fragment() {
                 finalDataSet.add(getLimitDataSet(limit, size))
             }
             val lineData = LineData(finalDataSet as List<ILineDataSet>?)
+
+            binding.lineChart.xAxis.setCenterAxisLabels(false)
+            binding.lineChart.xAxis.granularity = 1F
             binding.lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(xValues)
             binding.lineChart.data = lineData
         }
@@ -72,21 +77,6 @@ class DiagramsAllFragment : Fragment() {
         binding.lineChart.xAxis.setDrawGridLines(false)
         binding.lineChart.description.isEnabled = false
         binding.lineChart.legend.isWordWrapEnabled = true
-    }
-
-    private fun getBalanceDataSet(balanceList : List<Double>) : LineDataSet {
-
-        val bList = balanceList.reversed()
-        val lineList = ArrayList<Entry>()
-        for ((i, b) in bList.withIndex()) {
-            lineList.add(Entry(i.toFloat(), b.toFloat()))
-        }
-//        lineList.reverse()
-        val lineDataSet = LineDataSet(lineList, "Баланс")
-        lineDataSet.lineWidth = 3f
-        lineDataSet.setDrawValues(false)
-        lineDataSet.color = Color.BLUE
-        return lineDataSet
     }
 
     private fun getXValues() : ArrayList<String>
@@ -109,7 +99,7 @@ class DiagramsAllFragment : Fragment() {
         )
         val pastMonth = ArrayList<String>()
         var cur = curMonth - 1
-        for (i in 1..6) {
+        for (i in 0..5) {
             pastMonth.add(0, monthNames[cur])
             if (cur == 0) {
                 cur = monthNames.size - 1
@@ -131,6 +121,7 @@ class DiagramsAllFragment : Fragment() {
         lineDataSet.valueTextSize = 15f
         lineDataSet.setDrawValues(false)
         lineDataSet.color = Color.CYAN
+        lineDataSet.enableDashedLine(12F, 10F, 0F)
         return lineDataSet
     }
 
@@ -144,14 +135,29 @@ class DiagramsAllFragment : Fragment() {
         lineDataSet.lineWidth = 3f
         lineDataSet.valueTextSize = 15f
         lineDataSet.setDrawValues(false)
-        lineDataSet.color = Color.YELLOW
+        lineDataSet.color = Color.MAGENTA
+        lineDataSet.enableDashedLine(12F, 10F, 0F)
         return lineDataSet
     }
 
+    private fun getBalanceDataSet(balanceList : List<Double>) : LineDataSet {
+
+        val lineList = ArrayList<Entry>()
+        for (i in 1 .. 6)
+        {
+            lineList.add(Entry((i).toFloat(), balanceList[i-1].toFloat()))
+        }
+        val lineDataSet = LineDataSet(lineList, "Баланс")
+        lineDataSet.lineWidth = 3f
+        lineDataSet.setDrawValues(false)
+        lineDataSet.color = Color.BLUE
+        return lineDataSet
+    }
     private fun getExpensesDataSet(expenses: List<Double>) : LineDataSet {
         val lineList = ArrayList<Entry>()
-        for ((i, b) in expenses.withIndex()) {
-            lineList.add(Entry((i+1).toFloat(), b.toFloat()))
+        for (i in 1 .. 6)
+        {
+            lineList.add(Entry((i).toFloat(), expenses[i-1].toFloat()))
         }
         val lineDataSet = LineDataSet(lineList, "Расходы")
         lineDataSet.lineWidth = 3f
@@ -163,8 +169,9 @@ class DiagramsAllFragment : Fragment() {
 
     private fun getIncomesDataSet(incomes: List<Double>) : LineDataSet {
         val lineList = ArrayList<Entry>()
-        for ((i, b) in incomes.withIndex()) {
-            lineList.add(Entry((i+1).toFloat(), b.toFloat()))
+        for (i in 1 .. 6)
+        {
+            lineList.add(Entry((i).toFloat(), incomes[i-1].toFloat()))
         }
         val lineDataSet = LineDataSet(lineList, "Доходы")
         lineDataSet.lineWidth = 3f

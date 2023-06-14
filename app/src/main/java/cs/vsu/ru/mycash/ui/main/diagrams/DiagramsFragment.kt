@@ -38,9 +38,6 @@ class DiagramsFragment : Fragment() {
     private lateinit var appPrefs: AppPreferences
     private var cal = Calendar.getInstance()
     private val binding get() = _binding!!
-//    private val diagramsExpensesViewModel: DiagramsExpensesViewModel by activityViewModels()
-//    private val diagramsIncomeViewModel: DiagramsIncomeViewModel by activityViewModels()
-//    private val diagramsAllViewModel: DiagramsAllViewModel by activityViewModels()
     private val diagramsViewModel: DiagramsViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -52,6 +49,7 @@ class DiagramsFragment : Fragment() {
         _binding = FragmentDiagramsBinding.inflate(inflater, container, false)
         binding.loading.visibility = View.VISIBLE
 
+        getAccounts()
 
         if (diagramsViewModel.accountList.value != null && diagramsViewModel.accountList.value!!.size > 1) {
             binding.leftAccount.isVisible = true
@@ -63,22 +61,32 @@ class DiagramsFragment : Fragment() {
 
         val root: View = binding.root
 
-
         diagramsViewModel.accountIndex.observe(viewLifecycleOwner) {
+//            if (diagramsViewModel.accountList.value != null && diagramsViewModel.accountList.value!!.size > 1) {
+//                binding.leftAccount.isVisible = true
+//                binding.rightAccount.isVisible = true
+//            } else {
+//                binding.leftAccount.isVisible = false
+//                binding.rightAccount.isVisible = false
+//            }
             val accounts = diagramsViewModel.accountList.value
             if (accounts != null && accounts.isNotEmpty()) {
-                val accountName = diagramsViewModel.accountName.value
+                val accountName = accounts[it].name.toString()
                 binding.accountName.text = accountName
                 getAnalytics()
             }
         }
 
         binding.leftAccount.setOnClickListener {
+            Log.e("ind in left", diagramsViewModel.accountIndex.value.toString())
             diagramsViewModel.decrementAccountIndex()
+            Log.e("ind in left after", diagramsViewModel.accountIndex.value.toString())
         }
 
         binding.rightAccount.setOnClickListener {
+            Log.e("ind in right", diagramsViewModel.accountIndex.value.toString())
             diagramsViewModel.incrementAccountIndex()
+            Log.e("ind in right after", diagramsViewModel.accountIndex.value.toString())
         }
 
         val dateBtn: Button = binding.date
@@ -144,27 +152,9 @@ class DiagramsFragment : Fragment() {
             }
         tabLayoutMediator.attach()
 
-//        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-//            override fun onTabSelected(tab: TabLayout.Tab?) {
-//                getAnalytics()
-//            }
-//
-//            override fun onTabUnselected(tab: TabLayout.Tab?) {
-//            }
-//
-//            override fun onTabReselected(tab: TabLayout.Tab?) {
-//            }
-//        })
-
-        getAccounts()
         return root
     }
 
-
-//    override fun onResume() {
-//        super.onResume()
-//
-//    }
 
     private fun configureBtnRight() {
         val date = diagramsViewModel.date.value
@@ -198,14 +188,7 @@ class DiagramsFragment : Fragment() {
                         val resp = response.body()
                         if (resp != null)
                         {
-                            val all = resp.all
-                            val exp = resp.expenses
-                            val inc = resp.incomes
-                            Log.e("all", all.toString())
                             diagramsViewModel.setData(resp)
-//                            diagramsAllViewModel.setData(all)
-//                            diagramsExpensesViewModel.setDataList(exp)
-//                            diagramsIncomeViewModel.setDataList(inc)
                             binding.loading.visibility = View.GONE
                         }
                     }
@@ -226,6 +209,13 @@ class DiagramsFragment : Fragment() {
                 val accounts = response.body()
                 if (accounts != null) {
                     diagramsViewModel.setAccountList(accounts)
+                    if (accounts.size > 1) {
+                        binding.leftAccount.isVisible = true
+                        binding.rightAccount.isVisible = true
+                    } else {
+                        binding.leftAccount.isVisible = false
+                        binding.rightAccount.isVisible = false
+                    }
                     binding.accountName.text = diagramsViewModel.accountName.value
                     getAnalytics()
                 }
