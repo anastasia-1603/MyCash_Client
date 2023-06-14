@@ -54,9 +54,6 @@ class StartActivity : AppCompatActivity() {
                     override fun onResponse(call: Call<TokenResponse>, response: Response<TokenResponse>) {
                         val token = response.body()?.token.toString()
                         appPrefs.token = token
-                        Log.e("token start activity", token)
-                        Log.e("token start  prefs", appPrefs.token.toString())
-//                        preferences.edit().putString("TOKEN", token).apply()
                         ApiClient.updateClient(token)
                         appPrefs.isFirstTimeLaunch = false
                         val intent = Intent(this@StartActivity, MainScreenActivity::class.java)

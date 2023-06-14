@@ -24,12 +24,14 @@ import cs.vsu.ru.mycash.api.ApiClient
 import cs.vsu.ru.mycash.api.ApiService
 import cs.vsu.ru.mycash.data.*
 import cs.vsu.ru.mycash.databinding.FragmentHomeBinding
+import cs.vsu.ru.mycash.ui.main.operation.OperationViewModel
 import cs.vsu.ru.mycash.utils.AppPreferences
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.streams.toList
 
 class HomeFragment : Fragment() {
 
@@ -40,7 +42,6 @@ class HomeFragment : Fragment() {
     private val accountSendViewModel: AccountSendViewModel by activityViewModels()
     private lateinit var homeViewModel: HomeViewModel
     private val binding get() = _binding!!
-    private val sdf1 = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
 
     private lateinit var apiService: ApiService
     private lateinit var appPrefs: AppPreferences
@@ -57,6 +58,7 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        binding.loading.visibility = View.VISIBLE
         val accountName: TextView = binding.accountName
         homeViewModel.accountName.observe(viewLifecycleOwner) {
             accountName.text = it
@@ -64,11 +66,23 @@ class HomeFragment : Fragment() {
 
         val balance: TextView = binding.balance
         homeViewModel.balance.observe(viewLifecycleOwner) {
-            balance.text = "$it Р"
+            balance.text = "$it ₽"
+        }
+        val list = homeViewModel.accountList.value
+
+        if (list != null) {
+            if (list.size > 1) {
+                binding.rightAccount.visibility = View.VISIBLE
+                binding.leftAccount.visibility = View.VISIBLE
+            }
+            else {
+                binding.rightAccount.visibility = View.GONE
+                binding.leftAccount.visibility = View.GONE
+            }
         }
 
         homeViewModel.accountIndex.observe(viewLifecycleOwner) {
-            val accounts = operationViewModel.map.value?.let { it1 -> getAccounts(it1) }
+            val accounts = homeViewModel.accountList.value
             val index = it
             if (index != null) {
                 val account = accounts?.get(index)
@@ -275,8 +289,8 @@ class HomeFragment : Fragment() {
             TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
                 when (position) {
                     0 -> tab.text = "Все"
-                    1 -> tab.text = "Расходы"
-                    2 -> tab.text = "Доходы"
+                    1 -> tab.text = "Доходы"
+                    2 -> tab.text = "Расходы"
                 }
             }
         tabLayoutMediator.attach()
@@ -305,7 +319,8 @@ class HomeFragment : Fragment() {
             val date = homeViewModel.date.value
             val sdf1 = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
             if (date != null) {
-                binding.right.isEnabled = !sdf1.format(date.time).equals(sdf1.format(Calendar.getInstance().time))
+                binding.right.isEnabled =
+                    !sdf1.format(date.time).equals(sdf1.format(Calendar.getInstance().time))
             }
         } else {
             binding.right.isEnabled = true
@@ -317,6 +332,19 @@ class HomeFragment : Fragment() {
         super.onResume()
         loadOperations()
         homeViewModel.accountList.value?.let { accountSendViewModel.setAccountsList(it) }
+        val list = homeViewModel.accountList.value
+
+        if (list != null) {
+            if (list.size > 1) {
+                binding.rightAccount.visibility = View.VISIBLE
+                binding.leftAccount.visibility = View.VISIBLE
+            }
+            else {
+                binding.rightAccount.visibility = View.GONE
+                binding.leftAccount.visibility = View.GONE
+            }
+        }
+
     }
 
     class HomePagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
@@ -328,50 +356,52 @@ class HomeFragment : Fragment() {
         override fun createFragment(position: Int): Fragment {
             return when (position) {
                 0 -> TabAllFragment()
-                1 -> TabExpensesFragment()
-                2 -> TabIncomeFragment()
+                1 -> TabIncomeFragment()
+                2 -> TabExpensesFragment()
                 else -> throw IllegalArgumentException("Invalid position")
             }
         }
     }
 
-    private fun checkDateAfterNow(cal: Calendar): Boolean {
-        val cur = Calendar.getInstance()
-        return !cal.time.after(cur.time)
-    }
-
-
     private fun loadOperations() {
+        binding.loading.visibility = View.VISIBLE
         apiService = ApiClient.getClient(appPrefs.token.toString())
-        val call: Call<Map<String, List<Operation>>>
+//        val call: Call<Map<String, List<Operation>>>
+        val call: Call<List<MainScreenAccountResponse>>
         val calVm = homeViewModel.date.value
 
         if (calVm != null) {
             if (!calVm.time.after(Calendar.getInstance().time)) {
-                if (homeViewModel.mode.value == HomeViewModel.Mode.DAY) {
-                    call = apiService.getDataByDay(
+                call = if (homeViewModel.mode.value == HomeViewModel.Mode.DAY) {
+                    apiService.getDataByDay(
                         calVm.get(Calendar.YEAR),
                         calVm.get(Calendar.MONTH) + 1,
                         calVm.get(Calendar.DAY_OF_MONTH)
                     )
                 } else {
-                    call = apiService.getDataByMonth(
+                    apiService.getDataByMonth(
                         calVm.get(Calendar.YEAR), calVm.get(Calendar.MONTH) + 1
                     )
                 }
-                call.enqueue(object : Callback<Map<String, List<Operation>>> {
+                call.enqueue(object : Callback<List<MainScreenAccountResponse>> {
                     override fun onResponse(
-                        call: Call<Map<String, List<Operation>>>,
-                        response: Response<Map<String, List<Operation>>>
+                        call: Call<List<MainScreenAccountResponse>>,
+                        response: Response<List<MainScreenAccountResponse>>
                     ) {
-                        val map = response.body()
-                        if (map != null) { updateMap(map) }
+                        val resp = response.body()
+                        if (resp != null) {
+                            update(resp)
+                        }
                         homeViewModel.accountList.value?.let {
                             accountSendViewModel.setAccountsList(it)
                         }
+                        binding.loading.visibility = View.GONE
                     }
 
-                    override fun onFailure(call: Call<Map<String, List<Operation>>>, t: Throwable) {
+                    override fun onFailure(
+                        call: Call<List<MainScreenAccountResponse>>,
+                        t: Throwable
+                    ) {
                         Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
                     }
 
@@ -381,7 +411,38 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun update(data: List<MainScreenAccountResponse>) {
+
+        operationViewModel.setData(data)
+        val accounts: List<AccountDto> = data.stream().map {
+            AccountDto(it.accountName, it.balance)
+        }.toList()
+        homeViewModel.setAccountsList(accounts)
+        val index = homeViewModel.accountIndex.value
+        if (index != null) {
+            val account = accounts[index]
+            if (accounts.size > 1) {
+                binding.leftAccount.isVisible = true
+                binding.rightAccount.isVisible = true
+            } else {
+                binding.leftAccount.isVisible = false
+                binding.rightAccount.isVisible = false
+            }
+            homeViewModel.setAccountName(account.name)
+            homeViewModel.setBalance(account.balance.toString())
+            val operationsList: List<Operation>? = data.find {
+                it.accountName == account.name
+            }?.operations
+
+            if (operationsList != null) {
+                updateOperations(operationsList)
+            }
+        }
+
+    }
+
     private fun updateOperations(operationList: List<Operation>) {
+        binding.loading.visibility = View.VISIBLE
         operationViewModel.setOperationList(operationList)
         operationViewModel.operationList.value?.let { operations ->
             operationViewModel.setExpenseList(operations.filter {
@@ -393,47 +454,25 @@ class HomeFragment : Fragment() {
                 it.category.type == CategoryType.INCOME
             })
         }
-    }
-
-    private fun updateAccount(account: AccountDto, operationList: List<Operation>) {
-        homeViewModel.setAccountName(account.name)
-        homeViewModel.setBalance(account.balance.toString())
-        updateOperations(operationList)
+        binding.loading.visibility = View.GONE
     }
 
     private fun updateAccount(account: AccountDto) {
         homeViewModel.setAccountName(account.name)
         homeViewModel.setBalance(account.balance.toString())
-        val operationList = operationViewModel.map.value?.get(account.name)
-        if (operationList != null) {
-            updateOperations(operationList)
-        }
-    }
+        val data = operationViewModel.data.value
+        if (data != null) {
+            val operationsList: List<Operation>? = data.find {
+                it.accountName == account.name
+            }?.operations
 
-    private fun updateMap(map: Map<String, List<Operation>>) {
-        operationViewModel.setMap(map)
-
-        val accounts: List<AccountDto> = getAccounts(map)
-        homeViewModel.setAccountsList(accounts)
-
-        val index = homeViewModel.accountIndex.value
-        if (index != null) {
-            val account = accounts[index]
-
-            map["${account.name}:${account.balance}"]?.let {
-                updateAccount(account, it)
+            if (operationsList != null) {
+                updateOperations(operationsList)
             }
-        }
-    }
 
-    private fun getAccounts(map: Map<String, List<Operation>>): List<AccountDto> {
-        val accounts: ArrayList<AccountDto> = ArrayList()
-        map.keys.forEach {
-            val tmp = it.split(":")
-            val accountDto: AccountDto = AccountDto(tmp[0], tmp[1].toDouble())
-            accounts.add(accountDto)
         }
-        return accounts
+
+
     }
 
     override fun onDestroyView() {

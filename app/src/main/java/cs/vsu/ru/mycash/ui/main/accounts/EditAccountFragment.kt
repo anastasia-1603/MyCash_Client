@@ -1,14 +1,17 @@
 package cs.vsu.ru.mycash.ui.main.accounts
 
+import android.app.AlertDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.yandex.metrica.impl.ob.ol
 import cs.vsu.ru.mycash.R
 import cs.vsu.ru.mycash.api.ApiClient
 import cs.vsu.ru.mycash.api.ApiService
@@ -27,7 +30,6 @@ class EditAccountFragment : Fragment() {
     private lateinit var appPrefs: AppPreferences
     private val editAccountViewModel: EditAccountViewModel by activityViewModels()
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -39,51 +41,102 @@ class EditAccountFragment : Fragment() {
         val menu = requireActivity().findViewById<BottomNavigationView>(R.id.nav_view).menu
         menu.findItem(R.id.accountsFragment).isChecked = true
 
+        val account = editAccountViewModel.account.value
+
+        binding.cancelButton.isVisible = editAccountViewModel.accountsNum.value!! > 1
         binding.cancelButton.setOnClickListener {
-            findNavController().navigateUp()
+            val alertDialogBuilder = AlertDialog.Builder(requireContext())
+            alertDialogBuilder.setMessage("Вы уверены?")
+
+            alertDialogBuilder.setPositiveButton("Да") { dialog, _ ->
+                deleteAccount()
+                dialog.dismiss()
+                findNavController().navigateUp()
+            }
+            alertDialogBuilder.setNegativeButton("Нет") { dialog, _ ->
+                dialog.dismiss()
+            }
+            val alertDialog = alertDialogBuilder.create()
+            alertDialog.show()
+
         }
 
-        val account = editAccountViewModel.account.value
         if (account != null)
         {
             binding.accountName.setText(account.name)
-            binding.goal.setText(account.target.toString())
-            binding.limit.setText(account.target.toString())
+            if (account.target != null)
+            {
+                binding.goal.setText(account.target.toString())
+            }
+            else
+            {
+                binding.goal.setText("")
+            }
+            if (account.isLimited)
+            {
+                if (account.spendingLimit != null)
+                {
+                    binding.limit.setText(account.spendingLimit.toString())
+                }
+                else
+                {
+                    binding.limit.setText("")
+                }
+            }
+            else
+            {
+                binding.limit.setText("")
+            }
         }
 
-        val accountName = binding.accountName
 
         binding.saveButton.setOnClickListener {
+            val accountName = binding.accountName
             if (accountName.text.trim().isEmpty())
             {
                 accountName.error = "Введите название счета"
             }
             else
             {
-                updateAccount(accountName.text.toString())
+                if (account != null)
+                {
+                    val oldAccountName = account.name.toString()
+                    account.name = accountName.text.toString()
+                    val limit = binding.limit
+
+                    if (limit.text.toString().trim().isNotEmpty()) {
+                        if (limit.text.toString().toDouble() < 0) {
+                            limit.error = "Введите положительное значение"
+                        }
+                        else {
+                            account.spendingLimit = limit.text.toString().toDouble()
+                            account.isLimited = true
+                        }
+
+                    }
+                    val target = binding.goal
+                    if (target.text.toString().trim().isNotEmpty()) {
+                        if (target.text.toString().toDouble() < 0) {
+                            target.error = "Введите положительное значение"
+                        }
+                        else {
+                            account.target = target.text.toString().toDouble()
+                        }
+
+                    }
+                    updateAccount(account, oldAccountName)
+                }
+
             }
         }
         return binding.root
     }
 
-    //    val name: String,
-//    val balance: Double,
-//    val target: Double,
-//    val spendingLimit: Double,
-//    val isLimited: Boolean
-    private fun updateAccount(accountName: String)
+    private fun updateAccount(account: Account, oldAccountName: String)
     {
         apiService = ApiClient.getClient(appPrefs.token.toString())
-        val goal = binding.goal
-        val target = if (goal.text.trim().isEmpty()) { 0.0 } else {
-            goal.text.toString().toDouble()
-        }
-        val limit = binding.limit
-        val isLimited = limit.text.trim().isNotEmpty()
-        val account = Account(accountName,
-            0.0,
-            target, 0.0, isLimited)
-        apiService.updateAccount(account).enqueue(object: Callback<Void> {
+
+        apiService.updateAccount(oldAccountName, account).enqueue(object: Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 findNavController().navigateUp()
             }
@@ -94,12 +147,28 @@ class EditAccountFragment : Fragment() {
         })
     }
 
+    private fun deleteAccount() {
+        apiService = ApiClient.getClient(appPrefs.token.toString())
+        val account = editAccountViewModel.account.value
+        if (account != null) {
+            apiService.deleteAccount(account.name)
+                .enqueue(object : Callback<Void> {
+                    override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                        findNavController().navigateUp()
+                    }
 
+                    override fun onFailure(call: Call<Void>, t: Throwable) {
+                        Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
+                    }
+
+                })
+
+        }
+
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
-
 }

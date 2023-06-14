@@ -1,14 +1,62 @@
 package cs.vsu.ru.mycash.ui.main.operation
 
 import android.net.Uri
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import cs.vsu.ru.mycash.data.Account
 import cs.vsu.ru.mycash.data.Category
+import cs.vsu.ru.mycash.data.CategoryType
+import cs.vsu.ru.mycash.data.Operation
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.util.*
 
-class AddOperationViewModel : ViewModel() {
+class EditOperationViewModel : ViewModel() {
+
+    private val _operation: MutableLiveData<Operation> by lazy {
+        MutableLiveData<Operation>()
+    }
+    val operation: LiveData<Operation> = _operation
+
+    fun setOperation(operation: Operation, date: Calendar, imageUri: Uri?) {
+        _operation.value = operation
+        setAccountName(operation.accountName)
+        setComment(operation.comment)
+        setCategoryName(operation.category.name)
+        setValue(operation.value.toString())
+        setDate(date)
+        setImageUri(imageUri)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun setOperation(operation: Operation) {
+        _operation.value = operation
+        setAccountName(operation.accountName)
+        setComment(operation.comment)
+        setCategoryName(operation.category.name)
+        setValue(operation.value.toString())
+        val dateTime = LocalDateTime.parse(operation.dateTime)
+        val cal = Calendar.getInstance()
+        cal.time = Date.from(dateTime.atZone(ZoneId.systemDefault()).toInstant())
+        setDate(cal)
+        if (operation.category.type == CategoryType.INCOME)
+        {
+            setMode(Mode.INCOME)
+        }
+        else
+        {
+            setMode(Mode.EXPENSES)
+        }
+
+    }
+
+//    fun setOperation(operation: Operation) {
+//        _operation.value = operation
+//    }
+
     private val _accountName: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }

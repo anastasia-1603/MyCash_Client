@@ -1,6 +1,6 @@
 package cs.vsu.ru.mycash.data
 
-data class ErrorResponse(
-    val code: Int,
+data class ApiError(
+    val statusCode: Int,
     val message: String
 )

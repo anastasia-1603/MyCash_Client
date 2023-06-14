@@ -41,25 +41,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/checkBox" />
 
-    <Button
-        android:id="@+id/buttonGoOut"
-        android:layout_width="92dp"
-        android:layout_height="35dp"
-        android:layout_marginTop="36dp"
-        android:layout_marginEnd="32dp"
-        android:backgroundTint="#F4EFEF"
-        android:text="Выйти"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:strokeColor="#E81616" />
-
     <CheckBox
         android:id="@+id/checkBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="35dp"
         android:layout_marginTop="25dp"
-        android:text="Получать уведомления"
+        android:text="Получать уведомления при превышении лимита"
         android:textColor="@color/gray_text"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"

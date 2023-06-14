@@ -13,7 +13,6 @@
         android:background="@color/background"
         tools:context=".ui.main.home.HomeFragment">
 
-
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/floatingActionButton"
             android:layout_width="wrap_content"
@@ -42,7 +41,7 @@
             android:shadowColor="#AEAEAE"
             android:shadowDy="0"
             android:shadowRadius="0"
-            android:text="Название счета"
+            android:text=""
             android:textAlignment="center"
             android:textSize="34sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -55,7 +54,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="0.0"
+            android:text=""
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="34sp"
@@ -195,12 +194,15 @@
             app:layout_constraintTop_toTopOf="@+id/date"
             app:tint="@color/textview_colors" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline3"
+        <ProgressBar
+            android:id="@+id/loading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_begin="188dp" />
+            android:layout_marginTop="10dp"
+            android:indeterminate="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

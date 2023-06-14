@@ -11,10 +11,13 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import cs.vsu.ru.mycash.R
 import cs.vsu.ru.mycash.api.ApiClient
+import cs.vsu.ru.mycash.data.ApiError
 import cs.vsu.ru.mycash.data.RegisterRequest
 import cs.vsu.ru.mycash.data.TokenResponse
 import cs.vsu.ru.mycash.databinding.FragmentRegisterBinding
 import cs.vsu.ru.mycash.utils.AppPreferences
+import cs.vsu.ru.mycash.utils.ErrorUtils
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -35,6 +38,7 @@ class RegisterFragment : Fragment() {
 
         _binding = FragmentRegisterBinding.inflate(inflater, container, false)
         binding.continueBtn.setOnClickListener {
+
             register()
         }
         return binding.root
@@ -42,10 +46,14 @@ class RegisterFragment : Fragment() {
     private fun register() {
 
         val apiService = ApiClient.getClient(appPrefs.token.toString())
+
         if (checkValid()) {
+            val username = binding.username.text.toString()
+            val password = binding.password.text.toString()
+            binding.loading.visibility = View.VISIBLE
             apiService.register(RegisterRequest(
-                binding.username.text.toString(),
-                binding.password.text.toString())
+                username,
+                password)
             ).enqueue(object : Callback<TokenResponse> {
                 override fun onResponse(
                     call: Call<TokenResponse>,
@@ -53,16 +61,31 @@ class RegisterFragment : Fragment() {
                 ) {
                     if (response.body() != null)
                     {
-                        val tokenResponse = response.body()?.token.toString()
-                        appPrefs.token = tokenResponse
-                        ApiClient.updateClient(tokenResponse)
-                        val navController = findNavController()
-                        appPrefs.isAuth = true
+                        if (response.isSuccessful) {
+                            val alertDialogBuilder = AlertDialog.Builder(requireContext())
+                            alertDialogBuilder.setMessage("Вы успешно зарегистрированы!")
+                            val alertDialog = alertDialogBuilder.create()
+                            alertDialog.show()
+                            val tokenResponse = response.body()?.token.toString()
 
-                        navController.navigate(R.id.profileFragment)
+                            appPrefs.token = tokenResponse
+                            ApiClient.updateClient(tokenResponse)
+                            val navController = findNavController()
+                            appPrefs.isAuth = true
+                            appPrefs.username = username
+                            navController.navigate(R.id.profileFragment)
+
+                            alertDialog.dismiss()
+
+                        }
                     }
+                    else {
+                        if (response.code() == 409) {
+                            Toast.makeText(context, "Пользователь с таким логином уже существует", Toast.LENGTH_LONG).show()
+                        }
 
-
+                    }
+                    binding.loading.visibility = View.GONE
                 }
 
                 override fun onFailure(call: Call<TokenResponse>, t: Throwable) {

@@ -6,11 +6,7 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import cs.vsu.ru.mycash.data.Category
-import cs.vsu.ru.mycash.data.Operation
-import cs.vsu.ru.mycash.databinding.FragmentCategoriesBinding
 import cs.vsu.ru.mycash.databinding.ItemCategoryBinding
-import cs.vsu.ru.mycash.databinding.ItemOperationBinding
-import cs.vsu.ru.mycash.utils.OperationAdapter
 
 class CategoriesAdapter(private val onClickListener: CategoriesAdapter.OnClickListener)
     : RecyclerView.Adapter<CategoriesAdapter.CategoriesViewHolder>() {
@@ -40,7 +36,7 @@ class CategoriesAdapter(private val onClickListener: CategoriesAdapter.OnClickLi
         with (holder.binding) {
 
             categoryName.text = category.name
-            imageView.setColorFilter(-category.color)
+            imageView.setColorFilter(category.color)
 
             holder.itemView.setOnClickListener {
                 onClickListener.onClick(category)

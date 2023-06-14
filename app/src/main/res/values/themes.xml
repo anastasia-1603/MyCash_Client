@@ -24,4 +24,5 @@
     <style name="Theme.MyCash.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark" />
 
     <style name="Theme.MyCash.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
 </resources>

@@ -17,4 +17,15 @@ class EditAccountViewModel : ViewModel() {
     {
         _account.value = account
     }
+
+    private val _accountsNum: MutableLiveData<Int> by lazy {
+        MutableLiveData<Int>()
+    }
+    val accountsNum : LiveData<Int> = _accountsNum
+
+    fun setAccountsNum(accountsNum: Int)
+    {
+        _accountsNum.value = accountsNum
+    }
+
 }

@@ -49,6 +49,7 @@ class AccountsFragment : Fragment() {
         val manager = LinearLayoutManager(context)
         adapter = AccountsAdapter(AccountsAdapter.OnClickListener{ account ->
             editAccountViewModel.setAccount(account)
+            accountsViewModel.accountList.value?.let { editAccountViewModel.setAccountsNum(it.size) }
             findNavController().navigate(R.id.editAccountFragment)
         })
 
@@ -68,7 +69,7 @@ class AccountsFragment : Fragment() {
             }
             else
             {
-                findNavController().navigate(R.id.profileUnauthFragment)
+                findNavController().navigate(R.id.profileFragment)
             }
 
         }
@@ -87,6 +88,7 @@ class AccountsFragment : Fragment() {
                 response.body()?.let {
                     accountsViewModel.setAccountsList(it)
                 }
+                binding.loading.visibility = View.GONE
             }
 
             override fun onFailure(call: Call<List<Account>>, t: Throwable) {

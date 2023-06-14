@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background"
-        tools:context=".ui.main.operation.AddOperationFragment">
+        tools:context=".ui.main.operation.EditOperationFragment">
 
         <TextView
             android:id="@+id/textViewAddOperation"
@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
             android:maxLength="@integer/material_motion_duration_short_1"
-            android:text="Добавление"
+            android:text=""
             android:textColor="@color/black"
             android:textSize="28sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -155,12 +155,12 @@
 
 
                 <Button
-                    android:id="@+id/cancelButton"
+                    android:id="@+id/deleteButton"
                     android:layout_width="135dp"
                     android:layout_height="51dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="100dp"
-                    android:text="Отменить"
+                    android:text="Удалить"
                     android:textColor="@color/redText"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/saveButton"
@@ -174,11 +174,11 @@
                     android:layout_width="135dp"
                     android:layout_height="51dp"
                     android:text="Сохранить"
-                    app:layout_constraintBottom_toBottomOf="@+id/cancelButton"
+                    app:layout_constraintBottom_toBottomOf="@+id/deleteButton"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/cancelButton"
-                    app:layout_constraintTop_toTopOf="@+id/cancelButton"
+                    app:layout_constraintStart_toEndOf="@+id/deleteButton"
+                    app:layout_constraintTop_toTopOf="@+id/deleteButton"
                     app:layout_constraintVertical_bias="0.0" />
 
                 <ImageButton
@@ -227,16 +227,6 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
-
-        <ProgressBar
-            android:id="@+id/loading"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:indeterminate="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -23,6 +23,7 @@ class CategoriesFragment : Fragment() {
     private var _binding: FragmentCategoriesBinding? = null
     private val binding get() = _binding!!
     private val categoriesViewModel: CategoriesViewModel by activityViewModels()
+    private val editCategoryViewModel: EditCategoryViewModel by activityViewModels()
     private lateinit var apiService: ApiService
     private lateinit var appPrefs: AppPreferences
 
@@ -73,6 +74,7 @@ class CategoriesFragment : Fragment() {
                     categoriesViewModel.setIncomeList(
                         categories.filter { it.type == CategoryType.INCOME })
                 }
+                binding.loading.visibility = View.GONE
             }
 
             override fun onFailure(call: Call<List<Category>>, t: Throwable) {

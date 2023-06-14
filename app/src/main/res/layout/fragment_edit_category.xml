@@ -13,18 +13,15 @@
         android:background="@color/background"
         tools:context=".ui.main.categories.EditCategoryFragment">
 
-        <EditText
-            android:id="@+id/accountName"
+        <TextView
+            android:id="@+id/categName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
             android:layout_marginTop="40dp"
             android:layout_marginEnd="35dp"
-            android:hint="Введите название счета"
-            android:inputType="text"
-            android:maxLength="@integer/material_motion_duration_short_1"
+            android:text=""
             android:textColor="@color/black"
-            android:textColorHint="@color/gray"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -41,43 +38,23 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/limitText" />
 
-        <EditText
-            android:id="@+id/goal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="35dp"
-            android:layout_marginTop="10dp"
-            android:ems="10"
-            android:inputType="numberDecimal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/goalText" />
-
-        <TextView
-            android:id="@+id/goalText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="35dp"
-            android:layout_marginTop="25dp"
-            android:text="Введите финансовую цель"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/accountName" />
-
         <TextView
             android:id="@+id/limitText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="30dp"
             android:text="Введите лимит"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/goal" />
+            app:layout_constraintTop_toBottomOf="@+id/colorCateg" />
 
         <Button
-            android:id="@+id/cancelButton"
+            android:id="@+id/deleteButton"
             android:layout_width="135dp"
             android:layout_height="51dp"
             android:layout_marginTop="50dp"
-            android:text="Удалить"
+            android:text="Отменить"
             android:textColor="@color/redText"
             app:layout_constraintEnd_toStartOf="@+id/saveButton"
             app:layout_constraintHorizontal_bias="0.5"
@@ -89,12 +66,34 @@
             android:layout_width="135dp"
             android:layout_height="51dp"
             android:text="Сохранить"
-            app:layout_constraintBottom_toBottomOf="@+id/cancelButton"
+            app:layout_constraintBottom_toBottomOf="@+id/deleteButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/cancelButton"
-            app:layout_constraintTop_toTopOf="@+id/cancelButton"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintStart_toEndOf="@+id/deleteButton"
+            app:layout_constraintTop_toTopOf="@+id/deleteButton"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <TextView
+            android:id="@+id/colorCateg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="35dp"
+            android:layout_marginTop="30dp"
+            android:text="Цвет"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/categName" />
+
+        <ImageButton
+            android:id="@+id/colorBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:background="@color/background"
+            app:layout_constraintBottom_toBottomOf="@+id/colorCateg"
+            app:layout_constraintStart_toEndOf="@+id/colorCateg"
+            app:layout_constraintTop_toTopOf="@+id/colorCateg"
+            app:srcCompat="@drawable/baseline_circle_35" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

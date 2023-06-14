@@ -1,4 +1,4 @@
-package cs.vsu.ru.mycash.utils
+package cs.vsu.ru.mycash.ui.main.operation
 
 import android.os.Build
 import android.view.LayoutInflater
@@ -38,17 +38,16 @@ class OperationAdapter(private val onClickListener: OnClickListener) :
     override fun onBindViewHolder(holder: OperationViewHolder, position: Int) {
         val operation = data[position]
 
-
         with(holder.binding) {
             categoryName.text = operation.category.name
             value.text = operation.value.toString()
 
-//            val f = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
             val date = LocalDateTime.parse(operation.dateTime)
-            val formattedDate = DateTimeFormatter.ofPattern("HH:mm").format(date)
-            time.text = formattedDate
+            val formattedDateTime = DateTimeFormatter.ofPattern("dd.MM HH:mm").format(date)
 
-            imageView.setColorFilter(-operation.category.color)
+            time.text = formattedDateTime
+
+            imageView.setColorFilter(operation.category.color)
 
             holder.itemView.setOnClickListener {
                 onClickListener.onClick(operation)
