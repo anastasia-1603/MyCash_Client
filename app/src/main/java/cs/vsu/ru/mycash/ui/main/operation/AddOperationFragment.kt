@@ -241,25 +241,28 @@ class AddOperationFragment : Fragment(),
                 ) {
                     val resp = response.body()
                     if (resp != null) {
-                        if (resp.overLimitType == OverLimitType.CATEGORY) {
-                            val alertDialogBuilder = AlertDialog.Builder(activity)
-                            alertDialogBuilder.setMessage("Вы превысили лимит по категории!")
+                        if (appPrefs.getNotifications) {
+                            if (resp.overLimitType == OverLimitType.CATEGORY) {
+                                val alertDialogBuilder = AlertDialog.Builder(activity)
+                                alertDialogBuilder.setMessage("Вы превысили лимит по категории!")
 
-                            alertDialogBuilder.setNegativeButton("Закрыть") { dialog, _ ->
-                                dialog.dismiss()
-                            }
-                            val alertDialog = alertDialogBuilder.create()
-                            alertDialog.show()
-                        } else if (resp.overLimitType == OverLimitType.ACCOUNT) {
-                            val alertDialogBuilder = AlertDialog.Builder(requireContext())
-                            alertDialogBuilder.setMessage("Вы превысили лимит по счету!")
+                                alertDialogBuilder.setNegativeButton("Закрыть") { dialog, _ ->
+                                    dialog.dismiss()
+                                }
+                                val alertDialog = alertDialogBuilder.create()
+                                alertDialog.show()
+                            } else if (resp.overLimitType == OverLimitType.ACCOUNT) {
+                                val alertDialogBuilder = AlertDialog.Builder(requireContext())
+                                alertDialogBuilder.setMessage("Вы превысили лимит по счету!")
 
-                            alertDialogBuilder.setNegativeButton("Закрыть") { dialog, _ ->
-                                dialog.dismiss()
+                                alertDialogBuilder.setNegativeButton("Закрыть") { dialog, _ ->
+                                    dialog.dismiss()
+                                }
+                                val alertDialog = alertDialogBuilder.create()
+                                alertDialog.show()
                             }
-                            val alertDialog = alertDialogBuilder.create()
-                            alertDialog.show()
                         }
+
 
 
                         check = true
