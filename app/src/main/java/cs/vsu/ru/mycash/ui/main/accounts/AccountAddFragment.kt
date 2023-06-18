@@ -1,12 +1,12 @@
 package cs.vsu.ru.mycash.ui.main.accounts
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import cs.vsu.ru.mycash.R
@@ -18,7 +18,6 @@ import cs.vsu.ru.mycash.utils.AppPreferences
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.lang.Double
 
 class AccountAddFragment : Fragment() {
 
@@ -47,51 +46,44 @@ class AccountAddFragment : Fragment() {
         val accountName = binding.accountName
 
         binding.saveButton.setOnClickListener {
-            if (accountName.text.trim().isEmpty())
-            {
+            if (accountName.text.trim().isEmpty()) {
                 accountName.error = "Введите название счета"
-            }
-            else
-            {
+            } else {
                 postAccount(accountName.text.toString())
             }
         }
         return binding.root
     }
-    private fun postAccount(accountName: String)
-    {
+
+    private fun postAccount(accountName: String) {
         apiService = ApiClient.getClient(appPrefs.token.toString())
         val goal = binding.goal
 
-        var target : kotlin.Double? = null
+        var target: Double? = null
         if (goal.text.trim().isNotEmpty()) {
             if (binding.goal.text.toString().toDouble() < 0) {
                 binding.goal.error = "Введите положительное значение"
-            }
-            else
-            {
+            } else {
                 target = goal.text.toString().toDouble()
             }
         }
         val isLimited = binding.limit.text.trim().isNotEmpty()
-        var limit : kotlin.Double? = null
+        var limit: Double? = null
         if (isLimited) {
             if (binding.limit.text.toString().toDouble() < 0) {
                 binding.limit.error = "Введите положительное значение"
-            }
-            else{
+            } else {
                 limit = binding.limit.text.toString().toDouble()
             }
         }
-        val account = Account(accountName,
+        val account = Account(
+            accountName,
             0.0,
-            target, limit, isLimited)
-        apiService.addAccount(account).enqueue(object: Callback<Void> {
+            target, limit, isLimited
+        )
+        apiService.addAccount(account).enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                if (response.body() != null) {
-                    findNavController().navigateUp()
-                }
-
+                findNavController().navigateUp()
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
@@ -99,8 +91,6 @@ class AccountAddFragment : Fragment() {
             }
         })
     }
-
-
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -41,7 +41,7 @@ class MainScreenActivity : AppCompatActivity() {
                         finish()
                     }
 
-                    navController.navigate(R.id.profileUnauthFragment)
+                    navController.navigate(R.id.action_profileFragment_to_profileUnauthFragment)
                 }
             }
         }

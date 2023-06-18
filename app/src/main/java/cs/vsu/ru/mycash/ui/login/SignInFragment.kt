@@ -70,7 +70,10 @@ class SignInFragment : Fragment() {
                             appPrefs.isAuth = true
                             appPrefs.username = username.text.toString()
                             binding.loading.visibility = View.GONE
-                            findNavController().navigate(R.id.profileFragment)
+                            findNavController().apply {
+                                popBackStack()
+                                popBackStack()
+                            }
                         }
                         else {
                             if (response.code() == 401)

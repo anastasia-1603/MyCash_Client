@@ -12,7 +12,8 @@
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/floatingActionButton"
-            app:destination="@id/addOperationFragment" />
+            app:destination="@id/addOperationFragment"
+            app:popUpTo="@id/homeFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileUnauthFragment"
@@ -22,11 +23,25 @@
         <action
             android:id="@+id/registerBtn"
             app:destination="@+id/registerFragment"
-            />
+            app:popUpTo="@id/profileFragment" />
         <action
             android:id="@+id/sigInBtn"
             app:destination="@+id/signInFragment"
-            />
+            app:popUpTo="@id/profileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileUnauthFragment2"
+        android:name="cs.vsu.ru.mycash.ui.main.profile.ProfileUnauthFragment"
+        android:label="ProfileUnauthFragment"
+        tools:layout="@layout/fragment_profile_unauth">
+        <action
+            android:id="@+id/action_profileUnauthFragment2_to_signInFragment"
+            app:destination="@id/signInFragment"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_profileUnauthFragment2_to_registerFragment"
+            app:destination="@id/registerFragment"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/diagramsFragment"
@@ -42,12 +57,23 @@
         android:id="@+id/accountsFragment"
         android:name="cs.vsu.ru.mycash.ui.main.accounts.AccountsFragment"
         android:label="fragment_accounts"
-        tools:layout="@layout/fragment_accounts" />
+        tools:layout="@layout/fragment_accounts" >
+        <action
+            android:id="@+id/action_accountsFragment_to_accountAddFragment"
+            app:destination="@id/accountAddFragment" />
+        <action
+            android:id="@+id/action_accountsFragment_to_profileUnauthFragment"
+            app:destination="@id/profileUnauthFragment2" />
+    </fragment>
     <fragment
         android:id="@+id/profileFragment"
         android:name="cs.vsu.ru.mycash.ui.main.profile.ProfileFragment"
         android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_profileUnauthFragment"
+            app:destination="@id/profileUnauthFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/signInFragment"

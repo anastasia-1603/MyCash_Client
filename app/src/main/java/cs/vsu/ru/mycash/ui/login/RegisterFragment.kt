@@ -70,10 +70,12 @@ class RegisterFragment : Fragment() {
 
                             appPrefs.token = tokenResponse
                             ApiClient.updateClient(tokenResponse)
-                            val navController = findNavController()
                             appPrefs.isAuth = true
                             appPrefs.username = username
-                            navController.navigate(R.id.profileFragment)
+                            findNavController().apply {
+                                popBackStack()
+                                popBackStack()
+                            }
 
                             alertDialog.dismiss()
 

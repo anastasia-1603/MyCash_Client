@@ -267,7 +267,7 @@ class EditOperationFragment : Fragment(),
 
             apiService = ApiClient.getClient(appPrefs.token.toString())
 
-            apiService.addOperation(operation).enqueue(object : Callback<OperationResponse> {
+            apiService.updateOperation(operation).enqueue(object : Callback<OperationResponse> {
                 override fun onResponse(
                     call: Call<OperationResponse>,
                     response: Response<OperationResponse>

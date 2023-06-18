@@ -75,7 +75,7 @@ interface ApiService {
     fun deleteOperation(@Path("id") id: Long?) : Call<Void>
 
     @POST(OPERATION_UPDATE)
-    fun updateOperation() : Call<OperationResponse>
+    fun updateOperation(@Body operation: Operation) : Call<OperationResponse>
 
     @GET(ANALYTICS)
     fun getAnalytics(@Path("accountName") accountName: String,

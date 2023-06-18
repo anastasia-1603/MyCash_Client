@@ -65,13 +65,12 @@ class AccountsFragment : Fragment() {
         binding.floatingActionButton.setOnClickListener{
             if (appPrefs.isAuth)
             {
-                findNavController().navigate(R.id.accountAddFragment)
+                findNavController().navigate(R.id.action_accountsFragment_to_accountAddFragment)
             }
             else
             {
-                findNavController().navigate(R.id.profileFragment)
+                findNavController().navigate(R.id.action_accountsFragment_to_profileUnauthFragment)
             }
-
         }
 
         return root
