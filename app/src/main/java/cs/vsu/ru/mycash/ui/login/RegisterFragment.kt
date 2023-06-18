@@ -38,7 +38,7 @@ class RegisterFragment : Fragment() {
 
         _binding = FragmentRegisterBinding.inflate(inflater, container, false)
         binding.continueBtn.setOnClickListener {
-
+            binding.continueBtn.isClickable = false
             register()
         }
         return binding.root
@@ -76,17 +76,21 @@ class RegisterFragment : Fragment() {
                                 popBackStack()
                                 popBackStack()
                             }
-
                             alertDialog.dismiss()
 
                         }
                     }
                     else {
                         if (response.code() == 409) {
-                            Toast.makeText(context, "Пользователь с таким логином уже существует", Toast.LENGTH_LONG).show()
+                            Toast.makeText(context,
+                                "Пользователь с таким логином уже существует",
+                                Toast.LENGTH_LONG)
+                                .show()
+                            binding.continueBtn.isClickable = true
                         }
-
+                        binding.loading.visibility = View.GONE
                     }
+
                     binding.loading.visibility = View.GONE
                 }
 
@@ -108,6 +112,9 @@ class RegisterFragment : Fragment() {
         }
         if (password.text.trim().isEmpty()) {
             password.error = "Введите пароль"
+        }
+        if (password.text.toString().length < 6) {
+            password.error = "Пароль должен содержать как минимум 6 символов"
         }
         return valid
     }

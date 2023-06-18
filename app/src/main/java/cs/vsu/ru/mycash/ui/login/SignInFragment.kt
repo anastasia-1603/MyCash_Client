@@ -40,6 +40,7 @@ class SignInFragment : Fragment() {
 
         binding.continueBtn.setOnClickListener {
             binding.loading.visibility = View.VISIBLE
+            binding.continueBtn.isClickable = false
             var valid = true
             if (username.text.trim().isEmpty()) {
                 username.error = "Введите логин"
@@ -69,7 +70,7 @@ class SignInFragment : Fragment() {
                             ApiClient.updateClient(tokenResponse)
                             appPrefs.isAuth = true
                             appPrefs.username = username.text.toString()
-                            binding.loading.visibility = View.GONE
+
                             findNavController().apply {
                                 popBackStack()
                                 popBackStack()
@@ -79,12 +80,17 @@ class SignInFragment : Fragment() {
                             if (response.code() == 401)
                             {
                                 Toast.makeText(context, "Неправильный логин или пароль", Toast.LENGTH_SHORT).show()
+                                binding.continueBtn.isClickable = true
                             }
                         }
+                        binding.loading.visibility = View.GONE
+
                     }
 
                     override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
                         Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
+                        binding.loading.visibility = View.GONE
+                        binding.continueBtn.isClickable = true
                     }
 
                 })
