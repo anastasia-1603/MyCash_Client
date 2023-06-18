@@ -21,7 +21,6 @@
             android:text="@string/enter_account_name"
             android:textColor="@color/black"
             android:textSize="24sp"
-            android:maxLength="@integer/material_motion_duration_short_1"
             app:layout_constraintStart_toStartOf="@+id/textViewBalance"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -46,7 +45,7 @@
             android:autofillHints="@string/name_placeholder"
             android:ems="10"
             android:hint="@string/name_placeholder"
-            android:maxLength="@integer/material_motion_duration_short_1"
+            android:maxLength="18"
             android:inputType="text"
             android:textColor="@color/black"
             android:textColorHint="@color/gray"

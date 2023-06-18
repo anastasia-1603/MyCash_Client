@@ -98,34 +98,42 @@ class EditAccountFragment : Fragment() {
             }
             else
             {
-                if (account != null)
-                {
-                    val oldAccountName = account.name.toString()
-                    account.name = accountName.text.toString()
-                    val limit = binding.limit
-
-                    if (limit.text.toString().trim().isNotEmpty()) {
-                        if (limit.text.toString().toDouble() < 0) {
-                            limit.error = "Введите положительное значение"
-                        }
-                        else {
-                            account.spendingLimit = limit.text.toString().toDouble()
-                            account.isLimited = true
-                        }
-
-                    }
-                    val target = binding.goal
-                    if (target.text.toString().trim().isNotEmpty()) {
-                        if (target.text.toString().toDouble() < 0) {
-                            target.error = "Введите положительное значение"
-                        }
-                        else {
-                            account.target = target.text.toString().toDouble()
-                        }
-
-                    }
-                    updateAccount(account, oldAccountName)
+                if (!accountName.text.trim().toString()
+                        .matches(Regex("[a-zA-Z0-9а-яёА-ЯЁ_()!?\\- ]+"))
+                ) {
+                    accountName.error = "Не допускаются специальные символы"
                 }
+                else {
+                    if (account != null)
+                    {
+                        val oldAccountName = account.name.toString()
+                        account.name = accountName.text.toString()
+                        val limit = binding.limit
+
+                        if (limit.text.toString().trim().isNotEmpty()) {
+                            if (limit.text.toString().toDouble() < 0) {
+                                limit.error = "Введите положительное значение"
+                            }
+                            else {
+                                account.spendingLimit = limit.text.toString().toDouble()
+                                account.isLimited = true
+                            }
+
+                        }
+                        val target = binding.goal
+                        if (target.text.toString().trim().isNotEmpty()) {
+                            if (target.text.toString().toDouble() < 0) {
+                                target.error = "Введите положительное значение"
+                            }
+                            else {
+                                account.target = target.text.toString().toDouble()
+                            }
+
+                        }
+                        updateAccount(account, oldAccountName)
+                    }
+                }
+
 
             }
         }

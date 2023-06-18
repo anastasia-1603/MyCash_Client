@@ -49,7 +49,15 @@ class AccountAddFragment : Fragment() {
             if (accountName.text.trim().isEmpty()) {
                 accountName.error = "Введите название счета"
             } else {
-                postAccount(accountName.text.toString())
+                if (!accountName.text.trim().toString()
+                        .matches(Regex("[a-zA-Z0-9а-яёА-ЯЁ_()!?\\- ]+"))
+                ) {
+                    accountName.error = "Не допускаются специальные символы"
+                }
+                else {
+                    postAccount(accountName.text.toString())
+                }
+
             }
         }
         return binding.root
@@ -91,6 +99,7 @@ class AccountAddFragment : Fragment() {
             }
         })
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
