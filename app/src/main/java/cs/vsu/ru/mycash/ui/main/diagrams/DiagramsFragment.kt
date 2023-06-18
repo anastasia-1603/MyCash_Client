@@ -158,6 +158,7 @@ class DiagramsFragment : Fragment() {
     }
 
     private fun getAnalytics() {
+        setAllClickable(false)
         binding.loading.visibility = View.VISIBLE
         apiService = ApiClient.getClient(appPrefs.token.toString())
         val i = diagramsViewModel.accountIndex.value
@@ -179,6 +180,7 @@ class DiagramsFragment : Fragment() {
                         {
                             diagramsViewModel.setData(resp)
                             binding.loading.visibility = View.GONE
+                            setAllClickable(true)
                         }
                     }
 
@@ -193,6 +195,7 @@ class DiagramsFragment : Fragment() {
     }
 
     private fun getAccounts() {
+        setAllClickable(false)
         apiService = ApiClient.getClient(appPrefs.token.toString())
         apiService.getAccounts().enqueue(object : retrofit2.Callback<List<Account>> {
             override fun onResponse(call: Call<List<Account>>, response: Response<List<Account>>) {
@@ -265,5 +268,14 @@ class DiagramsFragment : Fragment() {
             datePickerDialog.datePicker.maxDate = maxC.time.time
         }
         return datePickerDialog
+    }
+
+
+    private fun setAllClickable(isClickable: Boolean) {
+        binding.right.isClickable = isClickable
+        binding.left.isClickable = isClickable
+        binding.rightAccount.isClickable = isClickable
+        binding.leftAccount.isClickable = isClickable
+        binding.date.isClickable = isClickable
     }
 }
