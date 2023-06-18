@@ -3,7 +3,6 @@ package cs.vsu.ru.mycash.ui.main.diagrams
 import android.app.DatePickerDialog
 import android.content.res.Resources
 import android.os.Bundle
-import android.provider.SyncStateContract.Helpers.update
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,22 +12,17 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import cs.vsu.ru.mycash.R
 import cs.vsu.ru.mycash.api.ApiClient
 import cs.vsu.ru.mycash.api.ApiService
 import cs.vsu.ru.mycash.data.Account
 import cs.vsu.ru.mycash.data.diagrams.AnalyticsResponse
 import cs.vsu.ru.mycash.databinding.FragmentDiagramsBinding
-import cs.vsu.ru.mycash.ui.main.home.HomeViewModel
 import cs.vsu.ru.mycash.utils.AppPreferences
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.text.SimpleDateFormat
 import java.util.*
 
 class DiagramsFragment : Fragment() {
@@ -62,13 +56,6 @@ class DiagramsFragment : Fragment() {
         val root: View = binding.root
 
         diagramsViewModel.accountIndex.observe(viewLifecycleOwner) {
-//            if (diagramsViewModel.accountList.value != null && diagramsViewModel.accountList.value!!.size > 1) {
-//                binding.leftAccount.isVisible = true
-//                binding.rightAccount.isVisible = true
-//            } else {
-//                binding.leftAccount.isVisible = false
-//                binding.rightAccount.isVisible = false
-//            }
             val accounts = diagramsViewModel.accountList.value
             if (accounts != null && accounts.isNotEmpty()) {
                 val accountName = accounts[it].name.toString()
@@ -173,13 +160,15 @@ class DiagramsFragment : Fragment() {
     private fun getAnalytics() {
         binding.loading.visibility = View.VISIBLE
         apiService = ApiClient.getClient(appPrefs.token.toString())
-        val accName = diagramsViewModel.accountName.value.toString()
+        val i = diagramsViewModel.accountIndex.value
+        val account = i?.let { diagramsViewModel.accountList.value?.get(it) }
         val date = diagramsViewModel.date.value
-        if (date != null)
+        if (date != null && account != null)
         {
             val year = date.get(Calendar.YEAR).toString()
             val month = date.get(Calendar.MONTH) + 1
-            apiService.getAnalytics(accName, year, month.toString())
+            Log.e("acc name diag", account.name.toString())
+            apiService.getAnalytics(account.name, year, month.toString())
                 .enqueue(object  : Callback<AnalyticsResponse> {
                     override fun onResponse(
                         call: Call<AnalyticsResponse>,
@@ -195,6 +184,7 @@ class DiagramsFragment : Fragment() {
 
                     override fun onFailure(call: Call<AnalyticsResponse>, t: Throwable) {
                         Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
+                        binding.loading.visibility = View.GONE
                     }
 
                 })
