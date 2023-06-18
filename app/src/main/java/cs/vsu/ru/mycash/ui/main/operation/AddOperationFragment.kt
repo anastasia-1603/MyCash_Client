@@ -42,7 +42,6 @@ class AddOperationFragment : Fragment(),
     private lateinit var apiService: ApiService
     private lateinit var appPrefs: AppPreferences
     private lateinit var addOperationViewModel: AddOperationViewModel
-    private val myactivity = activity
     private val pickImage = 100
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -53,7 +52,6 @@ class AddOperationFragment : Fragment(),
     ): View {
         addOperationViewModel = ViewModelProvider(this)[AddOperationViewModel::class.java]
         appPrefs = activity?.let { AppPreferences(it) }!!
-        Log.e("myactivity", myactivity.toString())
         _binding = FragmentAddOperationBinding.inflate(inflater, container, false)
         getAccounts()
         getCategories()
@@ -157,7 +155,7 @@ class AddOperationFragment : Fragment(),
             spinnerCategories.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
                     parent: AdapterView<*>,
-                    view: View, position: Int, id: Long
+                    view: View?, position: Int, id: Long
                 ) {
                     addOperationViewModel.setCategoryName(categoriesNames[position])
                 }
@@ -185,7 +183,7 @@ class AddOperationFragment : Fragment(),
             spinnerAccounts.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
                     parent: AdapterView<*>,
-                    view: View, position: Int, id: Long
+                    view: View?, position: Int, id: Long
                 ) {
                     addOperationViewModel.setAccountName(accountsNames[position])
                 }

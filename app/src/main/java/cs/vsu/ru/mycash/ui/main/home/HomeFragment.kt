@@ -170,7 +170,7 @@ class HomeFragment : Fragment() {
                         Calendar.YEAR
                     )
                 ) {
-                    findNavController().navigate(R.id.predictFragment)
+                    findNavController().navigate(R.id.action_homeFragment_to_predictFragment)
                 } else {
                     val monthNames = arrayOf(
                         "Январь",
@@ -269,7 +269,7 @@ class HomeFragment : Fragment() {
                         accountSendViewModel.setBalance(
                             homeViewModel.balance.value.toString().toDouble()
                         )
-                        findNavController().navigate(R.id.predictFragment)
+                        findNavController().navigate(R.id.action_homeFragment_to_predictFragment)
                     } else {
                         cal.set(Calendar.MONTH, date.get(Calendar.MONTH) + 1)
                     }
@@ -280,7 +280,7 @@ class HomeFragment : Fragment() {
         }
 
         binding.floatingActionButton.setOnClickListener {
-            findNavController().navigate(R.id.addOperationFragment)
+            findNavController().navigate(R.id.action_homeFragment_to_addOperationFragment)
         }
 
         val viewPager = binding.viewPager

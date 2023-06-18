@@ -11,9 +11,11 @@
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/floatingActionButton"
-            app:destination="@id/addOperationFragment"
-            app:popUpTo="@id/homeFragment" />
+            android:id="@+id/action_homeFragment_to_addOperationFragment"
+            app:destination="@id/addOperationFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_predictFragment"
+            app:destination="@id/predictFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileUnauthFragment"
@@ -103,7 +105,8 @@
     <fragment
         android:id="@+id/predictFragment"
         android:name="cs.vsu.ru.mycash.ui.main.home.PredictFragment"
-        android:label="PredictFragment" />
+        android:label="PredictFragment"
+        tools:layout="@layout/fragment_predict"/>
     <fragment
         android:id="@+id/accountAddFragment"
         android:name="cs.vsu.ru.mycash.ui.main.accounts.AccountAddFragment"
